@@ -102,3 +102,65 @@ ALTER TABLE `registration`
 -- ()
 -- ();
 -- COMMIT;
+
+-- ######################### NON GIVEN SCHEMA #########################
+
+--
+-- Table structure for table `skill`
+--
+
+DROP TABLE IF EXISTS `skill`;
+CREATE TABLE IF NOT EXISTS `skill` (
+  `skill_id` int(11) PRIMARY KEY NOT NULL,
+  `skill_name` varchar(50) NOT NULL,
+  `skill_desc` varchar(255) NOT NULL,
+  `skill_category` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--
+-- Table structure for table `course_skills`
+--
+
+DROP TABLE IF EXISTS `course_skills`;
+CREATE TABLE IF NOT EXISTS `course_skills` (
+  `course_skills_id` int(11) PRIMARY KEY NOT NULL,
+  `skill_id` int(11) NOT NULL,
+  `course_id` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `course_skills`
+  ADD CONSTRAINT `course_skills_fk_1` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`),
+  ADD CONSTRAINT `course_skills_fk_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`skill_id`);
+
+
+--
+-- Table structure for table `learning_journey`
+--
+
+DROP TABLE IF EXISTS `learning_journey`;
+CREATE TABLE IF NOT EXISTS `learning_journey` (
+  `learning_journey_id` int(11) PRIMARY KEY NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `staff_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `learning_journey`
+  ADD CONSTRAINT `learning_journey_fk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
+  ADD CONSTRAINT `learning_journey_fk_2` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`);
+
+
+--
+-- Table structure for table `learning_journey_skills`
+--
+
+DROP TABLE IF EXISTS `learning_journey_skills`;
+CREATE TABLE IF NOT EXISTS `learning_journey_skills` (
+  `learning_journey_skills_id` int(11) PRIMARY KEY NOT NULL,
+  `learning_journey_id` int(11) NOT NULL,
+  `skill_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `learning_journey_skills`
+  ADD CONSTRAINT `learning_journey_skills_fk_1` FOREIGN KEY (`learning_journey_id`) REFERENCES `learning_journey` (`learning_journey_id`),
+  ADD CONSTRAINT `learning_journey_skills_fk_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`skill_id`);
