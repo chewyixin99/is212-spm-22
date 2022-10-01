@@ -82,21 +82,21 @@ CREATE TABLE IF NOT EXISTS `course` (
 --
 DROP TABLE IF EXISTS `staff_learning_journey`;
 CREATE TABLE IF NOT EXISTS `staff_learning_journey` (
-  `staff_id` int(11) PRIMARY KEY NOT NULL,
-  `learning_journey_id` int(11) PRIMARY KEY NOT NULL
+  `staff_id` int(11) NOT NULL,
+  `learning_journey_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `staff_learning_journey`
-  ADD CONSTRAINT `staff_learning_journey_fk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`learning_journey_id`),
-  ADD CONSTRAINT `staff_learning_journey_fk_2` FOREIGN KEY (`learning_journey_id`) REFERENCES `staff` (`staff_id`);
+  ADD CONSTRAINT `staff_learning_journey_fk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`),
+  ADD CONSTRAINT `staff_learning_journey_fk_2` FOREIGN KEY (`learning_journey_id`) REFERENCES `learning_journey` (`learning_journey_id`);
 
 --
 -- Table structure for table `role_skill`
 --
 DROP TABLE IF EXISTS `role_skill`;
 CREATE TABLE IF NOT EXISTS `role_skill` (
-  `role_id` int(11) PRIMARY KEY NOT NULL,
-  `skill_id` int(11) PRIMARY KEY NOT NULL
+  `role_id` int(11) NOT NULL,
+  `skill_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `role_skill`
@@ -108,8 +108,8 @@ ALTER TABLE `role_skill`
 --
 DROP TABLE IF EXISTS `skill_course`;
 CREATE TABLE IF NOT EXISTS `skill_course` (
-  `skill_id` int(11) PRIMARY KEY NOT NULL,
-  `course_id` int(11) PRIMARY KEY NOT NULL
+  `skill_id` int(11) NOT NULL,
+  `course_id` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `skill_course`
