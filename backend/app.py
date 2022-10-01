@@ -21,17 +21,22 @@ class Staff(db.Model):
     staff_lname = db.Column(db.String(50))
     dept = db.Column(db.String(50))
     email = db.Column(db.String(50))
-    role = db.Column(db.Integer, db.ForeignKey('role_id'))
+    type = db.Column(db.Integer)
 
-    def __init__(self, staff_fname, staff_lname, dept, email, role):
+    def __init__(self, staff_fname, staff_lname, dept, email, type):
         self.staff_fname = staff_fname
         self.staff_lname = staff_lname
         self.dept = dept
         self.email = email
-        self.role = role
+        self.type = type
 
     def json(self):
-        return {"staff_id": self.staff_id, "staff_fname": self.staff_fname, "staff_lname": self.staff_lname, "dept": self.dept, "email": self.email, "role": self.role}
+        return {"staff_id": self.staff_id,
+                "staff_fname": self.staff_fname,
+                "staff_lname": self.staff_lname,
+                "dept": self.dept,
+                "email": self.email,
+                "type": self.type}
 
 class Course(db.Model):
     __tablename__ = 'course'
@@ -52,20 +57,26 @@ class Course(db.Model):
         self.course_category = course_category
 
     def json(self):
-        return {"course_id": self.course_id, "course_name": self.course_name, "course_desc": self.course_desc, "course_status": self.course_status, "course_type": self.course_type, "course_category": self.course_category}
+        return {"course_id": self.course_id,
+                "course_name": self.course_name,
+                "course_desc": self.course_desc,
+                "course_status": self.course_status,
+                "course_type": self.course_type,
+                "course_category": self.course_category}
 
 
 class Role(db.Model):
     __tablename__ = 'role'
 
     role_id = db.Column(db.Integer, primary_key = True)
-    role_name = db.Column(db.String(20))
+    role_name = db.Column(db.String(50))
 
     def __init__(self,role_name):
         self.role_name = role_name
 
     def json(self):
-        return {"role_id": self.role_id, "role_name": self.role_name}
+        return {"role_id": self.role_id,
+                "role_name": self.role_name}
 
 # class Registration(db.Model):
 #     __tablename__ = 'registration'
