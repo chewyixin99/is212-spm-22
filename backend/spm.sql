@@ -32,6 +32,12 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `type` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `staff` (`staff_id`, `staff_fname`, `staff_lname`, `dept`, `email`, `type`) VALUES
+(1, 'chew', 'yixin', 'dept_a', 'yixin@mail.com', 1),
+(2, 'loh', 'kokwee', 'dept_b', 'kokwee@mail.com', 2),
+(3, 'gan', 'jianlin', 'dept_c', 'jianlin@mail.com', 3);
+COMMIT;
+
 --
 -- Table structure for table `role`
 --
@@ -40,6 +46,12 @@ CREATE TABLE IF NOT EXISTS `role` (
   `role_id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `role_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `role` (`role_id`, `role_name`) VALUES
+(1, 'admin'),
+(2, 'user'),
+(3, 'manager');
+COMMIT;
 
 --
 -- Table structure for table `learning_journey`
@@ -54,6 +66,12 @@ CREATE TABLE IF NOT EXISTS `learning_journey` (
 ALTER TABLE `learning_journey`
   ADD CONSTRAINT `learning_journey_fk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`);
 
+INSERT INTO `learning_journey` (`learning_journey_id`, `learning_journey_name`, `role_id`) VALUES
+(1, 'learning_journey_1', 1),
+(2, 'learning_journey_2', 2),
+(3, 'learning_journey_3', 3);
+COMMIT;
+
 --
 -- Table structure for table `skill`
 --
@@ -63,6 +81,12 @@ CREATE TABLE IF NOT EXISTS `skill` (
   `skill_name` varchar(50) NOT NULL,
   `skill_desc` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `skill` (`skill_id`, `skill_name`, `skill_desc`) VALUES
+(1, 'Python', 'skill_desc_1'),
+(2, 'Java', 'skill_desc_2'),
+(3, 'SQL', 'skill_desc_3');
+COMMIT;
 
 --
 -- Table structure for table `course`
@@ -77,6 +101,13 @@ CREATE TABLE IF NOT EXISTS `course` (
   `course_category` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `course` (`course_id`, `course_name`, `course_desc`, `course_status`, `course_type`, `course_category`) VALUES
+('CS420', 'Foundations of Cybersecurity', 'desc_1', 'Active', 'Internal', 'Technical'),
+('IS442', 'Object Oriented Programming', 'desc_2', 'Active', 'Internal', 'Technical'),
+('IS212', 'Software Project Management', 'desc_3', 'Retired', 'Internal', 'Technical'),
+('EXT123', 'External Course 123', 'desc_4', 'Active', 'External', 'Finance');
+COMMIT;
+
 --
 -- Table structure for table `staff_learning_journey`
 --
@@ -89,6 +120,11 @@ CREATE TABLE IF NOT EXISTS `staff_learning_journey` (
 ALTER TABLE `staff_learning_journey`
   ADD CONSTRAINT `staff_learning_journey_fk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`),
   ADD CONSTRAINT `staff_learning_journey_fk_2` FOREIGN KEY (`learning_journey_id`) REFERENCES `learning_journey` (`learning_journey_id`);
+
+INSERT INTO `staff_learning_journey` (`staff_id`, `learning_journey_id`) VALUES
+(1, 1),
+(2, 2);
+COMMIT;
 
 --
 -- Table structure for table `role_skill`
@@ -103,6 +139,11 @@ ALTER TABLE `role_skill`
   ADD CONSTRAINT `role_skill_fk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
   ADD CONSTRAINT `role_skill_fk_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`skill_id`);
 
+INSERT INTO `role_skill` (`role_id`, `skill_id`) VALUES
+(1, 1),
+(2, 2);
+COMMIT;
+
 --
 -- Table structure for table `skill_course`
 --
@@ -115,3 +156,8 @@ CREATE TABLE IF NOT EXISTS `skill_course` (
 ALTER TABLE `skill_course`
   ADD CONSTRAINT `skill_course_fk_1` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`skill_id`),
   ADD CONSTRAINT `skill_course_fk_2` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`);
+
+INSERT INTO `skill_course` (`skill_id`, `course_id`) VALUES
+(1, 'IS212'),
+(2, 'IS442');
+COMMIT;
