@@ -69,7 +69,7 @@ ALTER TABLE `learning_journey`
 INSERT INTO `learning_journey` (`learning_journey_id`, `learning_journey_name`, `role_id`) VALUES
 (1, 'Product Manager 1', 1),
 (2, 'Product Manager 2', 1),
-(3, 'Full-stack developer', 3);
+(3, 'Full-stack developer 1', 3);
 COMMIT;
 
 --
@@ -102,9 +102,9 @@ CREATE TABLE IF NOT EXISTS `course` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `course` (`course_id`, `course_name`, `course_desc`, `course_status`, `course_type`, `course_category`) VALUES
-('IS111', 'Intro to Programming', 'is111 desc', 'available', 'type 1', 'category 1'),
-('IS212', 'Software Project Management', 'spm desc', 'available', 'type 2', 'category 2'),
-('IS216', 'Web App Development II', 'wad2 desc', 'unavailable', 'type 3', 'category 3');
+('IS111', 'Intro to Programming', 'is111 desc', 'Active', 'Internal', 'Technical'),
+('IS212', 'Software Project Management', 'spm desc', 'Active', 'Internal', 'Management'),
+('IS216', 'Web App Development II', 'wad2 desc', 'Retired', 'Internal', 'Technical');
 COMMIT;
 
 --
