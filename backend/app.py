@@ -16,6 +16,8 @@ CORS(app)
 from services.staff import get_staff_by_id, get_all_staffs
 from services.role import get_all_roles, get_role_by_id
 from services.course import get_all_courses, get_course_by_id
+from services.skill import get_all_skills, get_skill_by_id
+from services.learning_journey import get_all_learning_journeys, get_learning_journey_by_id
 
 # class Registration(db.Model):
 #     __tablename__ = 'registration'
