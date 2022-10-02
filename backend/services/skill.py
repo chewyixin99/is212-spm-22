@@ -7,16 +7,19 @@ class Skill(db.Model):
     skill_id = db.Column(db.Integer, primary_key = True)
     skill_name = db.Column(db.String(50))
     skill_desc = db.Column(db.String(255))
+    status = db.Column(db.String(50))
 
-    def __init__(self, skill_name, skill_desc):
+    def __init__(self, skill_name, skill_desc, status):
         self.skill_name = skill_name
         self.skill_desc = skill_desc
+        self.status = status
     
     def json(self):
         return {
             "skill_id": self.skill_id,
             "skill_name": self.skill_name,
-            "skill_desc": self.skill_desc
+            "skill_desc": self.skill_desc,
+            "status": self.status
         }
 
 @app.route("/skills")
