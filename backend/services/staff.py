@@ -12,23 +12,27 @@ class Staff(db.Model):
     dept = db.Column(db.String(50))
     email = db.Column(db.String(50))
     type = db.Column(db.Integer)
+    status = db.Column(db.String(50))
     learning_journeys = db.relationship('Learning_Journey', secondary = staff_learning_journey, backref = 'staffs')
 
-    def __init__(self, staff_fname, staff_lname, dept, email, type):
+    def __init__(self, staff_fname, staff_lname, dept, email, type, status):
         self.staff_fname = staff_fname
         self.staff_lname = staff_lname
         self.dept = dept
         self.email = email
         self.type = type
+        self.status = status
 
     def json(self):
-        return {"staff_id": self.staff_id,
-                "staff_fname": self.staff_fname,
-                "staff_lname": self.staff_lname,
-                "dept": self.dept,
-                "email": self.email,
-                "type": self.type}
-                
+        return {
+            "staff_id": self.staff_id,
+            "staff_fname": self.staff_fname,
+            "staff_lname": self.staff_lname,
+            "dept": self.dept,
+            "email": self.email,
+            "type": self.type,
+            "status": self.status
+        }
 
 #Get All Staffs
 @app.route("/staffs")

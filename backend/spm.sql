@@ -29,13 +29,14 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `staff_lname` varchar(50) NOT NULL,
   `dept` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `type` int(11) NOT NULL
+  `type` int(11) NOT NULL,
+  `status` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `staff` (`staff_id`, `staff_fname`, `staff_lname`, `dept`, `email`, `type`) VALUES
-(1, 'kokwee', 'loh', 'dept a', 'lohkokwee@mail.com', 1),
-(2, 'jianlin', 'gan', 'dept b', 'ganjianlin@mail.com', 2),
-(3, 'joel', 'lim', 'dept c', 'joellim@mail.com', 3);
+INSERT INTO `staff` (`staff_id`, `staff_fname`, `staff_lname`, `dept`, `email`, `type`, `status`) VALUES
+(1, 'kokwee', 'loh', 'dept a', 'lohkokwee@mail.com', 1, 'Active'),
+(2, 'jianlin', 'gan', 'dept b', 'ganjianlin@mail.com', 2, 'Active'),
+(3, 'joel', 'lim', 'dept c', 'joellim@mail.com', 3, 'Retired');
 COMMIT;
 
 --
@@ -44,13 +45,14 @@ COMMIT;
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE IF NOT EXISTS `role` (
   `role_id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(50) NOT NULL
+  `role_name` varchar(50) NOT NULL,
+  `status` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `role` (`role_id`, `role_name`) VALUES
-(1, 'Product Manager'),
-(2, 'Software Engineer'),
-(3, 'Full-stack developer');
+INSERT INTO `role` (`role_id`, `role_name`, `status`) VALUES
+(1, 'Product Manager', 'Active'),
+(2, 'Software Engineer', 'Active'),
+(3, 'Full-stack developer', 'Active');
 COMMIT;
 
 --
@@ -79,13 +81,14 @@ DROP TABLE IF EXISTS `skill`;
 CREATE TABLE IF NOT EXISTS `skill` (
   `skill_id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `skill_name` varchar(50) NOT NULL,
-  `skill_desc` varchar(255) NOT NULL
+  `skill_desc` varchar(255) NOT NULL,
+  `status` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `skill` (`skill_id`, `skill_name`, `skill_desc`) VALUES
-(1, 'Python', 'General-purpose Programming language'),
-(2, 'Leadership', 'Leadership skill'),
-(3, 'Vue', 'Front-end framework');
+INSERT INTO `skill` (`skill_id`, `skill_name`, `skill_desc`, `status`) VALUES
+(1, 'Python', 'General-purpose Programming language', 'Active'),
+(2, 'Leadership', 'Leadership skill', 'Active'),
+(3, 'Vue', 'Front-end framework', 'Active');
 COMMIT;
 
 --
