@@ -74,9 +74,9 @@ def create_course(course_id):
         })
     
     data = request.get_json()
-    course = Course(course_id, **data)
 
     try:
+        course = Course(course_id, **data)
         db.session.add(course)
         db.session.commit()
     except Exception as e:
@@ -87,7 +87,7 @@ def create_course(course_id):
             "data": {
                 "course_id": course_id
             },
-            "message": f"An error occured while creating the escrow record."
+            "message": f"An error occured while creating the course record."
         })
     # success, return 200
     return jsonify({

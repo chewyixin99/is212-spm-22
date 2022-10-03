@@ -1,5 +1,5 @@
 from __main__ import app, db
-from flask import jsonify
+from flask import jsonify, request
 
 from .staff_learning_journey import *
 
@@ -15,7 +15,7 @@ class Staff(db.Model):
     status = db.Column(db.String(50))
     learning_journeys = db.relationship('Learning_Journey', secondary = staff_learning_journey, backref = 'staffs')
 
-    def __init__(self, staff_fname, staff_lname, dept, email, type, status):
+    def __init__(self, email, staff_fname, staff_lname, dept, type, status):
         self.staff_fname = staff_fname
         self.staff_lname = staff_lname
         self.dept = dept
@@ -68,3 +68,64 @@ def get_staff_by_id(staff_id):
         "code": 404,
         "message": "Staff cannot be found. Please try again."
     }), 404
+
+@app.route("/staffs/<string:email>", methods=["POST"])
+def create_staff(email):
+    if (Staff.query.filter_by(email=email).first()):
+        return jsonify({
+            "code": 400,
+            "data": {
+                "email": email,
+            },
+            "message": f"Staff for this email: {email} already exists."
+        })
+    
+    data = request.get_json()
+
+    try:
+        staff = Staff(email, **data)
+        db.session.add(staff)
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        return jsonify({
+            "code": 500,
+            "data": {
+                "email": email
+            },
+            "message": f"An error occured while creating the staff record"
+        })
+    return jsonify({
+        "code": 201,
+        "data": staff.json(),
+        "message": f"Staff successfully created for staff email: {email}"
+    })
+
+@app.route("/staffs/<int:staff_id>", methods=["PUT"])
+def update_staff(staff_id):
+    staff = Staff.query.filter(Staff.staff_id == staff_id).first()
+    if not staff:
+        return jsonify({
+            "code": 404,
+            "message": f"Unable to update staff {staff_id}, staff does not exist."
+        })
+    
+    data = request.get_json()
+    try:
+        for key in data.keys():
+            setattr(staff, key, data[key])
+            db.session.commit()
+    except Exception as e:
+        print(e)
+        return jsonify({
+            "code": 500,
+            "data": {
+                "staff_id": staff_id
+            },
+            "message": f"An error occured while updating staff with staff_id: {staff_id}"
+        })
+    return jsonify({
+        "code": 200,
+        "data": staff.json(),
+        "message": f"Successfully updated staff {staff_id}."
+    })
