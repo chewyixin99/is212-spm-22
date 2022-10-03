@@ -1,6 +1,8 @@
 from __main__ import app, db
 from flask import jsonify
 
+from .skill_course import *
+
 class Skill(db.Model):
     __tablename__ = 'skill'
 
@@ -8,6 +10,7 @@ class Skill(db.Model):
     skill_name = db.Column(db.String(50))
     skill_desc = db.Column(db.String(255))
     status = db.Column(db.String(50))
+    courses = db.relationship('Course', secondary = skill_course, backref = 'skills')
 
     def __init__(self, skill_name, skill_desc, status):
         self.skill_name = skill_name
