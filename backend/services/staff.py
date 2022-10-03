@@ -1,6 +1,8 @@
 from __main__ import app, db
 from flask import jsonify
 
+from .staff_learning_journey import *
+
 class Staff(db.Model):
     __tablename__ = 'staff'
 
@@ -10,6 +12,7 @@ class Staff(db.Model):
     dept = db.Column(db.String(50))
     email = db.Column(db.String(50))
     type = db.Column(db.Integer)
+    learning_journeys = db.relationship('Learning_Journey', secondary = staff_learning_journey, backref = 'staffs')
 
     def __init__(self, staff_fname, staff_lname, dept, email, type):
         self.staff_fname = staff_fname
@@ -25,6 +28,7 @@ class Staff(db.Model):
                 "dept": self.dept,
                 "email": self.email,
                 "type": self.type}
+                
 
 #Get All Staffs
 @app.route("/staffs")
