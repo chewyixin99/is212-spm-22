@@ -1,7 +1,7 @@
 from __main__ import app, db
 from flask import jsonify, request
 
-from .staff_learning_journey import *
+from staff_learning_journey import staff_learning_journey
 
 class Staff(db.Model):
     __tablename__ = 'staff'

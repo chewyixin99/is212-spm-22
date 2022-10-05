@@ -1,6 +1,8 @@
 from __main__ import app, db
 from flask import jsonify, request
 
+from services.skill_course import skill_course
+
 class Course(db.Model):
     __tablename__ = 'course'
 
@@ -10,6 +12,7 @@ class Course(db.Model):
     course_status = db.Column(db.String(15))
     course_type = db.Column(db.String(10))
     course_category = db.Column(db.String(50))
+    skills = db.relationship('Skill', secondary = skill_course, backref = 'course', viewonly=True)
 
 
     def __init__(self, course_id, course_name, course_desc, course_status, course_type, course_category):
@@ -123,4 +126,20 @@ def update_course(course_id):
         "code": 200,
         "data": course.json(),
         "message": f"Successfully updated course {course_id}."
+    })
+
+@app.route("/courses/<string:course_id>/skills")
+def get_skills_of_course(course_id):
+    course = Course.query.filter_by(course_id = course_id).first()
+    if not course:
+        return jsonify({
+            "code": 404,
+            "message": "Course cannot be found. Please try again."
+        })
+    return jsonify({
+        "code": 200,
+        "data": {
+            "course_id": course_id,
+            "skills": [skill.json() for skill in course.skills]
+        }
     })
