@@ -12,7 +12,7 @@ class Skill(db.Model):
     skill_name = db.Column(db.String(50))
     skill_desc = db.Column(db.String(255))
     status = db.Column(db.String(50))
-    roles = db.relationship('Role', secondary = role_skill, backref = 'skill', viewonly=True)
+    roles = db.relationship('Role', secondary = role_skill, backref = 'skill', viewonly = True)
     courses = db.relationship('Course', secondary = skill_course, backref = 'skill')
 
     def __init__(self, skill_name, skill_desc, status):

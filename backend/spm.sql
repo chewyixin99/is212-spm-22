@@ -62,16 +62,18 @@ DROP TABLE IF EXISTS `learning_journey`;
 CREATE TABLE IF NOT EXISTS `learning_journey` (
   `learning_journey_id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `learning_journey_name` varchar(50) NOT NULL,
-  `role_id` int(11) NOT NULL
+  `role_id` int(11) NOT NULL,
+  `staff_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `learning_journey`
-  ADD CONSTRAINT `learning_journey_fk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`);
+  ADD CONSTRAINT `learning_journey_fk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
+  ADD CONSTRAINT `learning_journey_fk_2` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`);
 
-INSERT INTO `learning_journey` (`learning_journey_id`, `learning_journey_name`, `role_id`) VALUES
-(1, 'Product Manager 1', 1),
-(2, 'Product Manager 2', 1),
-(3, 'Full-stack developer 1', 3);
+INSERT INTO `learning_journey` (`learning_journey_id`, `learning_journey_name`, `role_id`, `staff_id`) VALUES
+(1, 'Product Manager 1', 1, 3),
+(2, 'Product Manager 2', 1, 2),
+(3, 'Full-stack developer 1', 3, 1);
 COMMIT;
 
 --
@@ -111,25 +113,6 @@ INSERT INTO `course` (`course_id`, `course_name`, `course_desc`, `course_status`
 COMMIT;
 
 --
--- Table structure for table `staff_learning_journey`
---
-DROP TABLE IF EXISTS `staff_learning_journey`;
-CREATE TABLE IF NOT EXISTS `staff_learning_journey` (
-  `staff_id` int(11) NOT NULL,
-  `learning_journey_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-ALTER TABLE `staff_learning_journey`
-  ADD CONSTRAINT `staff_learning_journey_fk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`),
-  ADD CONSTRAINT `staff_learning_journey_fk_2` FOREIGN KEY (`learning_journey_id`) REFERENCES `learning_journey` (`learning_journey_id`);
-
-INSERT INTO `staff_learning_journey` (`staff_id`, `learning_journey_id`) VALUES
-(1, 3),
-(2, 2),
-(3, 1);
-COMMIT;
-
---
 -- Table structure for table `role_skill`
 --
 DROP TABLE IF EXISTS `role_skill`;
@@ -164,6 +147,25 @@ ALTER TABLE `skill_course`
 
 INSERT INTO `skill_course` (`skill_id`, `course_id`) VALUES
 (1, 'IS111'),
+(1, 'IS212'),
+(2, 'IS212'),
+(3, 'IS216');
+COMMIT;
+
+--
+-- Table structure for table `learning_journey_course`
+--
+DROP TABLE IF EXISTS `learning_journey_course`;
+CREATE TABLE IF NOT EXISTS `learning_journey_course` (
+  `learning_journey_id` int(11) NOT NULL,
+  `course_id` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `learning_journey_course`
+  ADD CONSTRAINT `learning_journey_course_fk_1` FOREIGN KEY (`learning_journey_id`) REFERENCES `learning_journey` (`learning_journey_id`),
+    ADD CONSTRAINT `learning_journey_course_fk_2` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`);
+
+INSERT INTO `learning_journey_course` (`learning_journey_id`, `course_id`) VALUES
 (1, 'IS212'),
 (2, 'IS212'),
 (3, 'IS216');

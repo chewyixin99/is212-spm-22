@@ -2,6 +2,8 @@ from __main__ import app, db
 from flask import jsonify, request
 
 from services.skill_course import skill_course
+from services.learning_journey_course import learning_journey_course
+# from services.learning_journey import Learning_Journey
 
 class Course(db.Model):
     __tablename__ = 'course'
@@ -12,7 +14,8 @@ class Course(db.Model):
     course_status = db.Column(db.String(15))
     course_type = db.Column(db.String(10))
     course_category = db.Column(db.String(50))
-    skills = db.relationship('Skill', secondary = skill_course, backref = 'course', viewonly=True)
+    skills = db.relationship('Skill', secondary = skill_course, backref = 'course', viewonly = True)
+    learning_journeys = db.relationship('Learning_Journey', secondary = learning_journey_course, backref = 'course', viewonly = True)
 
 
     def __init__(self, course_id, course_name, course_desc, course_status, course_type, course_category):
