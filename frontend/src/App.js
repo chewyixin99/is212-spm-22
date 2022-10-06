@@ -1,17 +1,19 @@
 // import logo from './logo.svg';
-import './App.css';
-import { Navigate, Route, Routes } from "react-router-dom"
-import LearningJourneyPage from './components/learningJourney/LearningJourney';
-import MyLearningJourney from './components/learningJourney/MyLearningJourney';
-import NewLearningJourney from './components/learningJourney/NewLearningJourney';
-import NotFound from './pages/NotFoundPage';
-import LoginPage from './pages/LoginPage';
-import AdminOutlet from './pages/admin/AdminOutlet';
-import ManagerOutlet from './pages/manager/ManagerOutlet';
-import StaffOutlet from './pages/staff/StaffOutlet';
-import StaffHomePage from './pages/staff/StaffHomePage';
-import AdmingHomePage from './pages/admin/AdmingHomePage';
-import ManagerHomePage from './pages/manager/ManagerHomePage';
+import React from 'react'
+import './App.css'
+import { Navigate, Route, Routes } from 'react-router-dom'
+
+import LearningJourneyPage from './components/learningJourney/LearningJourney'
+import MyLearningJourney from './components/learningJourney/MyLearningJourney'
+import NewLearningJourney from './components/learningJourney/NewLearningJourney'
+import NotFound from './pages/NotFoundPage'
+import LoginPage from './pages/LoginPage'
+import AdminOutlet from './pages/admin/AdminOutlet'
+import AdmingHomePage from './pages/admin/AdmingHomePage'
+import StaffOutlet from './pages/staff/StaffOutlet'
+import StaffHomePage from './pages/staff/StaffHomePage'
+import ManagerOutlet from './pages/manager/ManagerOutlet'
+import ManagerHomePage from './pages/manager/ManagerHomePage'
 
 function App() {
   return (
@@ -19,14 +21,15 @@ function App() {
       {/* https://www.youtube.com/watch?v=Ul3y1LXxzdU&ab_channel=WebDevSimplified */}
       <Routes>
         {/* Login */}
-        <Route path="/" element={<Navigate to={'/login'} replace />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
 
-        {/* component Staff contains its own context (data, navbar) and all its nested routes will have access to it */}
+        {/* component StaffOutlet contains its own context (data, navbar),
+        and all its nested routes will have access to it */}
         <Route path="/staff" element={<StaffOutlet />}>
           {/* all types of users will share these routes as all users are staff */}
           {/* shows all learning journey for this staff */}
-          <Route index element={<StaffHomePage />}></Route>
+          <Route index element={<StaffHomePage />} />
           <Route path="learning-journey">
             {/* shows all learning journey for this staff */}
             <Route index element={<LearningJourneyPage />} />
@@ -38,18 +41,17 @@ function App() {
         </Route>
 
         <Route path="/admin" element={<AdminOutlet />}>
-          <Route index element={<AdmingHomePage />}></Route>
+          <Route index element={<AdmingHomePage />} />
         </Route>
 
-        <Route path="/manager" element={<ManagerOutlet />} />
-        <Route index element={<ManagerHomePage />}></Route>
-        <Route />
+        <Route path="/manager" element={<ManagerOutlet />}>
+          <Route index element={<ManagerHomePage />} />
+        </Route>
 
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
-
-  );
+  )
 }
 
-export default App;
+export default App

@@ -1,9 +1,7 @@
 import React from 'react'
 
-const AdmingHomePage = () => {
-  return (
-    <div>AdmingHomePage</div>
-  )
+function AdmingHomePage() {
+  return <div>AdmingHomePage</div>
 }
 
 export default AdmingHomePage

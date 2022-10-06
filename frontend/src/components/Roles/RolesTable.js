@@ -1,9 +1,7 @@
 import React from 'react'
 
-const RolesTable = () => {
-  return (
-    <div>RolesTable</div>
-  )
+function RolesTable() {
+  return <div>RolesTable</div>
 }
 
 export default RolesTable
