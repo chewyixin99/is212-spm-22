@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import propTypes from 'prop-types'
 
 import {
@@ -14,6 +14,7 @@ import {
 import SectionHeader from '../common/SectionHeader'
 import TableBodyLoader from '../common/TableBodyLoader'
 import { DUMMYROLEDATA } from '../../constants'
+import { getAllRoles } from '../../services/roles'
 
 function RolesTable({ isAbbreviated }) {
   const isLoading = false // TODO: for data retrieval later on
@@ -25,6 +26,12 @@ function RolesTable({ isAbbreviated }) {
   } else {
     tableData = DUMMYROLEDATA
   }
+
+  useEffect(() => {
+    getAllRoles().then((data) => {
+      console.log(data)
+    })
+  }, [getAllRoles])
 
   const renderSubheader = () => {
     if (isLoading) {
