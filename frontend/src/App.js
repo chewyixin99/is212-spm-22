@@ -9,7 +9,7 @@ import NewLearningJourney from './components/learningJourney/NewLearningJourney'
 import NotFound from './pages/NotFoundPage'
 import LoginPage from './pages/LoginPage'
 import AdminOutlet from './pages/admin/AdminOutlet'
-import AdmingHomePage from './pages/admin/AdmingHomePage'
+import AdminHomePage from './pages/admin/AdminHomePage'
 import StaffOutlet from './pages/staff/StaffOutlet'
 import StaffHomePage from './pages/staff/StaffHomePage'
 import ManagerOutlet from './pages/manager/ManagerOutlet'
@@ -41,7 +41,7 @@ function App() {
         </Route>
 
         <Route path="/admin" element={<AdminOutlet />}>
-          <Route index element={<AdmingHomePage />} />
+          <Route index element={<AdminHomePage />} />
         </Route>
 
         <Route path="/manager" element={<ManagerOutlet />}>

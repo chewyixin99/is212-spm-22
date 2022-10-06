@@ -7,12 +7,12 @@ import {
   TableContainer,
   Table,
   TableHead,
-  TableBody,
   TableRow,
   TableCell,
 } from '@mui/material'
 
 import SectionHeader from '../common/SectionHeader'
+import TableBodyLoader from '../common/TableBodyLoader'
 import { DUMMYROLEDATA } from '../../constants'
 
 function RolesTable({ isAbbreviated }) {
@@ -40,7 +40,7 @@ function RolesTable({ isAbbreviated }) {
     <Box sx={{ width: '50%', margin: 'auto' }}>
       <SectionHeader header="Roles" subHeader={renderSubheader()} />
       <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
@@ -50,7 +50,7 @@ function RolesTable({ isAbbreviated }) {
               <TableCell />
             </TableRow>
           </TableHead>
-          <TableBody />
+          <TableBodyLoader isLoading />
         </Table>
       </TableContainer>
     </Box>
