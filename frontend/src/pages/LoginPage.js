@@ -6,7 +6,7 @@ import Select from '@mui/material/Select';
 import { Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-const Login = () => {
+const LoginPage = () => {
   
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
@@ -18,7 +18,7 @@ const Login = () => {
             id="demo-simple-select-standard"
             label="Role"
           >
-            <MenuItem component={Link} to="/admin" disabled >HR Admin</MenuItem>
+            <MenuItem component={Link} to="/admin" >HR Admin</MenuItem>
             <MenuItem component={Link} to="/manager" disabled>Manager</MenuItem>
             <MenuItem component={Link} to="/staff">Staff</MenuItem>
           </Select>
@@ -27,4 +27,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default LoginPage

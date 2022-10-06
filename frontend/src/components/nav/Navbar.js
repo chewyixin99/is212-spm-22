@@ -1,4 +1,6 @@
-import * as React from 'react';
+import React, { useState } from 'react';
+import { Link, useOutletContext } from "react-router-dom"
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,17 +14,15 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Link, useOutletContext } from "react-router-dom"
-import Home from '../pages/Home';
-import LearningJourney from '../pages/LearningJourney';
 
 const pages = ['Home', 'Learning Journey'];
 const settings = ['Profile', 'Account', 'Dashboard'];
 
 const ResponsiveAppBar = ({role}) => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  // TODO: Separate navbar according to roles
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const obj = useOutletContext()
 
   const open = Boolean(anchorEl);

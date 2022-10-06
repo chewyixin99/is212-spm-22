@@ -1,47 +1,52 @@
 // import logo from './logo.svg';
 import './App.css';
 import { Navigate, Route, Routes } from "react-router-dom"
-import Home from './pages/Home';
-import LearningJourney from './pages/LearningJourney';
-import MyLearningJourney from './pages/MyLearningJourney';
-import NewLearningJourney from './pages/NewLearningJourney';
-import NotFound from './pages/NotFound';
-import Login from './pages/Login';
-import Admin from './pages/admin/Admin';
-import Manager from './pages/manager/Manager';
-import Staff from './pages/Staff';
+import LearningJourneyPage from './components/learningJourney/LearningJourney';
+import MyLearningJourney from './components/learningJourney/MyLearningJourney';
+import NewLearningJourney from './components/learningJourney/NewLearningJourney';
+import NotFound from './pages/NotFoundPage';
+import LoginPage from './pages/LoginPage';
+import AdminOutlet from './pages/admin/AdminOutlet';
+import ManagerOutlet from './pages/manager/ManagerOutlet';
+import StaffOutlet from './pages/staff/StaffOutlet';
+import StaffHomePage from './pages/staff/StaffHomePage';
+import AdmingHomePage from './pages/admin/AdmingHomePage';
+import ManagerHomePage from './pages/manager/ManagerHomePage';
 
 function App() {
   return (
     <>
-    {/* https://www.youtube.com/watch?v=Ul3y1LXxzdU&ab_channel=WebDevSimplified */}
-    <Routes>
-      {/* Login */}
-      <Route path="/" element={<Navigate to={'/login'} replace />}/>
-      <Route path="/login" element={<Login/>}/>
+      {/* https://www.youtube.com/watch?v=Ul3y1LXxzdU&ab_channel=WebDevSimplified */}
+      <Routes>
+        {/* Login */}
+        <Route path="/" element={<Navigate to={'/login'} replace />} />
+        <Route path="/login" element={<LoginPage />} />
 
-      <Route path="/admin" element={<Admin/>}/>
-
-      <Route path="/manager" element={<Manager/>}/>
-
-      {/* component Staff contains its own context (data, navbar) and all its nested routes will have access to it */}
-      <Route path="/staff" element={<Staff/>}>
-        {/* all types of users will share these routes as all users are staff */}
-        {/* shows all learning journey for this staff */}
-        <Route index element={<Home />}></Route>
-        <Route path="learning-journey">
+        {/* component Staff contains its own context (data, navbar) and all its nested routes will have access to it */}
+        <Route path="/staff" element={<StaffOutlet />}>
+          {/* all types of users will share these routes as all users are staff */}
           {/* shows all learning journey for this staff */}
-          <Route index element={<LearningJourney />}/>
-          {/* shows a specific learning journey for this staff */}
-          <Route path=":id" element={<MyLearningJourney />}/>
-          {/* create new learning journey for this staff */}
-          <Route path="new" element={<NewLearningJourney />}/>
+          <Route index element={<StaffHomePage />}></Route>
+          <Route path="learning-journey">
+            {/* shows all learning journey for this staff */}
+            <Route index element={<LearningJourneyPage />} />
+            {/* shows a specific learning journey for this staff */}
+            <Route path=":id" element={<MyLearningJourney />} />
+            {/* create new learning journey for this staff */}
+            <Route path="new" element={<NewLearningJourney />} />
+          </Route>
         </Route>
 
-      </Route>
+        <Route path="/admin" element={<AdminOutlet />}>
+          <Route index element={<AdmingHomePage />}></Route>
+        </Route>
 
-      <Route path="*" element={<NotFound />}/>
-    </Routes>
+        <Route path="/manager" element={<ManagerOutlet />} />
+        <Route index element={<ManagerHomePage />}></Route>
+        <Route />
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </>
 
   );

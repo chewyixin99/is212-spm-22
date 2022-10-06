@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Link, useOutletContext } from 'react-router-dom';
+
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { Button, Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { Link, useOutletContext } from 'react-router-dom';
-import { useState } from 'react'
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -25,7 +25,7 @@ const handleCloseNavMenu = () => {
 };
 
 
-const Home = () => {
+const StaffHomePage = () => {
 
   const obj = useOutletContext()
   const [learningJourneyList, setlearningJourneyList] = useState([
@@ -262,4 +262,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default StaffHomePage;
