@@ -50,3 +50,42 @@ export const DUMMYLJDATA = [
       'https://img.freepik.com/free-vector/female-engineer-standing-near-chalkboard-explaining-project-draft-building-worker-flat-vector-illustration-construction-architecture_74855-8362.jpg?w=1380&t=st=1664982310~exp=1664982910~hmac=8ad3286bfdece15354e78e7135eff2f5432b0e8b33a9fbb8fb1772b33f59ba1b',
   },
 ]
+
+export const DUMMYROLEDATA = [
+  {
+    id: 1,
+    role_name: 'Role 1',
+    status: 'Status 1',
+    skills: ['God', 'God Bless', 'I am the best'],
+  },
+  {
+    id: 2,
+    role_name: 'Role 2',
+    status: 'Status 2',
+    skills: ['Another God', 'Another God Bless', 'I am, indeed, the best'],
+  },
+  {
+    id: 3,
+    role_name: 'Role 3',
+    status: 'Status 3',
+    skills: ['This God', 'This God Bless', 'I am'],
+  },
+  {
+    id: 4,
+    role_name: 'Role 4',
+    status: 'Status 4',
+    skills: ['What God', 'What God Bless', 'I am him'],
+  },
+  {
+    id: 5,
+    role_name: 'Role 5',
+    status: 'Status 5',
+    skills: ['God', 'God Bless', 'Am I Him?'],
+  },
+  {
+    id: 6,
+    role_name: 'Role 6',
+    status: 'Status 6',
+    skills: ['God', 'God Bless', 'I am, truly, Him'],
+  },
+]

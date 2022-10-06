@@ -1,8 +1,5 @@
 import React from 'react'
-import {
-  Link,
-  // useOutletContext
-} from 'react-router-dom'
+import { Link, useOutletContext } from 'react-router-dom'
 
 import { styled } from '@mui/material/styles'
 import {
@@ -18,6 +15,8 @@ import {
   CardContent,
   CardMedia,
 } from '@mui/material'
+
+import SectionHeader from '../../components/common/SectionHeader'
 import { DUMMYLJDATA } from '../../constants'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -33,7 +32,8 @@ const Item = styled(Paper)(({ theme }) => ({
 // }
 
 function StaffHomePage() {
-  // const outletContext = useOutletContext()
+  const outletContext = useOutletContext()
+  console.log(outletContext)
   const learningJourneyList = DUMMYLJDATA
 
   return (
@@ -54,9 +54,7 @@ function StaffHomePage() {
         }}
       />
       <Box sx={{ marginBottom: '10vh', justifyContent: 'center' }}>
-        <Typography variant="h4" component="div" gutterBottom>
-          Learning Journey
-        </Typography>
+        <SectionHeader header="Learning Journey" />
         <Stack spacing={2}>
           {learningJourneyList.length > 0 ? (
             learningJourneyList.slice(0, 2).map((item) => (
@@ -142,9 +140,7 @@ function StaffHomePage() {
       </Box>
 
       <Box sx={{ marginBottom: '10vh' }}>
-        <Typography variant="h4" component="div" gutterBottom>
-          Roles
-        </Typography>
+        <SectionHeader header="Roles" />
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
             <Card sx={{ maxWidth: 345 }}>
