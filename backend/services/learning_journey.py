@@ -74,7 +74,7 @@ def get_courses_of_learning_journey(learning_journey_id):
 
 
 @app.route("/learning_journeys/<int:learning_journey_id>/courses/edit", methods=["PUT"])
-def delete_course_in_learning_journey(learning_journey_id):
+def edit_course_in_learning_journey(learning_journey_id):
     learning_journey = Learning_Journey.query.filter_by(learning_journey_id = learning_journey_id).first()
     if not learning_journey:
         return jsonify({
