@@ -73,8 +73,8 @@ def get_courses_of_learning_journey(learning_journey_id):
     })
 
 
-@app.route("/learning_journeys/<int:learning_journey_id>/courses/edit", methods=["PUT"])
-def edit_course_in_learning_journey(learning_journey_id):
+@app.route("/learning_journeys/<int:learning_journey_id>/courses", methods=["PUT"])
+def update_course_in_learning_journey(learning_journey_id):
     learning_journey = Learning_Journey.query.filter_by(learning_journey_id = learning_journey_id).first()
     if not learning_journey:
         return jsonify({
