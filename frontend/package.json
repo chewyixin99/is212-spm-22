@@ -32,6 +32,9 @@
       "react-app/jest"
     ]
   },
+  "hooks": {
+    "pre-commit": "npm test && npm run foo"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
