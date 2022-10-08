@@ -1,51 +1,59 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import { Link, useOutletContext } from "react-router-dom"
-import Home from '../pages/Home';
-import LearningJourney from '../pages/LearningJourney';
+import React, { useState } from 'react'
+import {
+  Link,
+  // useOutletContext
+} from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-const pages = ['Home', 'Learning Journey'];
-const settings = ['Profile', 'Account', 'Dashboard'];
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Menu,
+  Container,
+  Avatar,
+  Button,
+  Tooltip,
+  MenuItem,
+} from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
+import AdbIcon from '@mui/icons-material/Adb'
 
-const ResponsiveAppBar = ({role}) => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const obj = useOutletContext()
+// const pages = ['Home', 'Learning Journey']
+const settings = ['Profile', 'Account', 'Dashboard']
 
-  const open = Boolean(anchorEl);
+function Navbar({ role }) {
+  // TODO: Separate navbar according to roles
+  const [anchorElNav, setAnchorElNav] = useState(null)
+  const [anchorElUser, setAnchorElUser] = useState(null)
+  const [anchorEl, setAnchorEl] = useState(null)
+  // const outletContext = useOutletContext()
+
+  console.log('---> role: ', role)
+
+  const open = Boolean(anchorEl)
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
   const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
+    setAnchorElNav(event.currentTarget)
+  }
   const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
+    setAnchorElUser(event.currentTarget)
+  }
 
   const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+    setAnchorElNav(null)
+  }
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+    setAnchorElUser(null)
+  }
 
   return (
     <AppBar position="static">
@@ -99,32 +107,31 @@ const ResponsiveAppBar = ({role}) => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-
-                <MenuItem  onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">
-                    <Button
-                        onClick={handleCloseNavMenu}
-                        sx={{ my: 1, color: 'black', display: 'block' }}
-                        component={Link}
-                        to='/staff'
-                    >
-                        Home
-                    </Button>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 1, color: 'black', display: 'block' }}
+                    component={Link}
+                    to="/staff"
+                  >
+                    Home
+                  </Button>
                 </Typography>
-                </MenuItem>
+              </MenuItem>
 
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">
-                    <Button
-                        onClick={handleCloseNavMenu}
-                        component={Link}
-                        to='/staff/learning-journey'
-                        sx={{ my: 1, color: 'black', display: 'block' }}
-                    >
-                        Learning Journey
-                    </Button>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    to="/staff/learning-journey"
+                    sx={{ my: 1, color: 'black', display: 'block' }}
+                  >
+                    Learning Journey
+                  </Button>
                 </Typography>
-                </MenuItem>
+              </MenuItem>
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -157,36 +164,53 @@ const ResponsiveAppBar = ({role}) => {
               </Button>
             ))} */}
             <Button
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-                component={Link}
-                to='/staff'
-              >
-                Home
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              component={Link}
+              to="/staff"
+            >
+              Home
             </Button>
             <Button
-                onClick={handleClick}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-                id="basic-button"
-                aria-controls={open ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-              >
-                Learning Journey
+              onClick={handleClick}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              id="basic-button"
+              aria-controls={open ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+            >
+              Learning Journey
             </Button>
             <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
                 'aria-labelledby': 'basic-button',
-                }}
+              }}
             >
-                <MenuItem onClick={handleClose} component={Link} to='learning-journey/1'>Journey to be a Manager 1</MenuItem>
-                <MenuItem onClick={handleClose} component={Link} to='learning-journey/2'>Journey to be a Manager 2</MenuItem>
-                <MenuItem onClick={handleClose} component={Link} to='learning-journey/3'>Journey to be a Consultant 1</MenuItem>
-
+              <MenuItem
+                onClick={handleClose}
+                component={Link}
+                to="learning-journey/1"
+              >
+                Journey to be a Manager 1
+              </MenuItem>
+              <MenuItem
+                onClick={handleClose}
+                component={Link}
+                to="learning-journey/2"
+              >
+                Journey to be a Manager 2
+              </MenuItem>
+              <MenuItem
+                onClick={handleClose}
+                component={Link}
+                to="learning-journey/3"
+              >
+                Journey to be a Consultant 1
+              </MenuItem>
             </Menu>
           </Box>
 
@@ -218,13 +242,20 @@ const ResponsiveAppBar = ({role}) => {
                 </MenuItem>
               ))}
               <MenuItem>
-                <Typography component={Link} to="/login" textAlign="center">Log Out</Typography>
+                <Typography component={Link} to="/login" textAlign="center">
+                  Log Out
+                </Typography>
               </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
-  );
-};
-export default ResponsiveAppBar;
+  )
+}
+
+Navbar.propTypes = {
+  role: PropTypes.string,
+}
+
+export default Navbar
