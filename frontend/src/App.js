@@ -7,15 +7,13 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import LearningJourneyPage from './components/learningJourney/LearningJourney'
 import MyLearningJourney from './components/learningJourney/MyLearningJourney'
 import NewLearningJourney from './components/learningJourney/NewLearningJourney'
-import CoursePage from './components/Course/CoursePage'
-import Course from './components/Course/Course'
+import Course from './components/course/Course'
 
 // Page imports
 import NotFound from './pages/NotFoundPage'
 import LoginPage from './pages/LoginPage'
 import AdminOutlet from './pages/admin/AdminOutlet'
 import AdminHomePage from './pages/admin/AdminHomePage'
-import AdminRolesPage from './pages/admin/AdminRolesPage'
 import StaffOutlet from './pages/staff/StaffOutlet'
 import StaffHomePage from './pages/staff/StaffHomePage'
 import ManagerOutlet from './pages/manager/ManagerOutlet'
@@ -49,7 +47,6 @@ function App() {
         <Route path="/admin" element={<AdminOutlet />}>
           <Route index element={<AdminHomePage />} />
           <Route path="courses">
-            <Route index element={<CoursePage />} />
             <Route path=":course_id" element={<Course />} />
           </Route>
         </Route>

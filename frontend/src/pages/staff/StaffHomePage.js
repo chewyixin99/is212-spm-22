@@ -17,6 +17,8 @@ import {
   CardContent,
   CardMedia,
 } from '@mui/material'
+
+import SectionHeader from '../../components/common/SectionHeader'
 import { DUMMYLJDATA } from '../../constants'
 import axios from 'axios'
 
@@ -140,9 +142,7 @@ const StaffHomePage = () => {
       </Box>
 
       <Box sx={{ marginBottom: '10vh' }}>
-        <Typography variant="h4" component="div" gutterBottom>
-          Roles
-        </Typography>
+        <SectionHeader header="Roles" />
         <Grid container spacing={4}>
           {roleList?.length > 0 ? (
             roleList.map((item) => (
