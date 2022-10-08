@@ -3,13 +3,18 @@ import React from 'react'
 import './App.css'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
+// Component imports
 import LearningJourneyPage from './components/learningJourney/LearningJourney'
 import MyLearningJourney from './components/learningJourney/MyLearningJourney'
 import NewLearningJourney from './components/learningJourney/NewLearningJourney'
+import CoursePage from './components/Course/CoursePage'
+import Course from './components/Course/Course'
+
+// Page imports
 import NotFound from './pages/NotFoundPage'
 import LoginPage from './pages/LoginPage'
 import AdminOutlet from './pages/admin/AdminOutlet'
-import AdmingHomePage from './pages/admin/AdmingHomePage'
+import AdminHomePage from './pages/admin/AdminHomePage'
 import AdminRolesPage from './pages/admin/AdminRolesPage'
 import StaffOutlet from './pages/staff/StaffOutlet'
 import StaffHomePage from './pages/staff/StaffHomePage'
@@ -42,9 +47,10 @@ function App() {
         </Route>
 
         <Route path="/admin" element={<AdminOutlet />}>
-          <Route index element={<AdmingHomePage />} />
-          <Route path="roles">
-            <Route index element={<AdminRolesPage />} />
+          <Route index element={<AdminHomePage />} />
+          <Route path="courses">
+            <Route index element={<CoursePage />} />
+            <Route path=":course_id" element={<Course />} />
           </Route>
         </Route>
 
