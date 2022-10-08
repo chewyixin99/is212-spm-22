@@ -10,6 +10,7 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  Button,
 } from '@mui/material'
 
 import SectionHeader from '../common/SectionHeader'
@@ -17,6 +18,10 @@ import RolesTableRow from './RolesTableRow'
 import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
+
+import {
+  Link
+} from 'react-router-dom'
 
 function RolesTable({ isAbbreviated }) {
   const [roleData, isLoading] = useRolesLoader(null, isAbbreviated)
@@ -57,6 +62,9 @@ function RolesTable({ isAbbreviated }) {
       })}
     >
       <SectionHeader header="Roles" subHeader={renderSubheader()} />
+      <Button variant="outlined" component={Link} to="roles">
+              View All Roles
+      </Button>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

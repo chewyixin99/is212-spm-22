@@ -1,14 +1,14 @@
 import React from 'react'
-import RolesList from '../../components/Roles/RolesList'
+import RolesList from '../../components/roles/RolesList'
 import Box, { BoxProps } from '@mui/material/Box';
-
+import SectionHeader from '../../components/common/SectionHeader'
 
 function AdminRolesPage() {
   return (
     <div>
-        {/* Insert Margin */}
         <Box sx={{ flexDirection: 'row' }}>
-            <h1>Roles List</h1>
+            {/* <h1>Roles List</h1> */}
+            <SectionHeader header="Roles List"></SectionHeader>
             <button>Create New Role</button>
         </Box>
         <RolesList></RolesList>

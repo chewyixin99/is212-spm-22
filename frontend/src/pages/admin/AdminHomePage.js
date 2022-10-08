@@ -2,8 +2,8 @@ import React from 'react'
 
 import { Box } from '@mui/material'
 
-import RolesTable from '../../components/roles/RolesTable'
-import SkillsTable from '../../components/skills/SkillsTable'
+import RolesTable from '../../components/roles/RolesTable.js'
+import SkillsTable from '../../components/skills/SkillsTable.js'
 
 function AdminHomePage() {
   return (
