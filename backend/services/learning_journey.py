@@ -32,7 +32,7 @@ def get_all_learning_journeys():
     learning_journey_list = Learning_Journey.query.all()
     if len(learning_journey_list):
         return jsonify({
-            "code": "200",
+            "code": 200,
             "data": {
                 "learning_journeys": [learning_journey.json() for learning_journey in learning_journey_list]
             }
