@@ -3,9 +3,13 @@ import React from 'react'
 import './App.css'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
+// Component imports
 import LearningJourneyPage from './components/learningJourney/LearningJourney'
 import MyLearningJourney from './components/learningJourney/MyLearningJourney'
 import NewLearningJourney from './components/learningJourney/NewLearningJourney'
+import Course from './components/course/Course'
+
+// Page imports
 import NotFound from './pages/NotFoundPage'
 import LoginPage from './pages/LoginPage'
 import AdminOutlet from './pages/admin/AdminOutlet'
@@ -42,6 +46,9 @@ function App() {
 
         <Route path="/admin" element={<AdminOutlet />}>
           <Route index element={<AdminHomePage />} />
+          <Route path="courses">
+            <Route path=":course_id" element={<Course />} />
+          </Route>
         </Route>
 
         <Route path="/manager" element={<ManagerOutlet />}>

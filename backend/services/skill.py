@@ -33,7 +33,7 @@ def get_all_skills():
     skills_list = Skill.query.all()
     if len(skills_list):
         return jsonify({
-            "code": "200",
+            "code": 200,
             "data": {
                 "skills": [skill.json() for skill in skills_list]
             }

@@ -1,8 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Link,
-  // useOutletContext,
-  // useParams
 } from 'react-router-dom'
 
 import {
@@ -17,6 +15,7 @@ import {
 } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import AddIcon from '@mui/icons-material/Add'
+import axios from 'axios'
 
 import { DUMMYLJDATA } from '../../constants'
 
@@ -28,15 +27,20 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }))
 
-// const handleCloseNavMenu = () => {
-//   console.log("hi");
-// };
-
 function LearningJourneyPage() {
-  // const { id } = useParams()
-  // const outletContext = useOutletContext()
-  // const [learningJourneyList, setLearningJourneyList] = useState(DUMMYLJDATA)
-  const learningJourneyList = DUMMYLJDATA // Since state setter not used yet, use constant first
+
+  const [learningJourneyList, setlearningJourneyList] = useState([])
+
+  const getLJData = async (id) => {
+    const response = await axios.get(`http://localhost:5001/learning_journeys/${id}`)
+    const data = response.data.data
+    setlearningJourneyList(data)
+  }
+
+
+  useEffect(() => {
+    getLJData(1)
+  }, [])
 
   return (
     <Box sx={{ width: '50%', margin: 'auto' }}>
@@ -68,24 +72,24 @@ function LearningJourneyPage() {
       </IconButton>
 
       <Stack spacing={2}>
-        {learningJourneyList.map((item) => (
+        {learningJourneyList?.map((item) => (
           <Item
-            key={item.id}
+            key={item?.learning_journey_id}
             component={Link}
-            to={`${item.id}`}
+            to={`${item?.learning_journey_id}`}
             sx={{ textDecoration: 'none' }}
           >
             <Grid container spacing={4}>
               <Grid item xs={12} md={10}>
                 <Typography variant="h5" component="div">
-                  {item.title}
+                  {item.learning_journey_name}
                 </Typography>
                 <Typography variant="body1" component="div">
-                  {item.role}
+                  {item.role_id}
                 </Typography>
-                <Typography variant="body1" component="div">
+                {/* <Typography variant="body1" component="div">
                   {item.status}
-                </Typography>
+                </Typography> */}
                 <Box
                   sx={{
                     display: 'flex',

@@ -5,7 +5,7 @@ import { Box } from '@mui/material'
 import RolesTable from '../../components/roles/RolesTable'
 import SkillsTable from '../../components/skills/SkillsTable'
 
-function AdmingHomePage() {
+function AdminHomePage() {
   return (
     <Box>
       <Box sx={{ my: 5 }}>
@@ -18,4 +18,4 @@ function AdmingHomePage() {
   )
 }
 
-export default AdmingHomePage
+export default AdminHomePage
