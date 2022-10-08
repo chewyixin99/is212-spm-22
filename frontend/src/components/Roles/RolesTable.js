@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import propTypes from 'prop-types'
 
 import {
@@ -13,35 +13,24 @@ import {
 
 import SectionHeader from '../common/SectionHeader'
 import TableBodyLoader from '../common/TableBodyLoader'
-import { DUMMYROLEDATA } from '../../constants'
-import { getAllRoles } from '../../services/roles'
+import useRolesLoader from '../../services/roles/useRolesLoader'
 
 function RolesTable({ isAbbreviated }) {
-  const isLoading = false // TODO: for data retrieval later on
-  let tableData = []
+  const [roleData, isLoading] = useRolesLoader(null, isAbbreviated)
 
-  // TODO: Dispatch - if isAbbreviated retrieve top 5, else retrieve entire list
-  if (isAbbreviated) {
-    tableData = DUMMYROLEDATA.slice(0, 6)
-  } else {
-    tableData = DUMMYROLEDATA
-  }
-
-  useEffect(() => {
-    getAllRoles().then((data) => {
-      console.log(data)
-    })
-  }, [getAllRoles])
+  // console.log('---> RolesTable, roleData: ', roleData)
 
   const renderSubheader = () => {
     if (isLoading) {
       return 'Loading...'
     }
-    if (tableData.length === 0) {
+    if (roleData.length === 0) {
       return 'Total: 0'
     }
-    return `Total: ${tableData.length}`
+    return `Total: ${roleData.length}`
   }
+
+  console.log(isLoading)
 
   return (
     <Box sx={{ width: '50%', margin: 'auto' }}>
@@ -57,7 +46,7 @@ function RolesTable({ isAbbreviated }) {
               <TableCell />
             </TableRow>
           </TableHead>
-          <TableBodyLoader isLoading />
+          <TableBodyLoader isLoadin={isLoading} />
         </Table>
       </TableContainer>
     </Box>
