@@ -5,7 +5,7 @@ import { TableCell, TableRow } from '@mui/material'
 
 import ActionMenu from '../common/ActionMenu'
 
-const RolesTableRow = ({ roleInfo }) => {
+const SkillsTableRow = ({ skillInfo }) => {
   const actionMenuConfigs = [
     {
       itemName: 'View',
@@ -23,9 +23,9 @@ const RolesTableRow = ({ roleInfo }) => {
 
   return (
     <TableRow>
-      <TableCell>{roleInfo?.role_id}</TableCell>
-      <TableCell>{roleInfo?.role_name}</TableCell>
-      <TableCell>{roleInfo?.status}</TableCell>
+      <TableCell>{skillInfo?.skill_id}</TableCell>
+      <TableCell>{skillInfo?.skill_name}</TableCell>
+      <TableCell>{skillInfo?.status}</TableCell>
       <TableCell align="right">
         <ActionMenu variant="kebab" menuItemConfigs={actionMenuConfigs} />
       </TableCell>
@@ -33,12 +33,12 @@ const RolesTableRow = ({ roleInfo }) => {
   )
 }
 
-RolesTableRow.propTypes = {
-  roleInfo: propTypes.shape({
-    role_id: propTypes.number,
-    role_name: propTypes.string,
+SkillsTableRow.propTypes = {
+  skillInfo: propTypes.shape({
+    skill_id: propTypes.number,
+    skill_name: propTypes.string,
     status: propTypes.string,
   }),
 }
 
-export default RolesTableRow
+export default SkillsTableRow

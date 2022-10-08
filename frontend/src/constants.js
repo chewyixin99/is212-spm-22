@@ -4,6 +4,11 @@ export const ROLES = {
   MANAGER: 'MANAGER',
 }
 
+export const RESPONSE_CODES = {
+  SUCCESS: 200,
+  NOT_FOUND: 404,
+}
+
 export const DUMMYLJDATA = [
   {
     id: 1,

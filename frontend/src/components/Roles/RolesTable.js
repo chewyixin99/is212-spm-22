@@ -9,31 +9,53 @@ import {
   TableHead,
   TableRow,
   TableCell,
+  TableBody,
 } from '@mui/material'
 
 import SectionHeader from '../common/SectionHeader'
-import TableBodyLoader from '../common/TableBodyLoader'
+import RolesTableRow from './RolesTableRow'
+import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
+import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
 
 function RolesTable({ isAbbreviated }) {
   const [roleData, isLoading] = useRolesLoader(null, isAbbreviated)
 
   // console.log('---> RolesTable, roleData: ', roleData)
+  const isEmpty = roleData.length === 0
 
   const renderSubheader = () => {
     if (isLoading) {
       return 'Loading...'
     }
-    if (roleData.length === 0) {
+    if (isEmpty) {
       return 'Total: 0'
     }
     return `Total: ${roleData.length}`
   }
 
-  console.log(isLoading)
+  const renderTableRows = () => {
+    if (!isEmpty && !isLoading && roleData) {
+      return (
+        <>
+          {roleData.map((roleInfo) => (
+            <RolesTableRow roleInfo={roleInfo} />
+          ))}
+        </>
+      )
+    }
+  }
 
   return (
-    <Box sx={{ width: '50%', margin: 'auto' }}>
+    <Box
+      sx={(theme) => ({
+        [theme.breakpoints.up('md')]: {
+          width: '50%',
+        },
+        width: '80%',
+        margin: 'auto',
+      })}
+    >
       <SectionHeader header="Roles" subHeader={renderSubheader()} />
       <TableContainer component={Paper}>
         <Table>
@@ -42,11 +64,16 @@ function RolesTable({ isAbbreviated }) {
               <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
-              <TableCell />
+              <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
-          <TableBodyLoader isLoadin={isLoading} />
+          <TableBody>
+            {isLoading && <TableRowLoadingStatus cols={4} />}
+            {!isLoading && isEmpty && (
+              <TableRowEmptyStatus cols={4} content="No data available." />
+            )}
+            {renderTableRows()}
+          </TableBody>
         </Table>
       </TableContainer>
     </Box>

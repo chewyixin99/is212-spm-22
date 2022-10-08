@@ -8,8 +8,12 @@ import SkillsTable from '../../components/skills/SkillsTable'
 function AdmingHomePage() {
   return (
     <Box>
-      <RolesTable isAbbreviated />
-      <SkillsTable />
+      <Box sx={{ my: 5 }}>
+        <RolesTable isAbbreviated />
+      </Box>
+      <Box sx={{ my: 5 }}>
+        <SkillsTable />
+      </Box>
     </Box>
   )
 }
