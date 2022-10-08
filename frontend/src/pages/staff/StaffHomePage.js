@@ -29,10 +29,30 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }))
 
-// const handleCloseNavMenu = () => {
-//   console.log('hi')
-// }
 
+const StaffHomePage = () => {
+
+  const [learningJourneyList, setlearningJourneyList] = useState([])
+  const [roleList, setRoleList] = useState([])
+
+  const getLJData = async (id) => {
+    const response = await axios.get(`http://localhost:5001/learning_journeys/${id}`)
+    const data = response.data.data
+    setlearningJourneyList(data)
+  }
+
+  const getRoleData = async () => {
+    const response = await axios.get(`http://localhost:5001/roles`)
+    const data = response.data.data.roles
+    console.log(data);
+    setRoleList(data)
+  }
+
+  
+  useEffect(() => {
+    getLJData(1)
+    getRoleData()
+  }, [])
 
   return (
     <Box sx={{ width: '50%', margin: 'auto' }}>
@@ -56,20 +76,20 @@ const Item = styled(Paper)(({ theme }) => ({
           Learning Journey
         </Typography>
         <Stack spacing={2} >
-          {learningJourneyList.length > 0 ? (learningJourneyList.slice(0, 2).map((item) => (
-          <Item key={item.id} component={Link} to={`learning-journey/${item.id}`} sx={{ textDecoration: "none" }} >
+          {learningJourneyList?.length > 0 ? (learningJourneyList.slice(0, 2).map((item) => (
+          <Item key={item?.learning_journey_id} component={Link} to={`learning-journey/${item.learning_journey_id}`} sx={{ textDecoration: "none" }} >
             <Grid container spacing={4}>
               <Grid item xs={12} md={10}>
-                <Typography variant="h5" component="div">
-                  {item.title}
+              <Typography variant="h5" component="div">
+                  {item.learning_journey_name}
                 </Typography>
                 <Typography variant="body1" component="div">
-                  {item.role}
+                  {item.role_id}
                 </Typography>
                 <Typography variant="body1" component="div">
                   {item.status}
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', marginTop: '1rem', justifyContent: 'center' }}>
+                {/* <Box sx={{ display: 'flex', alignItems: 'center', marginTop: '1rem', justifyContent: 'center' }}>
                   <Box sx={{ width: '80%', mr: 1 }}>
                     {
                       item.progress == 100 ? 
@@ -80,13 +100,13 @@ const Item = styled(Paper)(({ theme }) => ({
                   <Box sx={{ minWidth: 35 }}>
                     <Typography variant="body2" color="text.secondary">{`${item.progress}%`}</Typography>
                   </Box>
-                </Box>
+                </Box> */}
               </Grid>
               <Grid item xs={12} md={2}>
                 <CardMedia
                   component="img"
                   alt="green iguana"
-                  object-fit
+                  // object-fit
                   image={item.bannerImg}
                 />
               </Grid>
@@ -131,7 +151,7 @@ const Item = styled(Paper)(({ theme }) => ({
                 <CardMedia
                   component="img"
                   alt="green iguana"
-                  object-fit
+                  // object-fit
                   image="https://img.freepik.com/free-vector/leader-concept-illustration_114360-7479.jpg?w=1380&t=st=1664901820~exp=1664902420~hmac=36a6129e33bf3e8a37625e49c7507f847a208c4427859bee106c84efcf8eac3b"
                 />
                 <CardContent>

@@ -42,7 +42,6 @@ def get_all_learning_journeys():
         "code": 404,
         "message": "There are no learning_journey records"
     })
-<<<<<<< Updated upstream
 
 @app.route("/learning_journeys/<int:staff_id>")
 def get_learning_journey_by_id(staff_id):
