@@ -1,11 +1,17 @@
 import React from 'react'
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import {
+    Box,
+    Paper,
+    TableContainer,
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody,
+  } from '@mui/material'
+  import PreviewIcon from '@mui/icons-material/Preview';
+  import EditIcon from '@mui/icons-material/Edit';
+  import DeleteIcon from '@mui/icons-material/Delete';
 
 function createData(
   id: number,
@@ -28,6 +34,15 @@ const rows = [
 
 function RolesList() {
   return (
+    <Box
+      sx={(theme) => ({
+        [theme.breakpoints.up('md')]: {
+          width: '80%',
+        },
+        width: '80%',
+        margin: 'auto',
+      })}
+    >
     <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -52,9 +67,9 @@ function RolesList() {
                 <TableCell align="left">{row.field}</TableCell>
                 <TableCell align="left">
                     {/* pass in the id */}
-                    <button>View</button>
-                    <button>Edit</button>
-                    <button>Delete</button>
+                    <PreviewIcon color="primary"></PreviewIcon>
+                    <EditIcon color="primary"></EditIcon>
+                    <DeleteIcon color="primary"></DeleteIcon>
                 </TableCell>
                 {/* <TableCell align="right">{row.protein}</TableCell> */}
             </TableRow>
@@ -62,6 +77,7 @@ function RolesList() {
         </TableBody>
         </Table>
     </TableContainer>
+    </Box>
   )
 }
 
