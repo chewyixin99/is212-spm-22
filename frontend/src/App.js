@@ -10,6 +10,7 @@ import NotFound from './pages/NotFoundPage'
 import LoginPage from './pages/LoginPage'
 import AdminOutlet from './pages/admin/AdminOutlet'
 import AdmingHomePage from './pages/admin/AdmingHomePage'
+import AdminRolesPage from './pages/admin/AdminRolesPage'
 import StaffOutlet from './pages/staff/StaffOutlet'
 import StaffHomePage from './pages/staff/StaffHomePage'
 import ManagerOutlet from './pages/manager/ManagerOutlet'
@@ -42,6 +43,9 @@ function App() {
 
         <Route path="/admin" element={<AdminOutlet />}>
           <Route index element={<AdmingHomePage />} />
+          <Route path="roles">
+            <Route index element={<AdminRolesPage />} />
+          </Route>
         </Route>
 
         <Route path="/manager" element={<ManagerOutlet />}>
