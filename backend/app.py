@@ -1,3 +1,9 @@
+from dotenv import load_dotenv
+import os
+from pathlib import Path
+
+load_dotenv()
+
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -5,7 +11,11 @@ from flask_cors import CORS
 app = Flask(__name__)
 app.debug = True
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:' + \
+db_pw = os.getenv("DATABASE_PASSWORD")
+if (db_pw == None): 
+    db_pw = ""
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:' + db_pw + \
                                         '@localhost:3306/spm'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,'pool_recycle': 280}
