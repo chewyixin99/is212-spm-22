@@ -8,6 +8,7 @@ import LearningJourneyPage from './components/learningJourney/LearningJourney'
 import MyLearningJourney from './components/learningJourney/MyLearningJourney'
 import NewLearningJourney from './components/learningJourney/NewLearningJourney'
 import Course from './components/course/Course'
+import Skill from './components/skills/Skills'
 
 // Page imports
 import NotFound from './pages/NotFoundPage'
@@ -51,6 +52,10 @@ function App() {
           <Route path="courses">
             <Route path=":course_id" element={<Course />} />
           </Route>
+          <Route path="skills">
+            <Route path=":skill_id" element={<Skill />} />
+          </Route>
+
         </Route>
 
         <Route path="/manager" element={<ManagerOutlet />}>
