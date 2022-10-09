@@ -1,7 +1,14 @@
 import React from 'react'
 import RolesList from '../../components/roles/RolesList'
-import Box, { BoxProps } from '@mui/material/Box';
 import SectionHeader from '../../components/common/SectionHeader'
+import {
+    Box,
+    Button,
+} from '@mui/material'
+
+import {
+    Link
+} from 'react-router-dom'
 
 function AdminRolesPage() {
   return (
@@ -9,7 +16,9 @@ function AdminRolesPage() {
         <Box sx={{ flexDirection: 'row' }}>
             {/* <h1>Roles List</h1> */}
             <SectionHeader header="Roles List"></SectionHeader>
-            <button>Create New Role</button>
+            <Button variant="outlined" component={Link} to="/admin/newrole">
+              Create New Role
+            </Button>
         </Box>
         <RolesList></RolesList>
 
