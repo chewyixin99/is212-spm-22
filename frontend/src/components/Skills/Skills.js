@@ -6,8 +6,8 @@ import {
  
  import { emphasize, styled } from '@mui/material/styles'
  import { blueGrey } from '@mui/material/colors'
- import LocalOfferIcon from '@mui/icons-material/LocalOffer';
- import CategoryIcon from '@mui/icons-material/Category';
+//  import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+//  import CategoryIcon from '@mui/icons-material/Category';
 
  import {
     Alert,
@@ -33,10 +33,10 @@ const StyledBreadcrumb = styled(Link)(({theme}) => ({
   border: '1px solid',
 }))
 
-const IconText = styled(Typography)(({theme}) => ({
-  display: 'flex',
-  alignItems: 'center',
-}))
+// const IconText = styled(Typography)(({theme}) => ({
+//   display: 'flex',
+//   alignItems: 'center',
+// }))
 
 function Skill() {
   const { skill_id } = useParams()
