@@ -10,7 +10,12 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  Button,
 } from '@mui/material'
+
+import {
+  Link,
+} from 'react-router-dom'
 
 import SectionHeader from '../common/SectionHeader'
 import SkillsTableRow from './SkillsTableRow'
@@ -18,8 +23,8 @@ import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useSkillsLoader from '../../services/skills/useSkillsLoader'
 
-function SkillsTable({ isAbbreviated }) {
-  const [skillData, isLoading] = useSkillsLoader(null, isAbbreviated)
+function SkillsTable({ numRows }) {
+  const [skillData, isLoading, total] = useSkillsLoader(numRows)
 
   // console.log('---> SkillsTable, skillData: ', skillData)
   const isEmpty = skillData.length === 0
@@ -31,15 +36,15 @@ function SkillsTable({ isAbbreviated }) {
     if (isEmpty) {
       return 'Total: 0'
     }
-    return `Total: ${skillData.length}`
+    return `Total: ${total}`
   }
 
   const renderTableRows = () => {
     if (!isEmpty && !isLoading && skillData) {
       return (
         <>
-          {skillData.map((skillInfo) => (
-            <SkillsTableRow skillInfo={skillInfo} />
+          {skillData.map((skillInfo, index) => (
+            <SkillsTableRow skillInfo={skillInfo} key={index} />
           ))}
         </>
       )
@@ -57,6 +62,19 @@ function SkillsTable({ isAbbreviated }) {
       })}
     >
       <SectionHeader header="Skills" subHeader={renderSubheader()} />
+      {
+        numRows == -1  
+          ? <Box sx={{ my: 1 }}>
+              <Button variant="outlined" component={Link} to="/admin/newskill">
+                Create New Skill
+              </Button>
+            </Box>
+          : <Box sx={{ my: 1 }}>
+              <Button variant="outlined" component={Link} to="skills">
+                View All Skills
+              </Button>
+            </Box>
+      }
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -81,7 +99,7 @@ function SkillsTable({ isAbbreviated }) {
 }
 
 SkillsTable.propTypes = {
-  isAbbreviated: propTypes.bool,
+  numRows: propTypes.number,
 }
 
 export default SkillsTable

@@ -4,23 +4,25 @@ import { RESPONSE_CODES } from '../../constants'
 const ENDPOINT = 'http://localhost:5001'
 
 const useSkillsLoader = (
+  numRows = -1,
   skillsId = null,
-  isAbbreviated = false,
   init = true
 ) => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [skillsData, setSkillsData] = useState([])
+  const [total, setTotal] = useState(0)
 
   const setData = (response) => {
     if (response?.code === RESPONSE_CODES.SUCCESS) {
+      setTotal(response.data.skills.length)
       if (skillsId) {
         setSkillsData([response?.data])
-      } else if (isAbbreviated) {
-        setSkillsData(response?.data?.skills.slice(0, 6))
-      } else {
+      } else if (numRows == -1) { 
         setSkillsData(response?.data?.skills)
-      }
+      } else {
+        setSkillsData(response?.data?.skills.slice(0, numRows))
+      } 
     } else if (response?.code === RESPONSE_CODES.NOT_FOUND) {
       setSkillsData([])
     }
@@ -47,7 +49,7 @@ const useSkillsLoader = (
     loadSkills()
   }, [skillsId, init])
 
-  return [skillsData, isLoading, error, reloadData]
+  return [skillsData, isLoading, total, error, reloadData]
 }
 
 export default useSkillsLoader

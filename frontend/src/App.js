@@ -18,6 +18,8 @@ import AdminOutlet from './pages/admin/AdminOutlet'
 import AdminHomePage from './pages/admin/AdminHomePage'
 import AdminRolesPage from './pages/admin/AdminRolesPage'
 import AdminNewRole from './pages/admin/AdminNewRole'
+import AdminSkillsPage from './pages/admin/AdminSkillsPage'
+import AdminNewSkill from './pages/admin/AdminNewSkill'
 import StaffOutlet from './pages/staff/StaffOutlet'
 import StaffHomePage from './pages/staff/StaffHomePage'
 import ManagerOutlet from './pages/manager/ManagerOutlet'
@@ -52,7 +54,9 @@ function App() {
           <Route index element={<AdminHomePage />} />
           <Route path="roles" element={<AdminRolesPage />}></Route>
           <Route path="newrole" element={<AdminNewRole />}></Route>
-
+          <Route path="skills" element={<AdminSkillsPage />}></Route>
+          <Route path="newskill" element={<AdminNewSkill />}></Route>
+          
           <Route path="courses">
             <Route path=":course_id" element={<Course />} />
           </Route>

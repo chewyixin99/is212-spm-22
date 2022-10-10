@@ -4,6 +4,12 @@ export const ROLES = {
   MANAGER: 'MANAGER',
 }
 
+export const STATUS = {
+  ACTIVE: 'ACTIVE',
+  PENDING: 'PENDING',
+  RETIRED: 'RETIRED',
+}
+
 export const RESPONSE_CODES = {
   SUCCESS: 200,
   NOT_FOUND: 404,

@@ -23,8 +23,8 @@ import {
   Link
 } from 'react-router-dom'
 
-function RolesTable({ isAbbreviated }) {
-  const [roleData, isLoading] = useRolesLoader(null, isAbbreviated)
+function RolesTable({ numRows }) {
+  const [roleData, isLoading, total] = useRolesLoader(numRows)
 
   // console.log('---> RolesTable, roleData: ', roleData)
   const isEmpty = roleData.length === 0
@@ -36,15 +36,15 @@ function RolesTable({ isAbbreviated }) {
     if (isEmpty) {
       return 'Total: 0'
     }
-    return `Total: ${roleData.length}`
+    return `Total: ${total}`
   }
 
   const renderTableRows = () => {
     if (!isEmpty && !isLoading && roleData) {
       return (
         <>
-          {roleData.map((roleInfo) => (
-            <RolesTableRow roleInfo={roleInfo} />
+          {roleData.map((roleInfo, index) => (
+            <RolesTableRow roleInfo={roleInfo} key={index} />
           ))}
         </>
       )
@@ -62,9 +62,19 @@ function RolesTable({ isAbbreviated }) {
       })}
     >
       <SectionHeader header="Roles" subHeader={renderSubheader()} />
-      <Button variant="outlined" component={Link} to="roles">
-              View All Roles
-      </Button>
+      {
+        numRows == -1
+          ? <Box sx={{ my: 1 }}>
+              <Button variant="outlined" component={Link} to="/admin/newrole">
+                Create New Role
+              </Button>
+            </Box>
+          : <Box sx={{ my: 1 }}>
+              <Button variant="outlined" component={Link} to="roles">
+                View All Roles
+              </Button>
+            </Box>
+      }
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -89,7 +99,7 @@ function RolesTable({ isAbbreviated }) {
 }
 
 RolesTable.propTypes = {
-  isAbbreviated: propTypes.bool,
+  numRows: propTypes.number,
 }
 
 export default RolesTable

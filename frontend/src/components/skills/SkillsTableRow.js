@@ -4,6 +4,7 @@ import propTypes from 'prop-types'
 import { TableCell, TableRow } from '@mui/material'
 
 import ActionMenu from '../common/ActionMenu'
+import { STATUS } from '../../constants'
 
 const SkillsTableRow = ({ skillInfo }) => {
   const actionMenuConfigs = [
@@ -20,12 +21,18 @@ const SkillsTableRow = ({ skillInfo }) => {
       itemAction: () => {},
     },
   ]
+  const textColor = 
+    skillInfo.status == STATUS.RETIRED
+      ? 'red'
+      : skillInfo.status == STATUS.PENDING
+        ? 'orange'
+        : 'green'
 
   return (
     <TableRow>
       <TableCell>{skillInfo?.skill_id}</TableCell>
       <TableCell>{skillInfo?.skill_name}</TableCell>
-      <TableCell>{skillInfo?.status}</TableCell>
+      <TableCell sx={{ color: textColor }}>{skillInfo?.status}</TableCell>
       <TableCell align="right">
         <ActionMenu variant="kebab" menuItemConfigs={actionMenuConfigs} />
       </TableCell>

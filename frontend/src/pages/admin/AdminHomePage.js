@@ -9,10 +9,10 @@ function AdminHomePage() {
   return (
     <Box>
       <Box sx={{ my: 5 }}>
-        <RolesTable isAbbreviated />
+        <RolesTable numRows={3} />
       </Box>
       <Box sx={{ my: 5 }}>
-        <SkillsTable />
+        <SkillsTable numRows={3} />
       </Box>
     </Box>
   )

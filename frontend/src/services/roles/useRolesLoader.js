@@ -3,20 +3,26 @@ import { RESPONSE_CODES } from '../../constants'
 
 const ENDPOINT = 'http://localhost:5001'
 
-const useRolesLoader = (roleId = null, isAbbreviated = false, init = true) => {
+const useRolesLoader = (
+  numRows = -1,
+  roleId = null,  
+  init = true
+) => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [roleData, setRoleData] = useState([])
+  const [total, setTotal] = useState(0)
 
   const setData = (response) => {
     if (response?.code === RESPONSE_CODES.SUCCESS) {
+      setTotal(response.data.roles.length)
       if (roleId) {
         setRoleData([response?.data])
-      } else if (isAbbreviated) {
-        setRoleData(response?.data?.roles.slice(0, 6))
-      } else {
+      } else if (numRows == -1) { 
         setRoleData(response?.data?.roles)
-      }
+      } else {
+        setRoleData(response?.data?.roles.slice(0, numRows))
+      } 
     } else if (response?.code === RESPONSE_CODES.NOT_FOUND) {
       setRoleData([])
     }
@@ -43,7 +49,7 @@ const useRolesLoader = (roleId = null, isAbbreviated = false, init = true) => {
     loadRoles()
   }, [roleId, init])
 
-  return [roleData, isLoading, error, reloadData]
+  return [roleData, isLoading, total, error, reloadData]
 }
 
 export default useRolesLoader
