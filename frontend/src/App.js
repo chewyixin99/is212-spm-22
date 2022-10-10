@@ -52,21 +52,21 @@ function App() {
 
         <Route path="/admin" element={<AdminOutlet />}>
           <Route index element={<AdminHomePage />} />
-          <Route path="roles" element={<AdminRolesPage />}></Route>
-          <Route path="newrole" element={<AdminNewRole />}></Route>
-          <Route path="skills" element={<AdminSkillsPage />}></Route>
-          <Route path="newskill" element={<AdminNewSkill />}></Route>
-          
+          <Route path="roles" element={<AdminRolesPage />} />
+          <Route path="newrole" element={<AdminNewRole />} />
+          <Route path="skills" element={<AdminSkillsPage />} />
+          <Route path="newskill" element={<AdminNewSkill />} />
+
           <Route path="courses">
             <Route path=":course_id" element={<Course />} />
           </Route>
           <Route path="skills">
             <Route path=":skill_id" element={<Skill />} />
           </Route>
+          
           <Route path="roles">
             <Route path=":role_id" element={<Role />} />
           </Route>
-
         </Route>
 
         <Route path="/manager" element={<ManagerOutlet />}>
