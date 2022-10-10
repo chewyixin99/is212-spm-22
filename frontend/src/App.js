@@ -9,6 +9,7 @@ import MyLearningJourney from './components/learningJourney/MyLearningJourney'
 import NewLearningJourney from './components/learningJourney/NewLearningJourney'
 import Course from './components/course/Course'
 import Skill from './components/skills/Skills'
+import Role from './components/roles/Roles'
 
 // Page imports
 import NotFound from './pages/NotFoundPage'
@@ -51,12 +52,15 @@ function App() {
           <Route index element={<AdminHomePage />} />
           <Route path="roles" element={<AdminRolesPage />}></Route>
           <Route path="newrole" element={<AdminNewRole />}></Route>
-          
+
           <Route path="courses">
             <Route path=":course_id" element={<Course />} />
           </Route>
           <Route path="skills">
             <Route path=":skill_id" element={<Skill />} />
+          </Route>
+          <Route path="roles">
+            <Route path=":role_id" element={<Role />} />
           </Route>
 
         </Route>

@@ -15,6 +15,8 @@ db_pw = os.getenv("DATABASE_PASSWORD")
 if (db_pw == None): 
     db_pw = ""
 
+
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:' + db_pw + \
                                         '@localhost:3306/spm'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
