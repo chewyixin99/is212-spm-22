@@ -33,14 +33,13 @@ CORS(app)
 def home():
     return "<h1>G7T3 Backend</h1>"
 
-# from services.staff import get_staff_by_id, get_all_staffs
-# from services.role import get_all_roles, get_role_by_id
-# from services.course import get_all_courses, get_course_by_id
-# from services.skill import get_all_skills, get_skill_by_id
-# from services.learning_journey import get_all_learning_journeys, get_learning_journey_by_id
+from services.staff import get_staff_by_id, get_all_staffs
+from services.role import get_all_roles, get_role_by_id
+from services.course import get_all_courses, get_course_by_id
+from services.skill import get_all_skills, get_skill_by_id
+from services.learning_journey import get_all_learning_journeys, get_learning_journey_by_id
 
 # Run the application
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
-    # app.run(host='0.0.0.0', port=port, debug=True)
-    app.run(port=port, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=True)
