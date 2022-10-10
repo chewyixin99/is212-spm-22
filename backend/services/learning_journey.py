@@ -1,7 +1,7 @@
 from __main__ import app, db
 from flask import jsonify, request
 
-from itsdangerous import json
+# from itsdangerous import json
 from services.learning_journey_course import learning_journey_course
 from services.course import Course
 
