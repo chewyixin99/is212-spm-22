@@ -33,11 +33,11 @@ CORS(app)
 def home():
     return "<h1>G7T3 Backend</h1>"
 
-import services.staff
-import services.role
-import services.course
-import services.skill
-import services.learning_journey
+import .services.staff
+import .services.role
+import .services.course
+import .services.skill
+import .services.learning_journey
 
 # Run the application
 if __name__ == '__main__':
