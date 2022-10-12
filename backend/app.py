@@ -29,9 +29,9 @@ app.debug = True
 # db = SQLAlchemy(app)
 # CORS(app)
 
-# @app.route("/")
-# def home():
-#     return "<h1>G7T3 Backend</h1>"
+@app.route("/")
+def home():
+    return "<h1>G7T3 Backend</h1>"
 
 # from services.staff import get_staff_by_id, get_all_staffs
 # from services.role import get_all_roles, get_role_by_id
