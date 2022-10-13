@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { RESPONSE_CODES } from '../../constants'
+import { RESPONSE_CODES, ENDPOINT } from '../../constants'
 
-const ENDPOINT = 'http://localhost:5001'
 
 const useRolesLoader = (
   numRows = -1,

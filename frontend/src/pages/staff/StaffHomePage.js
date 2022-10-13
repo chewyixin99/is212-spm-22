@@ -19,7 +19,7 @@ import {
 } from '@mui/material'
 
 import SectionHeader from '../../components/common/SectionHeader'
-import { DUMMYLJDATA } from '../../constants'
+import { ENDPOINT } from '../../constants'
 import axios from 'axios'
 
 
@@ -38,13 +38,13 @@ const StaffHomePage = () => {
   const [roleList, setRoleList] = useState([])
 
   const getLJData = async (id) => {
-    const response = await axios.get(`http://localhost:5001/learning_journeys/${id}`)
+    const response = await axios.get(`${ENDPOINT}/learning_journeys/${id}`)
     const data = response.data.data
     setlearningJourneyList(data)
   }
 
   const getRoleData = async () => {
-    const response = await axios.get(`http://localhost:5001/roles`)
+    const response = await axios.get(`${ENDPOINT}/roles`)
     const data = response.data.data.roles
     console.log(data);
     setRoleList(data)

@@ -16,6 +16,7 @@ import {
     Stack,
     Typography,
 } from '@mui/material'
+import { ENDPOINT } from '../../constants';
 
 const StyledBreadcrumb = styled(Link)(({theme}) => ({
   backgroundColor: blueGrey[50],
@@ -40,7 +41,7 @@ const IconText = styled(Typography)(({theme}) => ({
 
 function Course() {
   const { course_id } = useParams()
-  const baseUrl = 'http://localhost:5001'
+  const baseUrl = ENDPOINT
   const [course, setCourse] = React.useState([]);
   const [courseSkills, setCourseSkills] = React.useState([]);
 

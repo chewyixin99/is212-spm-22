@@ -17,7 +17,7 @@ import { styled } from '@mui/material/styles'
 import AddIcon from '@mui/icons-material/Add'
 import axios from 'axios'
 
-import { DUMMYLJDATA } from '../../constants'
+import { ENDPOINT } from '../../constants'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -32,7 +32,7 @@ function LearningJourneyPage() {
   const [learningJourneyList, setlearningJourneyList] = useState([])
 
   const getLJData = async (id) => {
-    const response = await axios.get(`http://localhost:5001/learning_journeys/${id}`)
+    const response = await axios.get(`${ENDPOINT}/learning_journeys/${id}`)
     const data = response.data.data
     setlearningJourneyList(data)
   }
