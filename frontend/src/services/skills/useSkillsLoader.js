@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { RESPONSE_CODES } from '../../constants'
-
-const ENDPOINT = 'http://localhost:5001'
+import { ENDPOINT } from '../../constants'
 
 const useSkillsLoader = (
   numRows = -1,
