@@ -1,38 +1,11 @@
-from __main__ import app, db
-from flask import jsonify, request
+from flask import Blueprint, jsonify, request
+from extensions import db
+from models.staff import Staff
 
-class Staff(db.Model):
-    __tablename__ = 'staff'
-
-    staff_id = db.Column(db.Integer, primary_key = True, autoincrement = True)
-    staff_fname = db.Column(db.String(50))
-    staff_lname = db.Column(db.String(50))
-    dept = db.Column(db.String(50))
-    email = db.Column(db.String(50))
-    type = db.Column(db.Integer)
-    status = db.Column(db.String(50))
-
-    def __init__(self, email, staff_fname, staff_lname, dept, type, status):
-        self.staff_fname = staff_fname
-        self.staff_lname = staff_lname
-        self.dept = dept
-        self.email = email
-        self.type = type
-        self.status = status
-
-    def json(self):
-        return {
-            "staff_id": self.staff_id,
-            "staff_fname": self.staff_fname,
-            "staff_lname": self.staff_lname,
-            "dept": self.dept,
-            "email": self.email,
-            "type": self.type,
-            "status": self.status
-        }
+staff_routes = Blueprint('staffs', __name__)
 
 #Get All Staffs
-@app.route("/staffs")
+@staff_routes.route("/staffs")
 def get_all_staffs():
     staffs_list = Staff.query.all()
     if len(staffs_list):
@@ -51,7 +24,7 @@ def get_all_staffs():
 
 
 #Get a Staff by staff_id
-@app.route("/staffs/<int:staff_id>")
+@staff_routes.route("/staffs/<int:staff_id>")
 def get_staff_by_id(staff_id):
     staff = Staff.query.filter_by(staff_id = staff_id).first()
     if staff:
@@ -66,7 +39,7 @@ def get_staff_by_id(staff_id):
         "message": "Staff cannot be found. Please try again."
     }), 404
 
-@app.route("/staffs/<string:email>", methods=["POST"])
+@staff_routes.route("/staffs/<string:email>", methods=["POST"])
 def create_staff(email):
     if (Staff.query.filter_by(email=email).first()):
         return jsonify({
@@ -98,7 +71,7 @@ def create_staff(email):
         "message": f"Staff successfully created for staff email: {email}"
     })
 
-@app.route("/staffs/<int:staff_id>", methods=["PUT"])
+@staff_routes.route("/staffs/<int:staff_id>", methods=["PUT"])
 def update_staff(staff_id):
     staff = Staff.query.filter(Staff.staff_id == staff_id).first()
     if not staff:

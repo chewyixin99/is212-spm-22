@@ -1,41 +1,14 @@
-from __main__ import app, db
-from flask import jsonify, request
-
-from services.skill_course import skill_course
-from services.learning_journey_course import learning_journey_course
+from flask import Blueprint, jsonify, request
+from extensions import db
+from models.course import Course
+from models.skill_course import skill_course
+from models.learning_journey_course import learning_journey_course
 # from services.learning_journey import Learning_Journey
 
-class Course(db.Model):
-    __tablename__ = 'course'
-
-    course_id = db.Column(db.String(20), primary_key = True)
-    course_name = db.Column(db.String(50))
-    course_desc = db.Column(db.String(255))
-    course_status = db.Column(db.String(15))
-    course_type = db.Column(db.String(10))
-    course_category = db.Column(db.String(50))
-    skills = db.relationship('Skill', secondary = skill_course, backref = 'course', viewonly = True)
-    learning_journeys = db.relationship('Learning_Journey', secondary = learning_journey_course, backref = 'course', viewonly = True)
-
-
-    def __init__(self, course_id, course_name, course_desc, course_status, course_type, course_category):
-        self.course_id = course_id
-        self.course_name = course_name
-        self.course_desc = course_desc
-        self.course_status = course_status
-        self.course_type = course_type
-        self.course_category = course_category
-
-    def json(self):
-        return {"course_id": self.course_id,
-                "course_name": self.course_name,
-                "course_desc": self.course_desc,
-                "course_status": self.course_status,
-                "course_type": self.course_type,
-                "course_category": self.course_category}
+course_routes = Blueprint('courses', __name__)
 
 #Get All Courses
-@app.route("/courses")
+@course_routes.route("/courses")
 def get_all_courses():
     courses_list = Course.query.all()
     if len(courses_list):
@@ -52,7 +25,7 @@ def get_all_courses():
         "message": "There are no role records."
     }), 404
 
-@app.route("/courses/<string:course_id>")
+@course_routes.route("/courses/<string:course_id>")
 def get_course_by_id(course_id):
     course = Course.query.filter(Course.course_id == course_id).first()
     if course:
@@ -67,7 +40,7 @@ def get_course_by_id(course_id):
         "message": "Course cannot be found. Please try again."
     }), 404
 
-@app.route("/courses/<string:course_id>", methods=["POST"])
+@course_routes.route("/courses/<string:course_id>", methods=["POST"])
 def create_course(course_id):
     if (Course.query.filter_by(course_id=course_id).first()):
         # exist, return 400
@@ -102,7 +75,7 @@ def create_course(course_id):
         "message": f"Course successfully created for course {course_id}"
     })
 
-@app.route("/courses/<string:course_id>", methods=["PUT"])
+@course_routes.route("/courses/<string:course_id>", methods=["PUT"])
 def update_course(course_id):
     course = Course.query.filter(Course.course_id == course_id).first()
     if not course:
@@ -131,7 +104,7 @@ def update_course(course_id):
         "message": f"Successfully updated course {course_id}."
     })
 
-@app.route("/courses/<string:course_id>/skills")
+@course_routes.route("/courses/<string:course_id>/skills")
 def get_skills_of_course(course_id):
     course = Course.query.filter_by(course_id = course_id).first()
     if not course:

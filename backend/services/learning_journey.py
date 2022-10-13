@@ -1,34 +1,11 @@
-from __main__ import app, db
-from flask import jsonify, request
+from flask import Blueprint, jsonify, request
+from extensions import db
+from models.learning_journey import Learning_Journey
 
-# from itsdangerous import json
-from services.learning_journey_course import learning_journey_course
-from services.course import Course
-
-class Learning_Journey(db.Model):
-    __tablename__ = 'learning_journey'
-
-    learning_journey_id = db.Column(db.Integer, primary_key = True)
-    learning_journey_name = db.Column(db.String(50))
-    role_id = db.Column(db.Integer, db.ForeignKey('role.role_id'))
-    staff_id = db.Column(db.Integer, db.ForeignKey('staff.staff_id'))
-    courses = db.relationship('Course', secondary = learning_journey_course, backref = 'learning_journey')
-
-    def __init__(self, learning_journey_name, role_id, staff_id):
-        self.learning_journey_name = learning_journey_name
-        self.role_id = role_id
-        self.staff_id = staff_id
-    
-    def json(self):
-        return {
-            "learning_journey_id": self.learning_journey_id,
-            "learning_journey_name": self.learning_journey_name,
-            "role_id": self.role_id,
-            "staff_id": self.staff_id
-        }
+learning_journey_routes = Blueprint('learning_journeys', __name__)
 
 # Get all learning journeys
-@app.route("/learning_journeys")
+@learning_journey_routes.route("/learning_journeys")
 def get_all_learning_journeys():
     learning_journey_list = Learning_Journey.query.all()
     if len(learning_journey_list):
@@ -43,7 +20,7 @@ def get_all_learning_journeys():
         "message": "There are no learning_journey records"
     })
 
-@app.route("/learning_journeys/<int:staff_id>")
+@learning_journey_routes.route("/learning_journeys/<int:staff_id>")
 def get_learning_journey_by_id(staff_id):
     staff_learning_journeys = Learning_Journey.query.filter(Learning_Journey.staff_id == staff_id).all()
     if staff_learning_journeys:
@@ -57,7 +34,7 @@ def get_learning_journey_by_id(staff_id):
     })
 
 
-@app.route("/learning_journeys/<int:learning_journey_id>/courses")
+@learning_journey_routes.route("/learning_journeys/<int:learning_journey_id>/courses")
 def get_courses_of_learning_journey(learning_journey_id):
     learning_journey = Learning_Journey.query.filter_by(learning_journey_id = learning_journey_id).first()
     if not learning_journey:
@@ -74,7 +51,7 @@ def get_courses_of_learning_journey(learning_journey_id):
     })
 
 
-@app.route("/learning_journeys/<int:learning_journey_id>/courses", methods=["PUT"])
+@learning_journey_routes.route("/learning_journeys/<int:learning_journey_id>/courses", methods=["PUT"])
 def update_course_in_learning_journey(learning_journey_id):
     learning_journey = Learning_Journey.query.filter_by(learning_journey_id = learning_journey_id).first()
     if not learning_journey:
