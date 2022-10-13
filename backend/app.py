@@ -1,46 +1,55 @@
-from dotenv import load_dotenv
 import os
 from pathlib import Path
-
-load_dotenv()
-
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-app = Flask(__name__)
-app.debug = True
+from extensions import db
+from services.course import course_routes
+from services.learning_journey import learning_journey_routes
+from services.role import role_routes
+from services.skill import skill_routes
+from services.staff import staff_routes
 
-db_pw = os.environ.get("DATABASE_PASSWORD")
-if (db_pw == None): 
-    db_pw = ""
+load_dotenv()
 
-is_production = int(os.environ.get("IS_PRODUCTION"))
-if (not is_production):
-    production_db = 'mysql+mysqlconnector://root:' + db_pw + '@localhost:3306/spm'
-else:
-    production_db = os.environ.get("CLEARDB_DATABASE_URL")
+def create_app():
+    app = Flask(__name__)
+    app.debug = True
 
-app.config['SQLALCHEMY_DATABASE_URI'] = production_db
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,'pool_recycle': 280}
+    db_pw = os.environ.get("DATABASE_PASSWORD")
+    if (db_pw == None): 
+        db_pw = ""
+
+    is_production = int(os.environ.get("IS_PRODUCTION"))
+    if (not is_production):
+        production_db = 'mysql+mysqlconnector://root:' + db_pw + '@localhost:3306/spm'
+    else:
+        production_db = os.environ.get("CLEARDB_DATABASE_URL")
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = production_db
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,'pool_recycle': 280}
     
+    db.init_app(app)
+    CORS(app)
 
-db = SQLAlchemy(app)
-CORS(app)
+    @app.route("/")
+    def home():
+        return "<h1>G7T3 Backend</h1>"
 
-@app.route("/")
-def home():
-    return "<h1>G7T3 Backend</h1>"
+    app.register_blueprint(course_routes)
+    app.register_blueprint(learning_journey_routes)
+    app.register_blueprint(role_routes)
+    app.register_blueprint(skill_routes)
+    app.register_blueprint(staff_routes)
 
-from services.staff import get_staff_by_id, get_all_staffs
-from services.role import get_all_roles, get_role_by_id
-from services.course import get_all_courses, get_course_by_id
-from services.skill import get_all_skills, get_skill_by_id
-from services.learning_journey import get_all_learning_journeys, get_learning_journey_by_id
+    return app
 
 # Run the application
 if __name__ == '__main__':
+    app = create_app()
+    # app.run(debug=True)
     # port = int(os.environ.get('PORT', 5001))
-    app.run(debug=True)
-    # app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)

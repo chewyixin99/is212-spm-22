@@ -1,30 +1,11 @@
-from __main__ import app, db
-from flask import jsonify, request
+from flask import Blueprint, jsonify, request
+from extensions import db
+from models.role import Role
 
-from services.role_skill import role_skill
-from services.skill import Skill
-
-class Role(db.Model):
-    __tablename__ = 'role'
-
-    role_id = db.Column(db.Integer, primary_key = True)
-    role_name = db.Column(db.String(50))
-    status = db.Column(db.String(50))
-    skills = db.relationship('Skill', secondary = role_skill, backref = 'role')
-
-    def __init__(self,role_name, status):
-        self.role_name = role_name
-        self.status = status
-
-    def json(self):
-        return {
-            "role_id": self.role_id,
-            "role_name": self.role_name,
-            "status": self.status
-        }
+role_routes = Blueprint('roles', __name__)
 
 #Get All Roles
-@app.route("/roles")
+@role_routes.route("/roles")
 def get_all_roles():
     roles_list = Role.query.all()
     if len(roles_list):
@@ -42,7 +23,7 @@ def get_all_roles():
     }), 404
 
 #Get a Role by role_id
-@app.route("/roles/<int:role_id>")
+@role_routes.route("/roles/<int:role_id>")
 def get_role_by_id(role_id):
     role = Role.query.filter_by(role_id = role_id).first()
     if role:
@@ -59,7 +40,7 @@ def get_role_by_id(role_id):
         }
     ), 404
 
-@app.route("/roles/<string:role_name>", methods=["POST"])
+@role_routes.route("/roles/<string:role_name>", methods=["POST"])
 def create_role(role_name):
     if (Role.query.filter_by(role_name=role_name).first()):
         return jsonify({
@@ -91,7 +72,7 @@ def create_role(role_name):
         "message": f"Role successfully created for Role role_name: {role_name}"
     })
 
-@app.route("/roles/<int:role_id>", methods=["PUT"])
+@role_routes.route("/roles/<int:role_id>", methods=["PUT"])
 def update_role(role_id):
     role = Role.query.filter(Role.role_id == role_id).first()
     if not role:
@@ -120,7 +101,7 @@ def update_role(role_id):
         "message": f"Successfully updated role {role_id}."
     })
 
-@app.route("/roles/<int:role_id>/skills")
+@role_routes.route("/roles/<int:role_id>/skills")
 def get_skills_of_role(role_id):
     role = Role.query.filter_by(role_id = role_id).first()
     if not role:
@@ -136,7 +117,7 @@ def get_skills_of_role(role_id):
         }
     })
 
-@app.route("/roles/<int:role_id>/skills", methods=["PUT"])
+@role_routes.route("/roles/<int:role_id>/skills", methods=["PUT"])
 def update_skills_of_role(role_id):
     role = Role.query.filter(Role.role_id == role_id).first()
     if not role:

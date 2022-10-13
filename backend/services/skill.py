@@ -1,34 +1,9 @@
-from __main__ import app, db
-from flask import jsonify, request
+from flask import Blueprint, jsonify, request
+from extensions import db
 
-from services.role_skill import role_skill
-from services.course import Course
-from services.skill_course import skill_course
+skill_routes = Blueprint('skills', __name__)
 
-class Skill(db.Model):
-    __tablename__ = 'skill'
-
-    skill_id = db.Column(db.Integer, primary_key = True)
-    skill_name = db.Column(db.String(50))
-    skill_desc = db.Column(db.String(255))
-    status = db.Column(db.String(50))
-    roles = db.relationship('Role', secondary = role_skill, backref = 'skill', viewonly = True)
-    courses = db.relationship('Course', secondary = skill_course, backref = 'skill')
-
-    def __init__(self, skill_name, skill_desc, status):
-        self.skill_name = skill_name
-        self.skill_desc = skill_desc
-        self.status = status
-    
-    def json(self):
-        return {
-            "skill_id": self.skill_id,
-            "skill_name": self.skill_name,
-            "skill_desc": self.skill_desc,
-            "status": self.status
-        }
-
-@app.route("/skills")
+@skill_routes.route("/skills")
 def get_all_skills():
     skills_list = Skill.query.all()
     if len(skills_list):
@@ -43,7 +18,7 @@ def get_all_skills():
         "message": "There are no skill records"
     })
 
-@app.route("/skills/<int:skill_id>")
+@skill_routes.route("/skills/<int:skill_id>")
 def get_skill_by_id(skill_id):
     skill = Skill.query.filter_by(skill_id = skill_id).first()
     if skill:
@@ -57,7 +32,7 @@ def get_skill_by_id(skill_id):
     })
 
 
-@app.route("/skills/<string:skill_name>", methods=["POST"])
+@skill_routes.route("/skills/<string:skill_name>", methods=["POST"])
 def create_skill(skill_name):
     if (Skill.query.filter_by(skill_name=skill_name).first()):
         return jsonify({
@@ -89,7 +64,7 @@ def create_skill(skill_name):
         "message": f"Skill successfully created for skill_name: {skill_name}"
     })
 
-@app.route("/skills/<int:skill_id>", methods=["PUT"])
+@skill_routes.route("/skills/<int:skill_id>", methods=["PUT"])
 def update_skill(skill_id):
     skill = Skill.query.filter(Skill.skill_id == skill_id).first()
     if not skill:
@@ -118,7 +93,7 @@ def update_skill(skill_id):
         "message": f"Successfully updated skill {skill_id}."
     })
 
-@app.route("/skills/<int:skill_id>/roles")
+@skill_routes.route("/skills/<int:skill_id>/roles")
 def get_roles_of_skill(skill_id):
     skill = Skill.query.filter_by(skill_id = skill_id).first()
     if not skill:
@@ -134,7 +109,7 @@ def get_roles_of_skill(skill_id):
         }
     })
 
-@app.route("/skills/<int:skill_id>/courses")
+@skill_routes.route("/skills/<int:skill_id>/courses")
 def get_courses_of_skill(skill_id):
     skill = Skill.query.filter_by(skill_id = skill_id).first()
     if not skill:
@@ -151,7 +126,7 @@ def get_courses_of_skill(skill_id):
         }
     })
 
-@app.route("/skills/<int:skill_id>/courses", methods=["PUT"])
+@skill_routes.route("/skills/<int:skill_id>/courses", methods=["PUT"])
 def update_courses_of_skill(skill_id):
     skill = Skill.query.filter_by(skill_id = skill_id).first()
     if not skill:

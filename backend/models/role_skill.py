@@ -1,5 +1,6 @@
-from __main__ import app, db
 from flask import jsonify
+from extensions import db
+
 
 # Helper association table
 
