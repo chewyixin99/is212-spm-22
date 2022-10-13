@@ -47,8 +47,14 @@ def create_app():
 
     return app
 
+def run_app():
+    # Deployment
+    app = create_app()
+    app.run(debug=True)
+
 # Run the application
 if __name__ == '__main__':
+    # Local
     app = create_app()
     # app.run(debug=True)
     # port = int(os.environ.get('PORT', 5001))
