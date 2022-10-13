@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from extensions import db
+from models.learning_journey import Learning_Journey
 
 learning_journey_routes = Blueprint('learning_journeys', __name__)
 

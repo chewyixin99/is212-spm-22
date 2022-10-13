@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from extensions import db
 from models.role import Role
+from models.skill import Skill
 
 role_routes = Blueprint('roles', __name__)
 
