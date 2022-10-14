@@ -13,9 +13,7 @@ import {
   Button,
 } from '@mui/material'
 
-import {
-  Link,
-} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import SectionHeader from '../common/SectionHeader'
 import SkillsTableRow from './SkillsTableRow'
@@ -24,7 +22,7 @@ import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useSkillsLoader from '../../services/skills/useSkillsLoader'
 
 function SkillsTable({ numRows }) {
-  const [skillData, isLoading, total] = useSkillsLoader(numRows)
+  const [skillData, isLoading, total, error] = useSkillsLoader(numRows)
 
   // console.log('---> SkillsTable, skillData: ', skillData)
   const isEmpty = skillData.length === 0
@@ -63,8 +61,23 @@ function SkillsTable({ numRows }) {
     )
   }
 
+  const renderTableStatuses = () => {
+    if (isLoading) {
+      return <TableRowLoadingStatus cols={4} />
+    } else if (!isLoading && !error && isEmpty) {
+      return <TableRowEmptyStatus cols={4} content="No data available." />
+    } else if (!isLoading && !isEmpty && error) {
+      return (
+        <TableRowEmptyStatus
+          cols={4}
+          content="Currently unable to retrieve data."
+        />
+      )
+    }
+  }
+
   const renderTableRows = () => {
-    if (!isEmpty && !isLoading && skillData) {
+    if (!isEmpty && !isLoading && !error && skillData) {
       return (
         <>
           {skillData.map((skillInfo, index) => (
@@ -101,10 +114,7 @@ function SkillsTable({ numRows }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {isLoading && <TableRowLoadingStatus cols={4} />}
-            {!isLoading && isEmpty && (
-              <TableRowEmptyStatus cols={4} content="No data available." />
-            )}
+            {renderTableStatuses()}
             {renderTableRows()}
           </TableBody>
         </Table>

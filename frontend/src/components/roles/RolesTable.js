@@ -21,7 +21,11 @@ import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
 
 function RolesTable({ numRows }) {
+<<<<<<< HEAD
+  const [roleData, isLoading, total, error] = useRolesLoader(numRows)
+=======
   const [roleData, isLoading, total] = useRolesLoader(numRows)
+>>>>>>> origin
   // console.log('---> RolesTable, roleData: ', roleData)
   const isEmpty = roleData.length === 0
 
@@ -59,8 +63,23 @@ function RolesTable({ numRows }) {
     )
   }
 
+  const renderTableStatuses = () => {
+    if (isLoading) {
+      return <TableRowLoadingStatus cols={4} />
+    } else if (!isLoading && !error && isEmpty) {
+      return <TableRowEmptyStatus cols={4} content="No data available." />
+    } else if (!isLoading && !isEmpty && error) {
+      return (
+        <TableRowEmptyStatus
+          cols={4}
+          content="Currently unable to retrieve data."
+        />
+      )
+    }
+  }
+
   const renderTableRows = () => {
-    if (!isEmpty && !isLoading && roleData) {
+    if (!isEmpty && !isLoading && !error && roleData) {
       return (
         <>
           {roleData.map((roleInfo, index) => (
@@ -98,10 +117,7 @@ function RolesTable({ numRows }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {isLoading && <TableRowLoadingStatus cols={4} />}
-            {!isLoading && isEmpty && (
-              <TableRowEmptyStatus cols={4} content="No data available." />
-            )}
+            {renderTableStatuses()}
             {renderTableRows()}
           </TableBody>
         </Table>
