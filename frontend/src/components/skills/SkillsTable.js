@@ -39,6 +39,30 @@ function SkillsTable({ numRows }) {
     return `Total: ${total}`
   }
 
+  const sectionButtonRenderer = () => {
+    return numRows === -1 ? (
+      <Box sx={{ my: 1 }}>
+        <Button variant="outlined" component={Link} to="/admin/newskill">
+          Create New Skill
+        </Button>
+      </Box>
+    ) : (
+      <Box sx={{ display: 'flex' }}>
+        <Box mx={1}>
+          <Button variant="outlined" component={Link} to="skills">
+            View All Skills
+          </Button>
+        </Box>
+
+        <Box>
+          <Button variant="outlined" component={Link} to="/admin/newrole">
+            Create New Skills
+          </Button>
+        </Box>
+      </Box>
+    )
+  }
+
   const renderTableRows = () => {
     if (!isEmpty && !isLoading && skillData) {
       return (
@@ -61,20 +85,11 @@ function SkillsTable({ numRows }) {
         margin: 'auto',
       })}
     >
-      <SectionHeader header="Skills" subHeader={renderSubheader()} />
-      {
-        numRows == -1  
-          ? <Box sx={{ my: 1 }}>
-              <Button variant="outlined" component={Link} to="/admin/newskill">
-                Create New Skill
-              </Button>
-            </Box>
-          : <Box sx={{ my: 1 }}>
-              <Button variant="outlined" component={Link} to="skills">
-                View All Skills
-              </Button>
-            </Box>
-      }
+      <SectionHeader
+        header="Skills"
+        subHeader={renderSubheader()}
+        sectionButtonComponent={sectionButtonRenderer()}
+      />
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

@@ -12,6 +12,7 @@ import {
   TableBody,
   Button,
 } from '@mui/material'
+import { Link } from 'react-router-dom'
 
 import SectionHeader from '../common/SectionHeader'
 import RolesTableRow from './RolesTableRow'
@@ -19,13 +20,8 @@ import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
 
-import {
-  Link
-} from 'react-router-dom'
-
 function RolesTable({ numRows }) {
   const [roleData, isLoading, total] = useRolesLoader(numRows)
-
   // console.log('---> RolesTable, roleData: ', roleData)
   const isEmpty = roleData.length === 0
 
@@ -37,6 +33,30 @@ function RolesTable({ numRows }) {
       return 'Total: 0'
     }
     return `Total: ${total}`
+  }
+
+  const sectionButtonRenderer = () => {
+    return numRows === -1 ? (
+      <Box>
+        <Button variant="outlined" component={Link} to="/admin/newrole">
+          Create New Role
+        </Button>
+      </Box>
+    ) : (
+      <Box sx={{ display: 'flex' }}>
+        <Box mx={1}>
+          <Button variant="outlined" component={Link} to="roles">
+            View All Roles
+          </Button>
+        </Box>
+
+        <Box>
+          <Button variant="outlined" component={Link} to="/admin/newrole">
+            Create New Role
+          </Button>
+        </Box>
+      </Box>
+    )
   }
 
   const renderTableRows = () => {
@@ -61,20 +81,12 @@ function RolesTable({ numRows }) {
         margin: 'auto',
       })}
     >
-      <SectionHeader header="Roles" subHeader={renderSubheader()} />
-      {
-        numRows == -1
-          ? <Box sx={{ my: 1 }}>
-              <Button variant="outlined" component={Link} to="/admin/newrole">
-                Create New Role
-              </Button>
-            </Box>
-          : <Box sx={{ my: 1 }}>
-              <Button variant="outlined" component={Link} to="roles">
-                View All Roles
-              </Button>
-            </Box>
-      }
+      <SectionHeader
+        header="Roles"
+        subHeader={renderSubheader()}
+        sectionButtonComponent={sectionButtonRenderer()}
+      />
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

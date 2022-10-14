@@ -35,11 +35,12 @@ const useSkillsLoader = (
       .then((responseJSON) => {
         // console.log('---> useSkillsLoader, responseJSON: ', responseJSON)
         setData(responseJSON)
+        setIsLoading(false)
       })
       .catch((e) => {
         setError(e)
+        setIsLoading(false)
       })
-      .finally(setIsLoading(false))
   }
 
   const reloadData = () => loadSkills() // TODO: Not tested yet

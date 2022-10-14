@@ -35,11 +35,12 @@ const useRolesLoader = (
       .then((responseJSON) => {
         // console.log('---> useRolesLoader, responseJSON: ', responseJSON)
         setData(responseJSON)
+        setIsLoading(false)
       })
       .catch((e) => {
         setError(e)
+        setIsLoading(false)
       })
-      .finally(setIsLoading(false))
   }
 
   const reloadData = () => loadRoles() // TODO: Not tested yet
