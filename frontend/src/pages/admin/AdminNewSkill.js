@@ -52,12 +52,14 @@ function AdminNewSkill() {
     }
 
     // https://stackoverflow.com/questions/52238637/react-router-how-to-pass-data-between-pages-in-react
-    navigate(
-      "/admin/newskill/preview",
-      {
-        state: formValues
-      }
-    )
+    if (!(skillNameError || skillDescError)) {
+      navigate(
+        "/admin/newskill/preview",
+        {
+          state: formValues
+        }
+      )
+    }
 
   }
 
