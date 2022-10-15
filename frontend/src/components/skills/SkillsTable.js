@@ -53,7 +53,7 @@ function SkillsTable({ numRows }) {
         </Box>
 
         <Box>
-          <Button variant="outlined" component={Link} to="/admin/newrole">
+          <Button variant="outlined" component={Link} to="/admin/newskill">
             Create New Skills
           </Button>
         </Box>
