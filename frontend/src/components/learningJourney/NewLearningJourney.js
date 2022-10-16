@@ -33,8 +33,6 @@ function union(a, b) {
 
 const steps = ['Learning Journey Information', 'Select Role', 'Select Skills', 'Select Courses']
 
-
-const steps = ['Learning Journey Information', 'Select Role', 'Select Skills', 'Select Courses']
 function NewLearningJourney() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
