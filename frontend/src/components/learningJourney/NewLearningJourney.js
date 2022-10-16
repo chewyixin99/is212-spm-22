@@ -1,10 +1,13 @@
+
 import { Box, Grid, TextField, FormControlLabel, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
 import React, { useEffect } from 'react'
+
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+
 import axios from 'axios';
 import Card from '@mui/material/Card';
 
@@ -30,12 +33,15 @@ function union(a, b) {
 
 const steps = ['Learning Journey Information', 'Select Role', 'Select Skills', 'Select Courses']
 
+
+const steps = ['Learning Journey Information', 'Select Role', 'Select Skills', 'Select Courses']
 function NewLearningJourney() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [skillData, setSkillData] = React.useState([]);
   const [selectedSkill, setSelectedSkill] = React.useState("");
   const [coursesBySkill, setCoursesBySkill] = React.useState([]);
+
 
   const isStepOptional = (step) => {
     return false;
@@ -354,6 +360,7 @@ function NewLearningJourney() {
                 return <h1>Error - Page do not exist!</h1>;
             }
           })()}
+
           {/* form here */}
 
 
@@ -377,7 +384,9 @@ function NewLearningJourney() {
             )}
 
             <Button onClick={handleNext}>
+
               {activeStep === steps.length - 1 ? 'Finish' : activeStep ===  2 ? selectedSkill !== "" ? 'Next' : '' : 'Next'}
+
             </Button>
           </Box>
         </React.Fragment>
