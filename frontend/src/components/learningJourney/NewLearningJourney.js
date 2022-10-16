@@ -19,6 +19,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 
+// transfer list functions start ------------------------
+
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
@@ -31,7 +33,42 @@ function union(a, b) {
   return [...a, ...not(b, a)];
 }
 
-const steps = ['Learning Journey Information', 'Select Role', 'Select Skills', 'Select Courses']
+// transfer list functions end ------------------------
+
+const steps = ['Input Learning Journey Name & Role', 'Select Skills', 'Select Courses', 'Review Learning Journey']
+
+const addresses = ['1 MUI Drive', 'Reactville', 'Anytown', '99999', 'USA'];
+
+const products = [
+  {
+    name: 'Product 1',
+    desc: 'A nice thing',
+    price: '$9.99',
+  },
+  {
+    name: 'Product 2',
+    desc: 'Another thing',
+    price: '$3.45',
+  },
+  {
+    name: 'Product 3',
+    desc: 'Something else',
+    price: '$6.51',
+  },
+  {
+    name: 'Product 4',
+    desc: 'Best thing of all',
+    price: '$14.11',
+  },
+  { name: 'Shipping', desc: '', price: 'Free' },
+];
+
+const payments = [
+  { name: 'Card type', detail: 'Visa' },
+  { name: 'Card holder', detail: 'Mr John Smith' },
+  { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
+  { name: 'Expiry date', detail: '04/2024' },
+];
 
 function NewLearningJourney() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -40,7 +77,7 @@ function NewLearningJourney() {
   const [selectedSkill, setSelectedSkill] = React.useState("");
   const [coursesBySkill, setCoursesBySkill] = React.useState([]);
 
-
+  // stepper form functions start ------------------------
   const isStepOptional = (step) => {
     return false;
   };
@@ -83,6 +120,10 @@ function NewLearningJourney() {
     setActiveStep(0);
   };
 
+  // stepper form functions end ------------------------
+
+  // select skill functions start ------------------------
+
   const handleSkillChange = (event) => {
     console.log(event.target.value);
     setSelectedSkill(event.target.value);
@@ -103,6 +144,14 @@ function NewLearningJourney() {
         console.log(error);
       });
   }
+
+  // select skill functions start ------------------------
+
+
+  // transfer list functions start ------------------------
+
+  // left data state represents the courses that are available to be added to the learning journey
+  // right data state represents the courses that are added to the learning journey
 
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([]);
@@ -207,6 +256,8 @@ function NewLearningJourney() {
     </Card>
   );
 
+  // transfer list functions end ------------------------
+
   useEffect(() => {
     axios.get('http://localhost:5001/skills')
       .then(res => {
@@ -256,12 +307,13 @@ function NewLearningJourney() {
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
           {(() => {
             switch (activeStep) {
+              // step 1 represents the learning journey name input and role selection
               case 0:
                 return (
                   <Box sx={{ height: '50vh' }}>
                     <React.Fragment>
                       <Typography variant="h6" gutterBottom>
-                        Learning Journey Set Up
+                        Learning Journey Name
                       </Typography>
                       <Grid container spacing={3}>
                         <Grid item xs={12} sm={6}>
@@ -276,30 +328,13 @@ function NewLearningJourney() {
                         </Grid>
 
                       </Grid>
+
+                      <h1>Insert Role List here</h1>
                     </React.Fragment>
                   </Box>
                 );
+              // step 2 represents skills selection
               case 1:
-                return <Box sx={{ height: '50vh', color: 'red' }}>
-                  <React.Fragment>
-                    <h1>Insert Role List here</h1>
-                    {/* <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">Age</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={role}
-                        label="Age"
-                        onChange={handleChange}
-                      >
-                        <MenuItem value={1}>Software Engineer</MenuItem>
-                        <MenuItem value={2}>Product Manager</MenuItem>
-                        <MenuItem value={3}>DevOps Engineer</MenuItem>
-                      </Select>
-                    </FormControl> */}
-                  </React.Fragment>
-                </Box>;
-              case 2:
                 return <Box sx={{ height: '50vh', color: 'red' }}>
                   <React.Fragment>
                     <FormControl fullWidth>
@@ -319,7 +354,8 @@ function NewLearningJourney() {
                     </FormControl>
                   </React.Fragment>
                 </Box>;
-              case 3:
+              // step 3 represents courses selection
+              case 2:
                 return <Box sx={{ height: '50vh', color: 'red' }}>
                   <React.Fragment>
                     <Grid container spacing={2} justifyContent="center" alignItems="center">
@@ -352,8 +388,64 @@ function NewLearningJourney() {
                     </Grid>
                   </React.Fragment>
                 </Box>;
-              case 4:
-                return <input type="text" placeholder='4' />;
+              // step 4 represents the learning journey summary before submission
+              case 3:
+                return <Box>
+                  <React.Fragment>
+                    <Typography variant="h6" gutterBottom>
+                      Learning Journey Summary
+                    </Typography>
+
+                    <ListItem sx={{ py: 1, px: 0 }}>
+                      <ListItemText primary={selectedSkill} />
+                      <Typography variant="body2">{right.join(', ')}</Typography>
+                    </ListItem>
+
+
+                    {/* checkout template */}
+                    {/* <List disablePadding>
+                      {products.map((product) => (
+                        <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
+                          <ListItemText primary={product.name} secondary={product.desc} />
+                          <Typography variant="body2">{product.price}</Typography>
+                        </ListItem>
+                      ))}
+
+                      <ListItem sx={{ py: 1, px: 0 }}>
+                        <ListItemText primary="Total" />
+                        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                          $34.06
+                        </Typography>
+                      </ListItem>
+                    </List>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                          Shipping
+                        </Typography>
+                        <Typography gutterBottom>John Smith</Typography>
+                        <Typography gutterBottom>{addresses.join(', ')}</Typography>
+                      </Grid>
+                      <Grid item container direction="column" xs={12} sm={6}>
+                        <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                          Payment details
+                        </Typography>
+                        <Grid container>
+                          {payments.map((payment) => (
+                            <React.Fragment key={payment.name}>
+                              <Grid item xs={6}>
+                                <Typography gutterBottom>{payment.name}</Typography>
+                              </Grid>
+                              <Grid item xs={6}>
+                                <Typography gutterBottom>{payment.detail}</Typography>
+                              </Grid>
+                            </React.Fragment>
+                          ))}
+                        </Grid>
+                      </Grid>
+                    </Grid> */}
+                  </React.Fragment>
+                </Box>
               default:
                 return <h1>Error - Page do not exist!</h1>;
             }
@@ -383,7 +475,7 @@ function NewLearningJourney() {
 
             <Button onClick={handleNext}>
 
-              {activeStep === steps.length - 1 ? 'Finish' : activeStep ===  2 ? selectedSkill !== "" ? 'Next' : '' : 'Next'}
+              {activeStep === steps.length - 1 ? 'Finish' : activeStep === 2 ? selectedSkill !== "" ? 'Next' : '' : 'Next'}
 
             </Button>
           </Box>
