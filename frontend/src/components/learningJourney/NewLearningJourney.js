@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import propTypes from 'prop-types'
 
 import {
@@ -11,6 +11,12 @@ import {
   TableCell,
   TableBody,
   Button,
+  Grid,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 
@@ -20,13 +26,9 @@ import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
 
-import { Box, Grid, TextField, FormControlLabel, FormControl, InputLabel, Select, MenuItem } from '@mui/material'
-import React, { useEffect } from 'react'
-
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import axios from 'axios';
@@ -40,49 +42,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 
-function NewLearningJourney({ numRows }) {
-  const [roleData, isLoading, total, error] = useRolesLoader(numRows)
-  // console.log('---> RolesTable, roleData: ', roleData)
-  const isEmpty = roleData.length === 0
-
-  const renderSubheader = () => {
-    if (isLoading) {
-      return 'Loading...'
-    }
-    if (isEmpty) {
-      return 'Total Number of Roles: 0'
-    }
-    return `Total Number of Roles: ${total}`
-  }
-
-  const renderTableStatuses = () => {
-    if (isLoading) {
-      return <TableRowLoadingStatus cols={4} />
-    } else if (!isLoading && !error && isEmpty) {
-      return <TableRowEmptyStatus cols={4} content="No data available." />
-    } else if (!isLoading && !isEmpty && error) {
-      return (
-        <TableRowEmptyStatus
-          cols={4}
-          content="Currently unable to retrieve data."
-        />
-      )
-    }
-  }
-
-  const renderTableRows = () => {
-    if (!isEmpty && !isLoading && !error && roleData) {
-      return (
-        <>
-          {roleData.map((roleInfo, index) => (
-            <RolesTableRow roleInfo={roleInfo} key={index} />
-          ))}
-        </>
-      )
-    }
-  }
-  return (
-    
 
 // transfer list functions start ------------------------
 
@@ -135,12 +94,53 @@ const payments = [
   { name: 'Expiry date', detail: '04/2024' },
 ];
 
-function NewLearningJourney() {
+function NewLearningJourney({ numRows }) {
+  const [roleData, isLoading, total, error] = useRolesLoader(numRows)
+  // console.log('---> RolesTable, roleData: ', roleData)
+  const isEmpty = roleData.length === 0
+
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [skillData, setSkillData] = React.useState([]);
   const [selectedSkill, setSelectedSkill] = React.useState("");
   const [coursesBySkill, setCoursesBySkill] = React.useState([]);
+
+  const renderSubheader = () => {
+    if (isLoading) {
+      return 'Loading...'
+    }
+    if (isEmpty) {
+      return 'Total Number of Roles: 0'
+    }
+    return `Total Number of Roles: ${total}`
+  }
+
+  const renderTableStatuses = () => {
+    if (isLoading) {
+      return <TableRowLoadingStatus cols={4} />
+    } else if (!isLoading && !error && isEmpty) {
+      return <TableRowEmptyStatus cols={4} content="No data available." />
+    } else if (!isLoading && !isEmpty && error) {
+      return (
+        <TableRowEmptyStatus
+          cols={4}
+          content="Currently unable to retrieve data."
+        />
+      )
+    }
+  }
+
+  const renderTableRows = () => {
+    if (!isEmpty && !isLoading && !error && roleData) {
+      return (
+        <>
+          {roleData.map((roleInfo, index) => (
+            <RolesTableRow roleInfo={roleInfo} key={index} />
+          ))}
+        </>
+      )
+    }
+  }
 
   // stepper form functions start ------------------------
   const isStepOptional = (step) => {
@@ -394,165 +394,122 @@ function NewLearningJourney() {
 
                       </Grid>
 
-                      <h1>Insert Role List here</h1>
-                      
                       <Box
-      sx={(theme) => ({
-        [theme.breakpoints.up('md')]: {
-          width: '50%',
-        },
-        width: '80%',
-        margin: 'auto',
-      })}
-    >
-      <SectionHeader
-        header="New Learning Journey"
-        subHeader={renderSubheader()}
-      />
+                        sx={(theme) => ({
+                          [theme.breakpoints.up('md')]: {
+                            width: '50%',
+                          },
+                          width: '80%',
+                          margin: 'auto',
+                        })}
+                      >
+                        <SectionHeader
+                          header="New Learning Journey"
+                          subHeader={renderSubheader()}
+                        />
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell align="center">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {renderTableStatuses()}
-            {renderTableRows()}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                        <TableContainer component={Paper}>
+                          <Table>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Status</TableCell>
+                                <TableCell align="center">Actions</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {renderTableStatuses()}
+                              {renderTableRows()}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Box>
                     </React.Fragment>
                   </Box>
                 );
               // step 2 represents skills selection
               case 1:
-                return <Box sx={{ height: '50vh', color: 'red' }}>
-                  <React.Fragment>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">Skills based on role</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={selectedSkill}
-                        label="Skills"
-                        onChange={handleSkillChange}
-                      >
-                        {skillData?.map((item) => {
-                          return <MenuItem key={item.skill_id} value={item.skill_id}>{item.skill_name}</MenuItem>
-                        })}
+                return (
+                  <Box sx={{ height: '50vh', color: 'red' }}>
+                    <React.Fragment>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Skills based on role</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={selectedSkill}
+                          label="Skills"
+                          onChange={handleSkillChange}
+                        >
+                          {skillData?.map((item) => {
+                            return <MenuItem key={item.skill_id} value={item.skill_id}>{item.skill_name}</MenuItem>
+                          })}
 
-                      </Select>
-                    </FormControl>
-                  </React.Fragment>
-                </Box>;
+                        </Select>
+                      </FormControl>
+                    </React.Fragment>
+                  </Box>
+                );
               // step 3 represents courses selection
               case 2:
-                return <Box sx={{ height: '50vh', color: 'red' }}>
-                  <React.Fragment>
-                    <Grid container spacing={2} justifyContent="center" alignItems="center">
-                      <Grid item>{customList('Choices', left)}</Grid>
-                      <Grid item>
-                        <Grid container direction="column" alignItems="center">
-                          <Button
-                            sx={{ my: 0.5 }}
-                            variant="outlined"
-                            size="small"
-                            onClick={handleCheckedRight}
-                            disabled={leftChecked.length === 0}
-                            aria-label="move selected right"
-                          >
-                            &gt;
-                          </Button>
-                          <Button
-                            sx={{ my: 0.5 }}
-                            variant="outlined"
-                            size="small"
-                            onClick={handleCheckedLeft}
-                            disabled={rightChecked.length === 0}
-                            aria-label="move selected left"
-                          >
-                            &lt;
-                          </Button>
+                return (
+                  <Box sx={{ height: '50vh', color: 'red' }}>
+                    <React.Fragment>
+                      <Grid container spacing={2} justifyContent="center" alignItems="center">
+                        <Grid item>{customList('Choices', left)}</Grid>
+                        <Grid item>
+                          <Grid container direction="column" alignItems="center">
+                            <Button
+                              sx={{ my: 0.5 }}
+                              variant="outlined"
+                              size="small"
+                              onClick={handleCheckedRight}
+                              disabled={leftChecked.length === 0}
+                              aria-label="move selected right"
+                            >
+                              &gt;
+                            </Button>
+                            <Button
+                              sx={{ my: 0.5 }}
+                              variant="outlined"
+                              size="small"
+                              onClick={handleCheckedLeft}
+                              disabled={rightChecked.length === 0}
+                              aria-label="move selected left"
+                            >
+                              &lt;
+                            </Button>
+                          </Grid>
                         </Grid>
+                        <Grid item>{customList('Chosen', right)}</Grid>
                       </Grid>
-                      <Grid item>{customList('Chosen', right)}</Grid>
-                    </Grid>
-                  </React.Fragment>
-                </Box>;
+                    </React.Fragment>
+                  </Box>
+                );
               // step 4 represents the learning journey summary before submission
               case 3:
-                return <Box>
-                  <React.Fragment>
-                    <Typography variant="h6" gutterBottom>
-                      Learning Journey Summary
-                    </Typography>
-
-                    <ListItem sx={{ py: 1, px: 0 }}>
-                      <ListItemText primary={selectedSkill} />
-                      <Typography variant="body2">{right.join(', ')}</Typography>
-                    </ListItem>
-
-
-                    {/* checkout template */}
-                    {/* <List disablePadding>
-                      {products.map((product) => (
-                        <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
-                          <ListItemText primary={product.name} secondary={product.desc} />
-                          <Typography variant="body2">{product.price}</Typography>
-                        </ListItem>
-                      ))}
+                return (
+                  <Box>
+                    <React.Fragment>
+                      <Typography variant="h6" gutterBottom>
+                        Learning Journey Summary
+                      </Typography>
 
                       <ListItem sx={{ py: 1, px: 0 }}>
-                        <ListItemText primary="Total" />
-                        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                          $34.06
-                        </Typography>
+                        <ListItemText primary={selectedSkill} />
+                        <Typography variant="body2">{right.join(', ')}</Typography>
                       </ListItem>
-                    </List>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-                          Shipping
-                        </Typography>
-                        <Typography gutterBottom>John Smith</Typography>
-                        <Typography gutterBottom>{addresses.join(', ')}</Typography>
-                      </Grid>
-                      <Grid item container direction="column" xs={12} sm={6}>
-                        <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-                          Payment details
-                        </Typography>
-                        <Grid container>
-                          {payments.map((payment) => (
-                            <React.Fragment key={payment.name}>
-                              <Grid item xs={6}>
-                                <Typography gutterBottom>{payment.name}</Typography>
-                              </Grid>
-                              <Grid item xs={6}>
-                                <Typography gutterBottom>{payment.detail}</Typography>
-                              </Grid>
-                            </React.Fragment>
-                          ))}
-                        </Grid>
-                      </Grid>
-                    </Grid> */}
-                  </React.Fragment>
-                </Box>
+
+                    </React.Fragment>
+                  </Box>
+                );
               default:
                 return <h1>Error - Page do not exist!</h1>;
             }
           })()}
 
-          {/* form here */}
-
-
-
-
-
+          {/* Stepper form control buttons start */}
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
               color="inherit"
@@ -575,12 +532,13 @@ function NewLearningJourney() {
 
             </Button>
           </Box>
+          {/* Stepper form control buttons end */}
         </React.Fragment>
-      )}
-
-
+      )
+    }
     </Box>
-  )
+  );
+
 }
 
 // RolesTable.propTypes = {
