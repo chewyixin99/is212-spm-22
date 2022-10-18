@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Box,
     Typography,
@@ -26,6 +26,21 @@ function AdminNewSkillPreview() {
     horizontal: 'right'
   })
   
+  // only navigate if success
+  useEffect(() => {
+    if (alertSeverity == 'success' && snackbarState.open) {
+       navigate(
+        "/admin/skills",
+        {
+          state: {
+            snackbarState: snackbarState,
+            from: 'AdminNewSkillPreview'
+          }
+        }
+      )
+    }
+  }, [alertSeverity, snackbarState])
+
   const handleBackClick = () => {
     navigate(-1)
   }
@@ -59,24 +74,10 @@ function AdminNewSkillPreview() {
           setAlertMessage(`Skill ${location.state.skillName} already exists.`)
           setAlertSeverity("error")
           setSnackbarState({...snackbarState, open: true})
-          
         } else {
           setAlertMessage(`Skill ${location.state.skillName} successfully created.`)
           setAlertSeverity("success")
           setSnackbarState({...snackbarState, open: true})
-          navigate(
-            "/admin/skills",
-            {
-              state: {
-                snackbarState: {
-                  open: true,
-                  vertical: 'bottom',
-                  horizontal: 'right'
-                },
-                from: 'AdminNewSkillPreview'
-              }
-            }
-          )
         }
 
       })

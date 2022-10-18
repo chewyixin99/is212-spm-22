@@ -13,7 +13,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `SPM`
 --
-DROP DATABASE IF EXISTS `SPM`; 
+DROP DATABASE IF EXISTS `SPM`;
 CREATE DATABASE IF NOT EXISTS `SPM` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `SPM`;
 
@@ -54,6 +54,25 @@ INSERT INTO `role` (`role_id`, `role_name`, `status`) VALUES
 (2, 'Software Engineer', 'Active'),
 (3, 'Full-stack developer', 'Active');
 COMMIT;
+
+--
+-- Table structure for table `registration`
+--
+-- DROP TABLE IF EXISTS `registration`;
+-- CREATE TABLE IF NOT EXISTS `registration` (
+--   `reg_id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+--   `course_id` varchar(50) NOT NULL,
+--   `staff_id` varchar(50) NOT NULL,
+--   `reg_status` varchar(50) NOT NULL,
+--   `completion_status` varchar(50) NOT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- INSERT INTO `role` (`role_id`, `role_name`, `status`) VALUES
+-- (1, 'Product Manager', 'Active'),
+-- (2, 'Software Engineer', 'Active'),
+-- (3, 'Full-stack developer', 'Active');
+-- COMMIT;
+
 
 --
 -- Table structure for table `learning_journey`
@@ -169,4 +188,37 @@ INSERT INTO `learning_journey_course` (`learning_journey_id`, `course_id`) VALUE
 (1, 'IS212'),
 (2, 'IS212'),
 (3, 'IS216');
+COMMIT;
+
+--
+-- Table structure for table `staff_course`
+--
+DROP TABLE IF EXISTS `staff_course`;
+CREATE TABLE IF NOT EXISTS `staff_course` (
+  `staff_id` int(11) NOT NULL,
+  `course_id` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `staff_course`
+  ADD CONSTRAINT `staff_course_fk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`),
+  ADD CONSTRAINT `staff_course_fk_2` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`);
+
+-- to add dummy data (halp)
+COMMIT;
+
+--
+-- Table structure for table `staff_skill` (Take note this is a db.Model, unlike other db.Tables)
+--
+DROP TABLE IF EXISTS `staff_skill`;
+CREATE TABLE IF NOT EXISTS `staff_skill` (
+  `staff_id` int(11) NOT NULL,
+  `skill_id` int(11) NOT NULL,
+  `completion_status` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `staff_skill`
+  ADD CONSTRAINT `staff_skill_fk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`staff_id`),
+  ADD CONSTRAINT `staff_skill_fk_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`skill_id`);
+
+-- to add dummy data (halp)
 COMMIT;
