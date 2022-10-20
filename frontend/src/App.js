@@ -21,6 +21,7 @@ import AdminNewRole from './pages/admin/AdminNewRole'
 import AdminSkillsPage from './pages/admin/AdminSkillsPage'
 import AdminNewSkill from './pages/admin/AdminNewSkill'
 import AdminNewSkillPreview from './pages/admin/AdminNewSkillPreview'
+import AdminEditSkill from './pages/admin/AdminEditSkill'
 import StaffOutlet from './pages/staff/StaffOutlet'
 import StaffHomePage from './pages/staff/StaffHomePage'
 import ManagerOutlet from './pages/manager/ManagerOutlet'
@@ -65,7 +66,10 @@ function App() {
             <Route path=":course_id" element={<Course />} />
           </Route>
           <Route path="skills">
-            <Route path=":skill_id" element={<Skill />} />
+            <Route path=":skill_id" >
+              <Route index element={<Skill />} />
+              <Route path="edit" element={<AdminEditSkill />} />
+            </Route>
           </Route>
           
           <Route path="roles">

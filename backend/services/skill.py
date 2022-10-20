@@ -94,6 +94,40 @@ def update_skill(skill_id):
     )
 
 
+@skill_routes.route("/skills/<int:skill_id>", methods=["DELETE"])
+def delete_skill(skill_id):
+    skill = Skill.query.filter_by(skill_id=skill_id).first()
+    if not (skill):
+        return jsonify(
+            {
+                "code": 404,
+                "data": {"skill_id": skill_id},
+                "message": f"Skill {skill_id} does not exist.",
+            }
+        )
+
+    try:
+        db.session.delete(skill)
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        return jsonify(
+            {
+                "code": 500,
+                "data": {"skill_id": skill_id},
+                "message": "An error occurred while deleting the skill.",
+            }
+        )
+
+    return jsonify(
+        {
+            "code": 201,
+            "skill_id": skill_id,
+            "message": f"Successfully deleted skill {skill_id}.",
+        }
+    )
+
+
 @skill_routes.route("/skills/<int:skill_id>/roles")
 def get_roles_of_skill(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()

@@ -1,32 +1,37 @@
-import React from 'react'
-import { 
-    Link,
-    useParams,
- } from 'react-router-dom'
- 
- import { emphasize, styled } from '@mui/material/styles'
- import { blueGrey } from '@mui/material/colors'
-//  import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-//  import CategoryIcon from '@mui/icons-material/Category';
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
- import {
-    Alert,
-    Box,
-    Breadcrumbs,
-    Stack,
-    Typography,
+import { emphasize, styled } from '@mui/material/styles'
+import { blueGrey } from '@mui/material/colors'
+
+import {
+  Alert,
+  Box,
+  Breadcrumbs,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Stack,
+  Typography,
 } from '@mui/material'
-import { ENDPOINT } from '../../constants'
+import { ENDPOINT, STATUS } from '../../constants'
+import DescriptionRows from '../common/DescriptionRows'
+import SnackbarAlert from '../common/SnackbarAlert'
+import { KeyboardArrowLeft } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 
-const StyledBreadcrumb = styled(Link)(({theme}) => ({
+const StyledBreadcrumb = styled(Link)(({ theme }) => ({
   backgroundColor: blueGrey[50],
   height: theme.spacing(6),
-  "&:hover, &:focus" : {
-    backgroundColor: blueGrey[100]
+  '&:hover, &:focus': {
+    backgroundColor: blueGrey[100],
   },
-  "&:active": {
+  '&:active': {
     boxShadow: theme.shadows[1],
-    backgroundColor: emphasize(blueGrey[100], 0.12)
+    backgroundColor: emphasize(blueGrey[100], 0.12),
   },
   padding: theme.spacing(1),
   textDecoration: 'none',
@@ -34,81 +39,226 @@ const StyledBreadcrumb = styled(Link)(({theme}) => ({
   border: '1px solid',
 }))
 
-// const IconText = styled(Typography)(({theme}) => ({
-//   display: 'flex',
-//   alignItems: 'center',
-// }))
-
 function Skill() {
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const { skill_id } = useParams()
   const baseUrl = ENDPOINT
-  const [skill, setSkill] = React.useState([]);
-  const [skillCourses, setSkillCourses] = React.useState([]);
+  const [skill, setSkill] = useState([])
+  const [skillCourses, setSkillCourses] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('Skill successfully edited')
+  const [alertSeverity, setAlertSeverity] = useState('success')
+  // modal controls
+  const [openModal, setOpenModal] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       await fetch(`${baseUrl}/skills/${skill_id}`)
-        .then(results => results.json())
-        .then(data => {
+        .then((results) => results.json())
+        .then((data) => {
           setSkill(data.data)
         })
       await fetch(`${baseUrl}/skills/${skill_id}/courses`)
-        .then(results => results.json())
-        .then(data => {
-            setSkillCourses(data.data.courses)
+        .then((results) => results.json())
+        .then((data) => {
+          setSkillCourses(data.data.courses)
         })
     }
     fetchData().catch(console.error)
   }, [])
-  console.log(skill)
+
+  const renderAlertMessage = (status) => {
+    if (status == STATUS.RETIRED) {
+      return (
+        <Alert severity="error">
+          This skill is no longer available for learning.
+        </Alert>
+      )
+    } else if (status == STATUS.PENDING) {
+      return <Alert severity="warning">This skill is pending approval.</Alert>
+    }
+    return (
+      <Alert severity="info">
+        This skill is currently available for learning.
+      </Alert>
+    )
+  }
+
+  const renderSkillCourses = (skillCourses) => {
+    if (skillCourses.length > 1) {
+      return (
+        <Breadcrumbs aria-label="breadcrumb">
+          {skillCourses.map((course) =>
+            course.course_status == STATUS.ACTIVE ? (
+              // course.course_status == "Active"
+              // ? <Link underline="hover" color="inherit" href="#"> {course.course_name}</Link>
+              <StyledBreadcrumb>
+                {/* to add link to the course page */}
+                {course.course_name}
+              </StyledBreadcrumb>
+            ) : (
+              <Typography></Typography>
+            )
+          )}
+        </Breadcrumbs>
+      )
+    } else {
+      return (
+        <Typography
+          sx={{ color: 'text.secondary' }}
+          variant="subtitle1"
+          display="block"
+          gutterBottom
+        >
+          There are no courses that has this skill yet.
+        </Typography>
+      )
+    }
+  }
+
+  const handleBackClick = () => {
+    navigate(-1)
+  }
+
+  const handleEditClick = () => {
+    console.log(`edit clicked`)
+    navigate(`/admin/skills/${skill.skill_id}/edit`, {
+      state: {
+        skillState: {
+          skillName: skill.skill_name,
+          skillId: skill.skill_id,
+          skillDesc: skill.skill_desc,
+          skillStatus: skill.status,
+        },
+        from: 'Skills',
+      },
+    })
+  }
+
+  const handleDeleteClick = () => {
+    console.log(`delete clicked`)
+    setOpenModal(true)
+  }
+
+  const handleConfirmDeleteClick = () => {
+    setIsLoading(true)
+    const requestOptions = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    const url = `${ENDPOINT}/skills/${skill_id}`
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((responseJSON) => {
+        setIsLoading(false)
+        if (responseJSON.code > 399) {
+          setAlertMessage(`Skill ${skill_id} does not exist`)
+          setAlertSeverity('error')
+          setSnackbarOpen(true)
+        } else {
+          navigate('/admin/skills', {
+            replace: true,
+          })
+        }
+      })
+      .catch(() => {
+        setIsLoading(false)
+        setAlertMessage('Internal server error, please try again.')
+        setAlertSeverity('error')
+        setSnackbarOpen(true)
+        setOpenModal(false)
+      })
+  }
+
+  const handleModalClose = () => {
+    setOpenModal(false)
+  }
 
   return (
-    <Box sx={{ width: '50%', margin: 'auto'}}>
-        <Typography
-          variant="h3"
-          noWrap
-          component="a"
-          sx={{
-            mr: 2,
-            my: 3,
-            display: { xs:'none', md: 'flex' },
-            fontFamily: 'monospace',
-            letterSpacing: '.3rem',
-            color: 'inherit',
-            textDecoration: 'none',
-          }}
-        />
-        <Box sx={{ marginBottom: '10vh', justifyContent: 'center' }}>
-          <Typography variant="h4" component="div" gutterBottom>
-            {skill.skill_name} [skill: {skill.skill_id}]
-          </Typography>
-          <Stack spacing={4} sx={{ marginTop: '5vh', marginBottom: '10vh '}}>
-            {
-              skill.status == 'Retired'
-                ? <Alert severity='error'>This skill is no longer available for learning.</Alert>
-                : <Alert severity='info'>This skill is currently available for learning</Alert>
-            }
-            <Breadcrumbs aria-label="breadcrumb">
-              {
-                  (
-                      skillCourses.map((course) => (
-                        course.course_status == "Active"
-                          // ? <Link underline="hover" color="inherit" href="#"> {course.course_name}</Link>
-                          ? <StyledBreadcrumb>
-                            {/* to add link to the course page */}
-                              {course.course_name}
-                            </StyledBreadcrumb>
-                          : <Typography></Typography>
-                      ))
-                  )
-              }
-            </Breadcrumbs>
-
-            <Typography>
-              {skill.skill_desc}
-            </Typography>
-          </Stack>
-        </Box>
+    <Box sx={{ width: '50%', margin: 'auto' }}>
+      <Typography
+        variant="h3"
+        noWrap
+        component="a"
+        sx={{
+          mr: 2,
+          my: 3,
+          display: { xs: 'none', md: 'flex' },
+          fontFamily: 'monospace',
+          letterSpacing: '.3rem',
+          color: 'inherit',
+          textDecoration: 'none',
+        }}
+      />
+      <Box sx={{ marginBottom: '10vh', justifyContent: 'center' }}>
+        <Typography variant="h4" component="div" gutterBottom>
+          {skill.skill_name}
+        </Typography>
+        <Stack spacing={4} sx={{ marginTop: '5vh', marginBottom: '10vh ' }}>
+          {renderAlertMessage(skill.status)}
+          {renderSkillCourses(skillCourses)}
+          {DescriptionRows('Skill ID', skill.skill_id)}
+          {DescriptionRows('Skill description', skill.skill_desc)}
+          {DescriptionRows('Skill status', skill.status)}
+          <form>
+            <Button
+              variant="outlined"
+              sx={{ mr: 3 }}
+              startIcon={<KeyboardArrowLeft />}
+              onClick={handleBackClick}
+            >
+              Back
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ mr: 3 }}
+              onClick={handleEditClick}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ mr: 3 }}
+              onClick={handleDeleteClick}
+            >
+              Delete
+            </Button>
+          </form>
+        </Stack>
+      </Box>
+      <SnackbarAlert
+        open={snackbarOpen}
+        alertMessage={alertMessage}
+        alertSeverity={alertSeverity}
+      ></SnackbarAlert>
+      <Dialog open={openModal} onClose={handleModalClose}>
+        <DialogTitle>{'Delete skill?'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Once you delete this skill, you will not be able to recover it.
+            Consider want to setting status to "Retired" instead.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleModalClose} autoFocus>
+            Back
+          </Button>
+          <LoadingButton
+            variant="contained"
+            loading={isLoading}
+            color="error"
+            onClick={handleConfirmDeleteClick}
+          >
+            Delete
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }
