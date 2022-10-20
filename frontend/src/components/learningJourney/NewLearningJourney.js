@@ -375,7 +375,7 @@ function NewLearningJourney({ numRows }) {
               // step 1 represents the learning journey name input and role selection
               case 0:
                 return (
-                  <Box sx={{ height: '50vh' }}>
+                  <Box sx={{ }}>
                     <React.Fragment>
                       <Typography variant="h6" gutterBottom>
                         Learning Journey Name
@@ -396,15 +396,18 @@ function NewLearningJourney({ numRows }) {
 
                       <Box
                         sx={(theme) => ({
-                          [theme.breakpoints.up('md')]: {
-                            width: '50%',
-                          },
-                          width: '80%',
-                          margin: 'auto',
+                          // [theme.breakpoints.up('md')]: {
+                          //   width: '50%',
+                          // },
+                          // width: '80%',
+                          // margin: 'auto',
                         })}
                       >
+                        <Typography variant="h6" mt={5}>
+                        Select Role
+                        </Typography>
                         <SectionHeader
-                          header="New Learning Journey"
+                          // header="New Learning Journey"
                           subHeader={renderSubheader()}
                         />
 
