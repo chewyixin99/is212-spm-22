@@ -55,9 +55,11 @@ function App() {
         <Route path="/admin" element={<AdminOutlet />}>
           <Route index element={<AdminHomePage />} />
           <Route path="roles" element={<AdminRolesPage />} />
-          <Route path="newrole" element={<AdminNewRole />} />
+          <Route path="newrole">
+            <Route index element={<AdminNewRole />} />
+          </Route>
           <Route path="skills" element={<AdminSkillsPage />} />
-          <Route path="newskill" >
+          <Route path="newskill">
             <Route index element={<AdminNewSkill />} />
             <Route path="preview" element={<AdminNewSkillPreview />} />
           </Route>
@@ -71,7 +73,7 @@ function App() {
               <Route path="edit" element={<AdminEditSkill />} />
             </Route>
           </Route>
-          
+
           <Route path="roles">
             <Route path=":role_id" element={<Role />} />
           </Route>

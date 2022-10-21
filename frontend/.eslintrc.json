@@ -21,6 +21,16 @@
     "comma-dangle": 0,
     "prettier/prettier": "error",
     "no-console": "off",
+    "object-curly-newline": "off",
+    "arrow-body-style": "off",
+    "consistent-return": "off",
+    "import/no-unresolved": [
+      2,
+      {
+        "caseSensitive": false
+      }
+      ],
+    "no-else-return": "off",
     "react/jsx-filename-extension": [
       1,
       {
@@ -40,15 +50,7 @@
         ]
       }
     ],
-    "object-curly-newline": "off",
-    "arrow-body-style": "off",
-    "consistent-return": "off",
     "react/no-array-index-key": "off",
-    "import/no-unresolved": [
-      2,
-      {
-        "caseSensitive": false
-      }
-    ], "no-else-return": "off"
+    "react/jsx-no-constructed-context-values": "off"
   }
 }
