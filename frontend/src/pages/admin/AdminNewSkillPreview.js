@@ -14,6 +14,9 @@ function AdminNewSkillPreview() {
   const location = useLocation()
   const navigate = useNavigate()
 
+  const { skillName, skillDesc, skillStatus } = location.state.formValues
+  const { courses, roles } = location.state
+
   const [isLoading, setIsLoading] = useState(false)
   const [alertSeverity, setAlertSeverity] = useState('info')
   const [alertMessage, setAlertMessage] = useState('')
@@ -48,8 +51,9 @@ function AdminNewSkillPreview() {
 
     // requestBody have to be stringified if not POST will return 400 bad request
     const requestBody = {
-      skill_desc: location.state.skillDesc,
-      status: location.state.skillStatus,
+      skill_desc: skillDesc,
+      status: skillStatus,
+      courses: courses,
     }
     const requestOptions = {
       method: 'POST',
@@ -59,7 +63,7 @@ function AdminNewSkillPreview() {
       body: JSON.stringify(requestBody),
     }
 
-    const url = `${ENDPOINT}/skills/${location.state.skillName}`
+    const url = `${ENDPOINT}/skills/${skillName}`
 
     fetch(url, requestOptions)
       .then((response) => response.json())
@@ -67,12 +71,16 @@ function AdminNewSkillPreview() {
         setIsLoading(false)
 
         if (responseJSON.code > 399) {
-          setAlertMessage(`Skill ${location.state.skillName} already exists.`)
+          setAlertMessage(
+            // `Skill ${skillName} already exists.`
+            responseJSON.message
+          )
           setAlertSeverity('error')
           setSnackbarState({ ...snackbarState, open: true })
         } else {
           setAlertMessage(
-            `Skill ${location.state.skillName} successfully created.`
+            // `Skill ${skillName} successfully created.`
+            responseJSON.message
           )
           setAlertSeverity('success')
           setSnackbarState({ ...snackbarState, open: true })
@@ -100,9 +108,11 @@ function AdminNewSkillPreview() {
         <SectionHeader header="Skill preview" />
         {/* id, name, status, description */}
         <form onSubmit={handleSubmit}>
-          {DescriptionRows('Skill name', location.state.skillName)}
-          {DescriptionRows('Skill description', location.state.skillDesc)}
-          {DescriptionRows('Skill status', location.state.skillStatus)}
+          {DescriptionRows('Skill name', skillName)}
+          {DescriptionRows('Skill description', skillDesc)}
+          {DescriptionRows('Skill status', skillStatus)}
+          {DescriptionRows('Roles', location.state.roles.join(', '))}
+          {DescriptionRows('Courses', location.state.courses.join(', '))}
           <Button
             variant="outlined"
             sx={{ my: 3, mr: 3 }}

@@ -71,13 +71,13 @@ function Skill() {
   }, [])
 
   const renderAlertMessage = (status) => {
-    if (status == STATUS.RETIRED) {
+    if (status === STATUS.RETIRED) {
       return (
         <Alert severity="error">
           This skill is no longer available for learning.
         </Alert>
       )
-    } else if (status == STATUS.PENDING) {
+    } else if (status === STATUS.PENDING) {
       return <Alert severity="warning">This skill is pending approval.</Alert>
     }
     return (
@@ -87,22 +87,21 @@ function Skill() {
     )
   }
 
+  // filter for breadcrumbs
+  const checkActive = (course) => {
+    return course.course_status === STATUS.ACTIVE
+  }
+
   const renderSkillCourses = (skillCourses) => {
-    if (skillCourses.length > 1) {
+    if (skillCourses.filter(checkActive).length > 0) {
       return (
         <Breadcrumbs aria-label="breadcrumb">
-          {skillCourses.map((course) =>
-            course.course_status == STATUS.ACTIVE ? (
-              // course.course_status == "Active"
-              // ? <Link underline="hover" color="inherit" href="#"> {course.course_name}</Link>
-              <StyledBreadcrumb>
-                {/* to add link to the course page */}
-                {course.course_name}
-              </StyledBreadcrumb>
-            ) : (
-              <Typography></Typography>
-            )
-          )}
+          {skillCourses.filter(checkActive).map((course) => (
+            <StyledBreadcrumb>
+              {/* to add link to the course page */}
+              {course.course_name}
+            </StyledBreadcrumb>
+          ))}
         </Breadcrumbs>
       )
     } else {
@@ -157,7 +156,7 @@ function Skill() {
       .then((responseJSON) => {
         setIsLoading(false)
         if (responseJSON.code > 399) {
-          setAlertMessage(`Skill ${skill_id} does not exist`)
+          setAlertMessage(responseJSON.message)
           setAlertSeverity('error')
           setSnackbarOpen(true)
         } else {

@@ -1,5 +1,6 @@
 from extensions import db
 from flask import Blueprint, jsonify, request
+from models.course import Course
 from models.skill import Skill
 
 skill_routes = Blueprint("skills", __name__)
@@ -23,6 +24,14 @@ def get_skill_by_id(skill_id):
     return jsonify({"code": 404, "message": "Skill cannot be found. Please try again."})
 
 
+@skill_routes.route("/skills/<string:skill_name>")
+def get_skill_by_skill_name(skill_name):
+    skill = Skill.query.filter_by(skill_name=skill_name).first()
+    if skill:
+        return jsonify({"code": 200, "data": skill.json()})
+    return jsonify({"code": 404, "message": "Skill cannot be found. Please try again."})
+
+
 @skill_routes.route("/skills/<string:skill_name>", methods=["POST"])
 def create_skill(skill_name):
     if Skill.query.filter_by(skill_name=skill_name).first():
@@ -39,7 +48,11 @@ def create_skill(skill_name):
     data = request.get_json()
 
     try:
-        skill = Skill(skill_name, **data)
+        skill = Skill(skill_name, data["skill_desc"], data["status"])
+        for course_id in data["courses"]:
+            course = Course.query.filter_by(course_id=course_id).first()
+            skill.courses.append(course)
+
         db.session.add(skill)
         db.session.commit()
     except Exception as e:

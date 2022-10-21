@@ -45,7 +45,10 @@ const SkillsTableRow = ({ skillInfo }) => {
         fetch(url, requestOptions)
           .then((response) => response.json())
           .then((responseJSON) => {
-            if (responseJSON.code < 299) {
+            console.log(responseJSON)
+            if (responseJSON.code > 399) {
+              console.log(responseJSON.message)
+            } else {
               window.location.reload()
             }
           })
