@@ -4,29 +4,69 @@ import propTypes from 'prop-types'
 import { TableCell, TableRow } from '@mui/material'
 
 import ActionMenu from '../common/ActionMenu'
-import { STATUS } from '../../constants'
+import { STATUS, ENDPOINT } from '../../constants'
+import { useNavigate } from 'react-router-dom'
 
 const SkillsTableRow = ({ skillInfo }) => {
+  const navigate = useNavigate()
+  const { skill_desc, skill_id, skill_name, status } = skillInfo
   const actionMenuConfigs = [
     {
       itemName: 'View',
-      itemAction: () => {},
+      itemAction: () => {
+        navigate(`/admin/skills/${skill_id}`)
+      },
     },
     {
       itemName: 'Edit',
-      itemAction: () => {},
+      itemAction: () => {
+        navigate(`/admin/skills/${skill_id}/edit`, {
+          state: {
+            skillState: {
+              skillName: skill_name,
+              skillId: skill_id,
+              skillDesc: skill_desc,
+              skillStatus: status,
+            },
+          },
+        })
+      },
     },
     {
       itemName: 'Remove',
-      itemAction: () => {},
+      itemAction: () => {
+        const requestOptions = {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+        const url = `${ENDPOINT}/skills/${skill_id}`
+        fetch(url, requestOptions)
+          .then((response) => response.json())
+          .then((responseJSON) => {
+            console.log(responseJSON)
+            if (responseJSON.code > 399) {
+              console.log(responseJSON.message)
+            } else {
+              window.location.reload()
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
     },
   ]
-  const textColor = 
-    skillInfo.status == STATUS.RETIRED
-      ? 'red'
-      : skillInfo.status == STATUS.PENDING
-        ? 'orange'
-        : 'green'
+
+  let textColor
+  if (skillInfo.status === STATUS.RETIRED) {
+    textColor = 'red'
+  } else if (skillInfo.status === STATUS.PENDING) {
+    textColor = 'orange'
+  } else {
+    textColor = 'green'
+  }
 
   return (
     <TableRow>
