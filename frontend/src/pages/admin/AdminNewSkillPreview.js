@@ -15,7 +15,7 @@ function AdminNewSkillPreview() {
   const navigate = useNavigate()
 
   const { skillName, skillDesc, skillStatus } = location.state.formValues
-  const { courses, roles } = location.state
+  const { courses } = location.state
 
   const [isLoading, setIsLoading] = useState(false)
   const [alertSeverity, setAlertSeverity] = useState('info')
@@ -111,7 +111,6 @@ function AdminNewSkillPreview() {
           {DescriptionRows('Skill name', skillName)}
           {DescriptionRows('Skill description', skillDesc)}
           {DescriptionRows('Skill status', skillStatus)}
-          {DescriptionRows('Roles', location.state.roles.join(', '))}
           {DescriptionRows('Courses', location.state.courses.join(', '))}
           <Button
             variant="outlined"

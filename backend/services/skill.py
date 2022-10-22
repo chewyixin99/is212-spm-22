@@ -53,6 +53,11 @@ def create_skill(skill_name):
             course = Course.query.filter_by(course_id=course_id).first()
             skill.courses.append(course)
 
+        #! CANNOT add role to skills
+        # for role_name in data["roles"]:
+        #     role = Role.query.filter_by(role_name=role_name).first()
+        #     skill.roles.append(role)
+
         db.session.add(skill)
         db.session.commit()
     except Exception as e:
@@ -86,9 +91,17 @@ def update_skill(skill_id):
 
     data = request.get_json()
     try:
-        for key in data.keys():
-            setattr(skill, key, data[key])
-            db.session.commit()
+        for i in range(len(data["courses"])):
+            course = Course.query.filter_by(course_id=data["courses"][i]).first()
+            data["courses"][i] = course
+        # for i in range(len(data["roles"])):
+        #     role = Role.query.filter_by(role_name=data["roles"][i]).first()
+        #     data["roles"][i] = role
+        # for key in data.keys():
+        #     setattr(skill, key, data[key])
+
+        db.session.commit()
+
     except Exception as e:
         print(e)
         return jsonify(

@@ -34,9 +34,9 @@ CREATE TABLE IF NOT EXISTS `staff` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `staff` (`staff_id`, `staff_fname`, `staff_lname`, `dept`, `email`, `type`, `status`) VALUES
-(1, 'kokwee', 'loh', 'dept a', 'lohkokwee@mail.com', 1, 'Active'),
-(2, 'jianlin', 'gan', 'dept b', 'ganjianlin@mail.com', 2, 'Active'),
-(3, 'joel', 'lim', 'dept c', 'joellim@mail.com', 3, 'Retired');
+(1, 'kokwee', 'loh', 'dept a', 'lohkokwee@mail.com', 1, 'ACTIVE'),
+(2, 'jianlin', 'gan', 'dept b', 'ganjianlin@mail.com', 2, 'ACTIVE'),
+(3, 'joel', 'lim', 'dept c', 'joellim@mail.com', 3, 'RETIRED');
 COMMIT;
 
 --
@@ -50,9 +50,9 @@ CREATE TABLE IF NOT EXISTS `role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `role` (`role_id`, `role_name`, `status`) VALUES
-(1, 'Product Manager', 'Active'),
-(2, 'Software Engineer', 'Active'),
-(3, 'Full-stack developer', 'Active');
+(1, 'Product Manager', 'ACTIVE'),
+(2, 'Software Engineer', 'ACTIVE'),
+(3, 'Full-stack developer', 'ACTIVE');
 COMMIT;
 
 --
@@ -107,9 +107,9 @@ CREATE TABLE IF NOT EXISTS `skill` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `skill` (`skill_id`, `skill_name`, `skill_desc`, `status`) VALUES
-(1, 'Python', 'General-purpose Programming language', 'Active'),
-(2, 'Leadership', 'Leadership skill', 'Active'),
-(3, 'Vue', 'Front-end framework', 'Active');
+(1, 'Python', 'General-purpose Programming language', 'ACTIVE'),
+(2, 'Leadership', 'Leadership skill', 'ACTIVE'),
+(3, 'Vue', 'Front-end framework', 'ACTIVE');
 COMMIT;
 
 --
@@ -126,9 +126,9 @@ CREATE TABLE IF NOT EXISTS `course` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `course` (`course_id`, `course_name`, `course_desc`, `course_status`, `course_type`, `course_category`) VALUES
-('IS111', 'Intro to Programming', 'is111 desc', 'Active', 'Internal', 'Technical'),
-('IS212', 'Software Project Management', 'spm desc', 'Active', 'Internal', 'Management'),
-('IS216', 'Web App Development II', 'wad2 desc', 'Retired', 'Internal', 'Technical');
+('IS111', 'Intro to Programming', 'is111 desc', 'ACTIVE', 'Internal', 'Technical'),
+('IS212', 'Software Project Management', 'spm desc', 'ACTIVE', 'Internal', 'Management'),
+('IS216', 'Web App Development II', 'wad2 desc', 'RETIRED', 'Internal', 'Technical');
 COMMIT;
 
 --

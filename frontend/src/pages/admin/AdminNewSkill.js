@@ -29,14 +29,11 @@ function AdminNewSkill() {
   // error handling already built in TextField
   const navigate = useNavigate()
   const [allCourses, setAllCourses] = useState([])
-  const [allRoles, setAllRoles] = useState([])
   const [courses, setCourses] = useState([])
-  const [roles, setRoles] = useState([])
 
   const [skillNameError, setSkillNameError] = useState(false)
   const [skillDescError, setSkillDescError] = useState(false)
   const [coursesError, setCoursesError] = useState(false)
-  const [rolesError, setRolesError] = useState(false)
   const [formValues, setFormValues] = useState({
     skillName: '',
     skillDesc: '',
@@ -55,11 +52,6 @@ function AdminNewSkill() {
         .then((responseJSON) => {
           setAllCourses(responseJSON.data.courses)
         })
-      await fetch(`${ENDPOINT}/roles`)
-        .then((response) => response.json())
-        .then((responseJSON) => {
-          setAllRoles(responseJSON.data.roles)
-        })
     }
     fetchData().catch(console.error)
   }, [])
@@ -70,15 +62,13 @@ function AdminNewSkill() {
         alertSeverity === 'error' ||
         formValues.skillName.length > 50 ||
         formValues.skillDesc.length > 255 ||
-        courses.length < 1 ||
-        roles.length < 1
+        courses.length < 1
       )
     ) {
       navigate('/admin/newskill/preview', {
         state: {
           formValues: formValues,
           courses: courses,
-          roles: roles,
         },
       })
     }
@@ -125,13 +115,6 @@ function AdminNewSkill() {
     setCourses(typeof value === 'string' ? courses.split(',') : value)
   }
 
-  const handleRolesChange = (e) => {
-    const {
-      target: { value },
-    } = e
-    setRoles(typeof value === 'string' ? roles.split(',') : value)
-  }
-
   const handleSubmit = (e) => {
     // prevent refreshing of page, without this will have warning
     // 'Form submission canceled because the form is not connected'
@@ -141,7 +124,6 @@ function AdminNewSkill() {
     setSkillNameError(false)
     setSkillDescError(false)
     setCoursesError(false)
-    setRolesError(false)
     setSnackbarOpen(false)
     setIsLoading(true)
 
@@ -158,10 +140,6 @@ function AdminNewSkill() {
 
     if (courses.length < 1) {
       setCoursesError(true)
-    }
-
-    if (roles.length < 1) {
-      setRolesError(true)
     }
   }
 
@@ -225,53 +203,7 @@ function AdminNewSkill() {
             }}
             fullWidth
           />
-          {/* Add dropdown for courses and roles here */}
-
-          <Typography
-            sx={{ color: 'text.secondary' }}
-            variant="subtitle1"
-            display="block"
-            gutterBottom
-          >
-            Roles
-          </Typography>
-          <FormControl fullWidth sx={{ marginBottom: 3 }} error={rolesError}>
-            <InputLabel id="roles">Select role</InputLabel>
-            <Select
-              labelId="roles"
-              id="roles-select"
-              value={roles}
-              name="roles"
-              label="Role"
-              multiple
-              onChange={(e) => {
-                handleRolesChange(e)
-              }}
-              input={<OutlinedInput label="Chip" />}
-              renderValue={(selectedRole) => {
-                return (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selectedRole.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
-                  </Box>
-                )
-              }}
-            >
-              {allRoles.map((singleRole) => {
-                return (
-                  <MenuItem
-                    value={singleRole.role_name}
-                    key={singleRole.role_name}
-                  >
-                    {singleRole.role_name}
-                  </MenuItem>
-                )
-              })}
-            </Select>
-            <FormHelperText>Select at least one role</FormHelperText>
-          </FormControl>
-
+          {/* Add dropdown for courses here */}
           <Typography
             sx={{ color: 'text.secondary' }}
             variant="subtitle1"
