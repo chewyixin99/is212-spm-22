@@ -1,53 +1,36 @@
-import React from 'react'
-import {useState} from 'react';
+import React, { useState } from 'react'
 import propTypes from 'prop-types'
 
-import { TableCell, TableRow, Button, ButtonGroup } from '@mui/material'
+import { TableCell, TableRow, Button } from '@mui/material'
 
 import { STATUS } from '../../constants'
 
-const RolesTableRow = ({ roleInfo }) => {
-  const textColor = 
+const RolesTableRow = (props) => {
+
+  const roleInfo = props.roleInfo
+  const textColor =
     roleInfo.status == STATUS.RETIRED
       ? 'red'
       : roleInfo.status == STATUS.PENDING
         ? 'orange'
         : 'green'
 
-  // const [selectedid, setSelectedid] = useState('');
-  // const [buttonText, setButtonText] = useState('Select');
+  const renderButton = (id, name) => {
 
-  // const handleClick = (param) => {
-    
-  //   if (buttonText == 'Select'){
-  //     setButtonText('Selected')
-  //     setSelectedid(param)
-  //   } else {
-  //     setButtonText('Select')
-  //     setSelectedid('')
-  //   }
-    
-  // }
-  // console.log(selectedid)
-  // // console.log()
-
-  const [selectedid, setSelectedid] = useState('');
-
-  const renderButton = (param) => {
-    // console.log(param)
-    
-    if (selectedid === param){
+    if (props.selectedRoleId === id) {
       return (
-        <Button variant='contained' onClick={event => setSelectedid('')}>Selected</Button>
+        <Button variant='contained'>Selected</Button>
       )
     } else {
       return (
-        <Button variant='outlined' onClick={event => setSelectedid(param)}>Select</Button>
+        <Button variant='outlined' onClick={event => props.getData(id, name)}>Select</Button>
       )
     }
   }
-   
-  console.log(selectedid)
+
+  useState(() => {
+    console.log('selectedid', props.selectedRoleId);
+  }, [props.selectedRoleId])
 
   return (
     <TableRow>
@@ -55,10 +38,10 @@ const RolesTableRow = ({ roleInfo }) => {
       <TableCell>{roleInfo?.role_name}</TableCell>
       <TableCell sx={{ color: textColor }}>{roleInfo?.status}</TableCell>
       <TableCell align="center">
-        {renderButton(roleInfo?.role_id)}
-        {/* <Button variant="outlined" onClick={event => handleClick(roleInfo?.role_id)}>{buttonText}</Button> */}
+        {renderButton(roleInfo?.role_id, roleInfo?.role_name)}
       </TableCell>
     </TableRow>
+
   )
 }
 

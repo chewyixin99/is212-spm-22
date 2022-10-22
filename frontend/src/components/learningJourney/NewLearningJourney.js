@@ -18,6 +18,7 @@ import {
   Select,
   MenuItem
 } from '@mui/material'
+
 import { Link } from 'react-router-dom'
 
 import SectionHeader from '../common/SectionHeader'
@@ -25,6 +26,7 @@ import RolesTableRow from '../learningJourney/RolesTableRow'
 import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
+import CoursesBySkill from './CoursesBySkill'
 
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -42,68 +44,47 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 
+import { RESPONSE_CODES, ENDPOINT } from '../../constants'
 
-// transfer list functions start ------------------------
 
-function not(a, b) {
-  return a.filter((value) => b.indexOf(value) === -1);
-}
+const steps = ['Input Learning Journey Name & Role', 'Select Skills and Courses', 'Review Learning Journey']
 
-function intersection(a, b) {
-  return a.filter((value) => b.indexOf(value) !== -1);
-}
-
-function union(a, b) {
-  return [...a, ...not(b, a)];
-}
-
-// transfer list functions end ------------------------
-
-const steps = ['Input Learning Journey Name & Role', 'Select Skills', 'Select Courses', 'Review Learning Journey']
-
-const addresses = ['1 MUI Drive', 'Reactville', 'Anytown', '99999', 'USA'];
-
-const products = [
-  {
-    name: 'Product 1',
-    desc: 'A nice thing',
-    price: '$9.99',
-  },
-  {
-    name: 'Product 2',
-    desc: 'Another thing',
-    price: '$3.45',
-  },
-  {
-    name: 'Product 3',
-    desc: 'Something else',
-    price: '$6.51',
-  },
-  {
-    name: 'Product 4',
-    desc: 'Best thing of all',
-    price: '$14.11',
-  },
-  { name: 'Shipping', desc: '', price: 'Free' },
-];
-
-const payments = [
-  { name: 'Card type', detail: 'Visa' },
-  { name: 'Card holder', detail: 'Mr John Smith' },
-  { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
-  { name: 'Expiry date', detail: '04/2024' },
-];
 
 function NewLearningJourney({ numRows }) {
   const [roleData, isLoading, total, error] = useRolesLoader(numRows)
-  // console.log('---> RolesTable, roleData: ', roleData)
   const isEmpty = roleData.length === 0
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [skillData, setSkillData] = React.useState([]);
   const [selectedSkill, setSelectedSkill] = React.useState("");
-  const [coursesBySkill, setCoursesBySkill] = React.useState([]);
+  const [selectedRoleId, setSelectedRoleId] = React.useState(0);
+  const [selectedRoleName, setSelectedRoleName] = React.useState("N.A.");
+
+  const [learningJourneyName, setLearningJourneyName] = React.useState("");
+
+  const [selectedCourses, setSelectedCourses] = React.useState({});
+  const [selectedCoursesId, setselectedCoursesId] = React.useState([]);
+
+  // collate skill names and their selected courses
+  const handleAddCourses = (coursesArr, name) => {
+
+    setSelectedCourses(prevState => ({
+      ...prevState,
+      [name]: coursesArr
+    }));
+
+  }
+
+  useEffect(() => {
+    console.log(selectedCourses);
+    console.log("selectedRoleId: " + selectedRoleId);
+    console.log("selectedRoleName: " + selectedRoleName);
+  }, [selectedCourses, selectedRoleId, selectedRoleName]);
+
+  const handleAddCoursesId = (id) => {
+    setselectedCoursesId(prevState => [...prevState, id]);
+  }
 
   const renderSubheader = () => {
     if (isLoading) {
@@ -130,12 +111,34 @@ function NewLearningJourney({ numRows }) {
     }
   }
 
+
+
+
+  const getData = async (id, name) => {
+
+    setSelectedRoleId(id);
+    setSelectedRoleName(name);
+
+    if (id != 0 || name != "N.A.") {
+      axios.get(`${ENDPOINT}/roles/${id}/skills`)
+        .then(res => {
+          console.log(res.data.data);
+          setSkillData(res.data.data.skills)
+          setSelectedCourses({});
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+
+  }
+
   const renderTableRows = () => {
     if (!isEmpty && !isLoading && !error && roleData) {
       return (
         <>
           {roleData.map((roleInfo, index) => (
-            <RolesTableRow roleInfo={roleInfo} key={index} />
+            <RolesTableRow roleInfo={roleInfo} getData={getData} selectedRoleId={selectedRoleId} key={index} />
           ))}
         </>
       )
@@ -192,148 +195,8 @@ function NewLearningJourney({ numRows }) {
   const handleSkillChange = (event) => {
     console.log(event.target.value);
     setSelectedSkill(event.target.value);
-    getCourseDataBySkill(event.target.value)
   };
-
-  const getCourseDataBySkill = (id) => {
-    axios.get(`http://localhost:5001/skills/${id}/courses`)
-      .then((response) => {
-        console.log(response.data);
-        setCoursesBySkill(response.data.data.courses)
-        let res = response.data.data.courses
-        let courseIdList = res.map((course) => course.course_id)
-        console.log(courseIdList)
-        setLeft(courseIdList)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
   // select skill functions start ------------------------
-
-
-  // transfer list functions start ------------------------
-
-  // left data state represents the courses that are available to be added to the learning journey
-  // right data state represents the courses that are added to the learning journey
-
-  const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState([]);
-  const [right, setRight] = React.useState([]);
-
-  const leftChecked = intersection(checked, left);
-  const rightChecked = intersection(checked, right);
-
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
-
-  const numberOfChecked = (items) => intersection(checked, items).length;
-
-  const handleToggleAll = (items) => () => {
-    if (numberOfChecked(items) === items.length) {
-      setChecked(not(checked, items));
-    } else {
-      setChecked(union(checked, items));
-    }
-  };
-
-  const handleCheckedRight = () => {
-    setRight(right.concat(leftChecked));
-    setLeft(not(left, leftChecked));
-    setChecked(not(checked, leftChecked));
-  };
-
-  const handleCheckedLeft = () => {
-    setLeft(left.concat(rightChecked));
-    setRight(not(right, rightChecked));
-    setChecked(not(checked, rightChecked));
-  };
-
-  const customList = (title, items) => (
-    <Card>
-      <CardHeader
-        sx={{ px: 2, py: 1 }}
-        avatar={
-          <Checkbox
-            onClick={handleToggleAll(items)}
-            checked={numberOfChecked(items) === items.length && items.length !== 0}
-            indeterminate={
-              numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0
-            }
-            disabled={items.length === 0}
-            inputProps={{
-              'aria-label': 'all items selected',
-            }}
-          />
-        }
-        title={title}
-        subheader={`${numberOfChecked(items)}/${items.length} selected`}
-      />
-      <Divider />
-      <List
-        sx={{
-          width: 200,
-          height: 230,
-          bgcolor: 'background.paper',
-          overflow: 'auto',
-        }}
-        dense
-        component="div"
-        role="list"
-      >
-        {items.map((value) => {
-          const labelId = `transfer-list-all-item-${value}-label`;
-
-          return (
-            <ListItem
-              key={value}
-              role="listitem"
-              button
-              onClick={handleToggle(value)}
-            >
-              <ListItemIcon>
-                <Checkbox
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{
-                    'aria-labelledby': labelId,
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={`${value}`} />
-            </ListItem>
-          );
-        })}
-        <ListItem />
-      </List>
-    </Card>
-  );
-
-  // transfer list functions end ------------------------
-
-  useEffect(() => {
-    axios.get('http://localhost:5001/skills')
-      .then(res => {
-        setSkillData(res.data.data.skills)
-        console.log(res.data.data.skills)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [])
-
 
   return (
     <Box sx={{ width: '50%', margin: 'auto', padding: '40px 0' }}>
@@ -375,7 +238,7 @@ function NewLearningJourney({ numRows }) {
               // step 1 represents the learning journey name input and role selection
               case 0:
                 return (
-                  <Box sx={{ }}>
+                  <Box sx={{}}>
                     <React.Fragment>
                       <Typography variant="h6" gutterBottom>
                         Learning Journey Name
@@ -389,6 +252,7 @@ function NewLearningJourney({ numRows }) {
                             label="Name of learning Journey"
                             fullWidth
                             variant="standard"
+                            onChange={e => setLearningJourneyName(e.target.value)}
                           />
                         </Grid>
 
@@ -404,7 +268,7 @@ function NewLearningJourney({ numRows }) {
                         })}
                       >
                         <Typography variant="h6" mt={5}>
-                        Select Role
+                          Select Role
                         </Typography>
                         <SectionHeader
                           // header="New Learning Journey"
@@ -427,18 +291,31 @@ function NewLearningJourney({ numRows }) {
                             </TableBody>
                           </Table>
                         </TableContainer>
+                        <Typography variant="h6" mt={5} gutterBottom>
+                          {selectedRoleName == 'N.A.' ? 'Please select a role' : `Selected Role: ${selectedRoleName}`}
+                        </Typography>
                       </Box>
                     </React.Fragment>
                   </Box>
                 );
-              // step 2 represents skills selection
+              // step 2 represents skills and courses selection
               case 1:
                 return (
-                  <Box sx={{ height: '50vh', color: 'red' }}>
+                  <Box sx={{ height: '50vh' }}>
                     <React.Fragment>
+                      {skillData?.map((item) => {
+                        return (<CoursesBySkill
+                          item={item}
+                          key={item.skill_id}
+                          handleAddCourses={handleAddCourses}
+                        />)
+                      })}
+
                       <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">Skills based on role</InputLabel>
-                        <Select
+
+
+                        {/* <InputLabel id="demo-simple-select-label">Skills based on role</InputLabel> */}
+                        {/* <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
                           value={selectedSkill}
@@ -449,16 +326,11 @@ function NewLearningJourney({ numRows }) {
                             return <MenuItem key={item.skill_id} value={item.skill_id}>{item.skill_name}</MenuItem>
                           })}
 
-                        </Select>
+                        </Select> */}
                       </FormControl>
                     </React.Fragment>
-                  </Box>
-                );
-              // step 3 represents courses selection
-              case 2:
-                return (
-                  <Box sx={{ height: '50vh', color: 'red' }}>
-                    <React.Fragment>
+
+                    {/* <React.Fragment>
                       <Grid container spacing={2} justifyContent="center" alignItems="center">
                         <Grid item>{customList('Choices', left)}</Grid>
                         <Grid item>
@@ -487,22 +359,39 @@ function NewLearningJourney({ numRows }) {
                         </Grid>
                         <Grid item>{customList('Chosen', right)}</Grid>
                       </Grid>
-                    </React.Fragment>
+                    </React.Fragment> */}
                   </Box>
                 );
-              // step 4 represents the learning journey summary before submission
-              case 3:
+              // step 3 represents the learning journey summary before submission
+              case 2:
                 return (
                   <Box>
                     <React.Fragment>
                       <Typography variant="h6" gutterBottom>
                         Learning Journey Summary
                       </Typography>
-
-                      <ListItem sx={{ py: 1, px: 0 }}>
-                        <ListItemText primary={selectedSkill} />
-                        <Typography variant="body2">{right.join(', ')}</Typography>
+                      <ListItem sx={{ py: 1, px: 0 }} >
+                        <ListItemText primary='Learning Journey Name' />
+                        <Typography variant="body2">{learningJourneyName}</Typography>
                       </ListItem>
+                      <ListItem sx={{ py: 1, px: 0 }} >
+                        <ListItemText primary='Role' />
+                        <Typography variant="body2">{selectedRoleName}</Typography>
+                      </ListItem>
+
+
+                      {
+                        Object.keys(selectedCourses).map(k => (
+                          <ListItem sx={{ py: 1, px: 0 }} key={k}>
+                            <ListItemText primary={k} />
+                            <Typography variant="body2">{selectedCourses[k].length > 1 ? selectedCourses[k].join(', ') : selectedCourses[k]}</Typography>
+
+                          </ListItem>
+                        ))
+                      }
+
+
+
 
                     </React.Fragment>
                   </Box>
@@ -538,15 +427,12 @@ function NewLearningJourney({ numRows }) {
           {/* Stepper form control buttons end */}
         </React.Fragment>
       )
-    }
+      }
     </Box>
   );
 
-}
 
-// RolesTable.propTypes = {
-//   numRows: propTypes.number,
-// }
+}
 
 export default NewLearningJourney
 
