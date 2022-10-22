@@ -47,7 +47,7 @@ import Divider from '@mui/material/Divider';
 import { RESPONSE_CODES, ENDPOINT } from '../../constants'
 
 
-const steps = ['Input Learning Journey Name & Role', 'Select Skills and Courses', 'Review Learning Journey']
+const steps = ['Input Learning Journey Name and Role', 'Select Skills and Courses', 'Review Learning Journey']
 
 
 function NewLearningJourney({ numRows }) {
@@ -62,29 +62,39 @@ function NewLearningJourney({ numRows }) {
   const [selectedRoleName, setSelectedRoleName] = React.useState("N.A.");
 
   const [learningJourneyName, setLearningJourneyName] = React.useState("");
-
   const [selectedCourses, setSelectedCourses] = React.useState({});
-  const [selectedCoursesId, setselectedCoursesId] = React.useState([]);
 
-  // collate skill names and their selected courses
+  // select courses by skill start ----------------------------
+
+  // collate all selected courses by skill
   const handleAddCourses = (coursesArr, name) => {
-
     setSelectedCourses(prevState => ({
       ...prevState,
       [name]: coursesArr
     }));
-
   }
 
-  useEffect(() => {
-    console.log(selectedCourses);
-    console.log("selectedRoleId: " + selectedRoleId);
-    console.log("selectedRoleName: " + selectedRoleName);
-  }, [selectedCourses, selectedRoleId, selectedRoleName]);
+  // retrieve skills based on role id
+  const getData = async (id, name) => {
 
-  const handleAddCoursesId = (id) => {
-    setselectedCoursesId(prevState => [...prevState, id]);
+    setSelectedRoleId(id);
+    setSelectedRoleName(name);
+
+    if (id != 0 || name != "N.A.") {
+      axios.get(`${ENDPOINT}/roles/${id}/skills`)
+        .then(res => {
+          console.log(res.data.data);
+          setSkillData(res.data.data.skills)
+          setSelectedCourses({});
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
+  // select courses by skill end ----------------------------
+
+  // render role list start ------------------------
 
   const renderSubheader = () => {
     if (isLoading) {
@@ -111,28 +121,6 @@ function NewLearningJourney({ numRows }) {
     }
   }
 
-
-
-
-  const getData = async (id, name) => {
-
-    setSelectedRoleId(id);
-    setSelectedRoleName(name);
-
-    if (id != 0 || name != "N.A.") {
-      axios.get(`${ENDPOINT}/roles/${id}/skills`)
-        .then(res => {
-          console.log(res.data.data);
-          setSkillData(res.data.data.skills)
-          setSelectedCourses({});
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
-
-  }
-
   const renderTableRows = () => {
     if (!isEmpty && !isLoading && !error && roleData) {
       return (
@@ -145,7 +133,10 @@ function NewLearningJourney({ numRows }) {
     }
   }
 
+  // render role list end ------------------------
+
   // stepper form functions start ------------------------
+
   const isStepOptional = (step) => {
     return false;
   };
@@ -197,6 +188,10 @@ function NewLearningJourney({ numRows }) {
     setSelectedSkill(event.target.value);
   };
   // select skill functions start ------------------------
+
+
+  useEffect(() => {
+  }, [selectedCourses, selectedRoleId, selectedRoleName]);
 
   return (
     <Box sx={{ width: '50%', margin: 'auto', padding: '40px 0' }}>
@@ -310,56 +305,7 @@ function NewLearningJourney({ numRows }) {
                           handleAddCourses={handleAddCourses}
                         />)
                       })}
-
-                      <FormControl fullWidth>
-
-
-                        {/* <InputLabel id="demo-simple-select-label">Skills based on role</InputLabel> */}
-                        {/* <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={selectedSkill}
-                          label="Skills"
-                          onChange={handleSkillChange}
-                        >
-                          {skillData?.map((item) => {
-                            return <MenuItem key={item.skill_id} value={item.skill_id}>{item.skill_name}</MenuItem>
-                          })}
-
-                        </Select> */}
-                      </FormControl>
                     </React.Fragment>
-
-                    {/* <React.Fragment>
-                      <Grid container spacing={2} justifyContent="center" alignItems="center">
-                        <Grid item>{customList('Choices', left)}</Grid>
-                        <Grid item>
-                          <Grid container direction="column" alignItems="center">
-                            <Button
-                              sx={{ my: 0.5 }}
-                              variant="outlined"
-                              size="small"
-                              onClick={handleCheckedRight}
-                              disabled={leftChecked.length === 0}
-                              aria-label="move selected right"
-                            >
-                              &gt;
-                            </Button>
-                            <Button
-                              sx={{ my: 0.5 }}
-                              variant="outlined"
-                              size="small"
-                              onClick={handleCheckedLeft}
-                              disabled={rightChecked.length === 0}
-                              aria-label="move selected left"
-                            >
-                              &lt;
-                            </Button>
-                          </Grid>
-                        </Grid>
-                        <Grid item>{customList('Chosen', right)}</Grid>
-                      </Grid>
-                    </React.Fragment> */}
                   </Box>
                 );
               // step 3 represents the learning journey summary before submission
@@ -389,10 +335,6 @@ function NewLearningJourney({ numRows }) {
                           </ListItem>
                         ))
                       }
-
-
-
-
                     </React.Fragment>
                   </Box>
                 );
@@ -401,7 +343,7 @@ function NewLearningJourney({ numRows }) {
             }
           })()}
 
-          {/* Stepper form control buttons start */}
+          {/* Stepper form control buttons start ------------------ */}
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
               color="inherit"
@@ -424,7 +366,7 @@ function NewLearningJourney({ numRows }) {
 
             </Button>
           </Box>
-          {/* Stepper form control buttons end */}
+          {/* Stepper form control buttons end ---------------- */}
         </React.Fragment>
       )
       }
