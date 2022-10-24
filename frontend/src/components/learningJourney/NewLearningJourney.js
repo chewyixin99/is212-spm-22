@@ -128,8 +128,8 @@ function NewLearningJourney({ numRows }) {
       if (roleInfo.status == 'Active'){
         total += 1
       }
-    return total
     })
+    return total
   }
 
   const renderTableRows = () => {
