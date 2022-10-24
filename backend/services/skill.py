@@ -1,10 +1,12 @@
 from extensions import db
 from flask import Blueprint, jsonify, request
+from models.course import Course
 from models.skill import Skill
 
 skill_routes = Blueprint("skills", __name__)
 
 
+# Get all Skills
 @skill_routes.route("/skills")
 def get_all_skills():
     skills_list = Skill.query.all()
@@ -15,6 +17,7 @@ def get_all_skills():
     return jsonify({"code": 404, "message": "There are no skill records"})
 
 
+# Get Skill by Id
 @skill_routes.route("/skills/<int:skill_id>")
 def get_skill_by_id(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
@@ -23,6 +26,16 @@ def get_skill_by_id(skill_id):
     return jsonify({"code": 404, "message": "Skill cannot be found. Please try again."})
 
 
+# Get Skill by Name
+@skill_routes.route("/skills/<string:skill_name>")
+def get_skill_by_skill_name(skill_name):
+    skill = Skill.query.filter_by(skill_name=skill_name).first()
+    if skill:
+        return jsonify({"code": 200, "data": skill.json()})
+    return jsonify({"code": 404, "message": "Skill cannot be found. Please try again."})
+
+
+# Create Skill
 @skill_routes.route("/skills/<string:skill_name>", methods=["POST"])
 def create_skill(skill_name):
     if Skill.query.filter_by(skill_name=skill_name).first():
@@ -39,7 +52,16 @@ def create_skill(skill_name):
     data = request.get_json()
 
     try:
-        skill = Skill(skill_name, **data)
+        skill = Skill(skill_name, data["skill_desc"], data["status"])
+        for course_id in data["courses"]:
+            course = Course.query.filter_by(course_id=course_id).first()
+            skill.courses.append(course)
+
+        # ! CANNOT add role to skills
+        # for role_name in data["roles"]:
+        #     role = Role.query.filter_by(role_name=role_name).first()
+        #     skill.roles.append(role)
+
         db.session.add(skill)
         db.session.commit()
     except Exception as e:
@@ -48,7 +70,7 @@ def create_skill(skill_name):
             {
                 "code": 500,
                 "data": {"skill_name": skill_name},
-                "message": f"An error occured while creating the skill record",
+                "message": "An error occurred while creating the skill record",
             }
         )
     return jsonify(
@@ -60,6 +82,7 @@ def create_skill(skill_name):
     )
 
 
+# Update Skill
 @skill_routes.route("/skills/<int:skill_id>", methods=["PUT"])
 def update_skill(skill_id):
     skill = Skill.query.filter(Skill.skill_id == skill_id).first()
@@ -73,16 +96,24 @@ def update_skill(skill_id):
 
     data = request.get_json()
     try:
-        for key in data.keys():
-            setattr(skill, key, data[key])
-            db.session.commit()
+        for i in range(len(data["courses"])):
+            course = Course.query.filter_by(course_id=data["courses"][i]).first()
+            data["courses"][i] = course
+        # for i in range(len(data["roles"])):
+        #     role = Role.query.filter_by(role_name=data["roles"][i]).first()
+        #     data["roles"][i] = role
+        # for key in data.keys():
+        #     setattr(skill, key, data[key])
+
+        db.session.commit()
+
     except Exception as e:
         print(e)
         return jsonify(
             {
                 "code": 500,
                 "data": {"skill_id": skill_id},
-                "message": f"An error occured while updating skill with skill_id: {skill_id}",
+                "message": f"An error occurred while updating skill with skill_id: {skill_id}",
             }
         )
     return jsonify(
@@ -94,6 +125,42 @@ def update_skill(skill_id):
     )
 
 
+# Delete Skill
+@skill_routes.route("/skills/<int:skill_id>", methods=["DELETE"])
+def delete_skill(skill_id):
+    skill = Skill.query.filter_by(skill_id=skill_id).first()
+    if not (skill):
+        return jsonify(
+            {
+                "code": 404,
+                "data": {"skill_id": skill_id},
+                "message": f"Skill {skill_id} does not exist.",
+            }
+        )
+
+    try:
+        db.session.delete(skill)
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        return jsonify(
+            {
+                "code": 500,
+                "data": {"skill_id": skill_id},
+                "message": "An error occurred while deleting the skill.",
+            }
+        )
+
+    return jsonify(
+        {
+            "code": 201,
+            "skill_id": skill_id,
+            "message": f"Successfully deleted skill {skill_id}.",
+        }
+    )
+
+
+# Get Roles of Skill
 @skill_routes.route("/skills/<int:skill_id>/roles")
 def get_roles_of_skill(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
@@ -112,6 +179,7 @@ def get_roles_of_skill(skill_id):
     )
 
 
+# Get Courses of Skill
 @skill_routes.route("/skills/<int:skill_id>/courses")
 def get_courses_of_skill(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
@@ -131,6 +199,7 @@ def get_courses_of_skill(skill_id):
     )
 
 
+# Update Courses of Skill
 @skill_routes.route("/skills/<int:skill_id>/courses", methods=["PUT"])
 def update_courses_of_skill(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
@@ -145,12 +214,12 @@ def update_courses_of_skill(skill_id):
 
     for r in data["remove"]:
         to_remove = Course.query.filter_by(course_id=r).first()
-        if to_remove == None:
+        if to_remove is None:
             return jsonify({"code": 404, "message": f"Course id {r} does not exist."})
         remove_courses.append(to_remove)
     for a in data["add"]:
         to_add = Course.query.filter_by(course_id=a).first()
-        if to_add == None:
+        if to_add is None:
             return jsonify({"code": 404, "message": f"Course id {a} does not exist."})
         add_courses.append(to_add)
 
@@ -168,7 +237,7 @@ def update_courses_of_skill(skill_id):
             {
                 "code": 500,
                 "data": data,
-                "message": f"An error occured while updating role with data.",
+                "message": "An error occurred while updating role with data.",
             }
         )
 
@@ -179,6 +248,25 @@ def update_courses_of_skill(skill_id):
                 "skill": skill.json(),
                 "courses": [course.json() for course in skill.courses],
                 "message": "Successfully updated courses in skill.",
+            },
+        }
+    )
+
+
+@skill_routes.route("/skills/<int:skill_id>/staffs")
+def get_staffs_of_skill(skill_id):
+    skill = Skill.query.filter_by(skill_id=skill_id).first()
+    if not skill:
+        return jsonify(
+            {"code": 404, "message": "Skill cannot be found. Please try again."}
+        )
+    return jsonify(
+        {
+            "code": 200,
+            "data": {
+                # "skill": skill.json(),
+                "skill_id": skill_id,
+                "staffs": [staff.json() for staff in skill.staffs],
             },
         }
     )

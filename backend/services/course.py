@@ -8,7 +8,8 @@ from models.skill_course import skill_course
 
 course_routes = Blueprint("courses", __name__)
 
-# Get All Courses
+
+# Get all Courses
 @course_routes.route("/courses")
 def get_all_courses():
     courses_list = Course.query.all()
@@ -22,6 +23,7 @@ def get_all_courses():
     return jsonify({"code": 404, "message": "There are no role records."}), 404
 
 
+# Get Course by Id
 @course_routes.route("/courses/<string:course_id>")
 def get_course_by_id(course_id):
     course = Course.query.filter(Course.course_id == course_id).first()
@@ -33,6 +35,7 @@ def get_course_by_id(course_id):
     )
 
 
+# Create Course
 @course_routes.route("/courses/<string:course_id>", methods=["POST"])
 def create_course(course_id):
     if Course.query.filter_by(course_id=course_id).first():
@@ -58,7 +61,7 @@ def create_course(course_id):
             {
                 "code": 500,
                 "data": {"course_id": course_id},
-                "message": f"An error occured while creating the course record.",
+                "message": "An error occurred while creating the course record.",
             }
         )
     # success, return 200
@@ -71,6 +74,7 @@ def create_course(course_id):
     )
 
 
+# Update Course
 @course_routes.route("/courses/<string:course_id>", methods=["PUT"])
 def update_course(course_id):
     course = Course.query.filter(Course.course_id == course_id).first()
@@ -93,7 +97,7 @@ def update_course(course_id):
             {
                 "code": 500,
                 "data": {"course_id": course_id},
-                "message": "An error occured while updating the course.",
+                "message": "An error occurred while updating the course.",
             }
         )
     return jsonify(
@@ -105,6 +109,7 @@ def update_course(course_id):
     )
 
 
+# Get Skills of Course
 @course_routes.route("/courses/<string:course_id>/skills")
 def get_skills_of_course(course_id):
     course = Course.query.filter_by(course_id=course_id).first()
@@ -123,18 +128,42 @@ def get_skills_of_course(course_id):
     )
 
 
-# @app.route("/courses/<string:course_id>/staffs") #for testing
-# def get_staffs_of_course(course_id):
-#     course = Course.query.filter_by(course_id = course_id).first()
-#     if not course:
-#         return jsonify({
-#             "code": 404,
-#             "message": "Course cannot be found. Please try again."
-#         })
-#     return jsonify({
-#         "code": 200,
-#         "data": {
-#             "course_id": course_id,
-#             "skills": [staff.json() for staff in course.staffs]
-#         }
-#     })
+# Get Staffs of Course
+@course_routes.route("/courses/<string:course_id>/staffs")
+def get_staffs_of_course(course_id):
+    course = Course.query.filter_by(course_id=course_id).first()
+    if not course:
+        return jsonify(
+            {"code": 404, "message": "Course cannot be found. Please try again."}
+        )
+    return jsonify(
+        {
+            "code": 200,
+            "data": {
+                "course_id": course_id,
+                "staffs": [staff.json() for staff in course.staffs],
+            },
+        }
+    )
+
+
+# Get Learning Journeys of Course
+@course_routes.route("/courses/<string:course_id>/learning_journeys")
+def get_learning_journeys_of_course(course_id):
+    course = Course.query.filter_by(course_id=course_id).first()
+    if not course:
+        return jsonify(
+            {"code": 404, "message": "Course cannot be found. Please try again."}
+        )
+    return jsonify(
+        {
+            "code": 200,
+            "data": {
+                "course_id": course_id,
+                "learning_journeys": [
+                    learning_journey.json()
+                    for learning_journey in course.learning_journeys
+                ],
+            },
+        }
+    )

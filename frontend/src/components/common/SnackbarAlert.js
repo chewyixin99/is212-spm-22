@@ -8,29 +8,24 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const SnackbarAlert = ({
   autoHideDuration = 5000,
-  snackbarState = {
-    open: false,
-    vertical: 'bottom',
-    horizontal: 'right'
-  },
+  open,
   alertMessage = 'Default snackbar',
   alertSeverity = 'info'
 }) => {
-  const [ state, setState ] = useState(snackbarState)
-  const { vertical, horizontal, open } = state
+  const [ isOpen, setIsOpen ] = useState(open)
 
   useEffect(() => {
-    setState(snackbarState)
-  }, [snackbarState])
+    setIsOpen(open)
+  }, [open])
 
   const handleClose = () => {
-    setState({...state, open: false })
+    setIsOpen(false)
   }
   
   return (
     <Snackbar
-      anchorOrigin={{vertical, horizontal}}
-      open={open}
+      anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+      open={isOpen}
       autoHideDuration={autoHideDuration}
       onClose={handleClose}
     >

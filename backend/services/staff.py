@@ -4,7 +4,8 @@ from models.staff import Staff
 
 staff_routes = Blueprint("staffs", __name__)
 
-# Get All Staffs
+
+# Get all Staffs
 @staff_routes.route("/staffs")
 def get_all_staffs():
     staffs_list = Staff.query.all()
@@ -15,7 +16,7 @@ def get_all_staffs():
     return jsonify({"code": 404, "message": "There are no staff records."}), 404
 
 
-# Get a Staff by staff_id
+# Get Staff by Staff_id
 @staff_routes.route("/staffs/<int:staff_id>")
 def get_staff_by_id(staff_id):
     staff = Staff.query.filter_by(staff_id=staff_id).first()
@@ -27,6 +28,7 @@ def get_staff_by_id(staff_id):
     )
 
 
+# Create Staff
 @staff_routes.route("/staffs/<string:email>", methods=["POST"])
 def create_staff(email):
     if Staff.query.filter_by(email=email).first():
@@ -52,7 +54,7 @@ def create_staff(email):
             {
                 "code": 500,
                 "data": {"email": email},
-                "message": f"An error occured while creating the staff record",
+                "message": "An error occurred while creating the staff record",
             }
         )
     return jsonify(
@@ -64,6 +66,7 @@ def create_staff(email):
     )
 
 
+# Update Staff
 @staff_routes.route("/staffs/<int:staff_id>", methods=["PUT"])
 def update_staff(staff_id):
     staff = Staff.query.filter(Staff.staff_id == staff_id).first()
@@ -86,7 +89,7 @@ def update_staff(staff_id):
             {
                 "code": 500,
                 "data": {"staff_id": staff_id},
-                "message": f"An error occured while updating staff with staff_id: {staff_id}",
+                "message": f"An error occurred while updating staff with staff_id: {staff_id}",
             }
         )
     return jsonify(
@@ -98,6 +101,7 @@ def update_staff(staff_id):
     )
 
 
+# Get Courses of Staff
 @staff_routes.route("/staffs/<int:staff_id>/courses")
 def get_courses_of_staff(staff_id):
     staff = Staff.query.filter_by(staff_id=staff_id).first()
@@ -116,6 +120,7 @@ def get_courses_of_staff(staff_id):
     )
 
 
+# Get Skills of Staff
 @staff_routes.route("/staffs/<int:staff_id>/skills")
 def get_skills_of_staff(staff_id):
     staff = Staff.query.filter_by(staff_id=staff_id).first()

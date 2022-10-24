@@ -121,6 +121,7 @@ function NewLearningJourney({ numRows }) {
     }
   }
 
+
   const numActive = () => {
     var total = 0
     roleData.map((roleInfo) => {
