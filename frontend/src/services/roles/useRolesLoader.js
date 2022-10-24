@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react'
 import { RESPONSE_CODES, ENDPOINT } from '../../constants'
 
-
-const useRolesLoader = (
-  numRows = -1,
-  roleId = null,  
-  init = true
-) => {
+const useRolesLoader = (numRows = -1, roleId = null, init = true) => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [roleData, setRoleData] = useState([])
@@ -14,14 +9,14 @@ const useRolesLoader = (
 
   const setData = (response) => {
     if (response?.code === RESPONSE_CODES.SUCCESS) {
-      setTotal(response.data.roles.length)
-      if (roleId) {
+      if (roleId !== null) {
         setRoleData([response?.data])
-      } else if (numRows == -1) { 
+      } else if (numRows === -1) {
         setRoleData(response?.data?.roles)
       } else {
         setRoleData(response?.data?.roles.slice(0, numRows))
-      } 
+      }
+      setTotal(response.data.roles.length)
     } else if (response?.code === RESPONSE_CODES.NOT_FOUND) {
       setRoleData([])
     }
@@ -46,8 +41,10 @@ const useRolesLoader = (
   const reloadData = () => loadRoles() // TODO: Not tested yet
 
   useEffect(() => {
-    loadRoles()
-  }, [roleId, init])
+    if (init) {
+      loadRoles()
+    }
+  }, [roleId])
 
   return [roleData, isLoading, total, error, reloadData]
 }

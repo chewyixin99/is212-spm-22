@@ -6,9 +6,9 @@ const roleFormInitialValues = {
   roleStatus: '',
 }
 
-const CreateRoleFormContext = createContext({
+const CreateEditRoleFormContext = createContext({
   roleFormValues: roleFormInitialValues,
   setRoleFormValues: () => {},
 })
 
-export default CreateRoleFormContext
+export default CreateEditRoleFormContext

@@ -21,7 +21,7 @@ import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
 
 function RolesTable({ numRows }) {
-  const [roleData, isLoading, total, error] = useRolesLoader(numRows)
+  const [roleData, isLoading, total, error] = useRolesLoader(numRows, null)
   // console.log('---> RolesTable, roleData: ', roleData)
   const isEmpty = roleData.length === 0
 
@@ -38,7 +38,7 @@ function RolesTable({ numRows }) {
   const sectionButtonRenderer = () => {
     return numRows === -1 ? (
       <Box>
-        <Button variant="outlined" component={Link} to="/admin/newrole">
+        <Button variant="outlined" component={Link} to="/admin/roles/newrole">
           Create New Role
         </Button>
       </Box>
@@ -51,7 +51,7 @@ function RolesTable({ numRows }) {
         </Box>
 
         <Box>
-          <Button variant="outlined" component={Link} to="/admin/newrole">
+          <Button variant="outlined" component={Link} to="/admin/roles/newrole">
             Create New Role
           </Button>
         </Box>

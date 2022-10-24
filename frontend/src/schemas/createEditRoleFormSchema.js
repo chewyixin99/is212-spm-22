@@ -1,8 +1,8 @@
 import * as Yup from 'yup'
 
-const createRoleFormSchema = Yup.object({
+const CreateEditRoleFormSchema = Yup.object({
   roleName: Yup.string()
-    .max(15, 'Must be 15 characters or less.')
+    .max(50, 'Must be 50 characters or less.')
     .required('Required'),
   roleDesc: Yup.string()
     .max(255, 'Not more than 255 characters.')
@@ -10,4 +10,4 @@ const createRoleFormSchema = Yup.object({
   roleStatus: Yup.string().required('Please select a status.'),
 })
 
-export default createRoleFormSchema
+export default CreateEditRoleFormSchema

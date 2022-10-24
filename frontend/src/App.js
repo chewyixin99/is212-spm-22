@@ -26,6 +26,7 @@ import StaffOutlet from './pages/staff/StaffOutlet'
 import StaffHomePage from './pages/staff/StaffHomePage'
 import ManagerOutlet from './pages/manager/ManagerOutlet'
 import ManagerHomePage from './pages/manager/ManagerHomePage'
+import AdminEditRole from './pages/admin/AdminEditRole'
 
 function App() {
   return (
@@ -54,10 +55,17 @@ function App() {
 
         <Route path="/admin" element={<AdminOutlet />}>
           <Route index element={<AdminHomePage />} />
-          <Route path="roles" element={<AdminRolesPage />} />
-          <Route path="newrole">
-            <Route index element={<AdminNewRole />} />
+          <Route path="roles">
+            {/* All Role */}
+            <Route index element={<AdminRolesPage />} />
+            {/* Single Role */}
+            <Route path=":role_id">
+              <Route index element={<Role />} />
+              <Route path="edit" element={<AdminEditRole />} />
+            </Route>
+            <Route path="newrole" element={<AdminNewRole />} />
           </Route>
+
           <Route path="skills" element={<AdminSkillsPage />} />
           <Route path="newskill">
             <Route index element={<AdminNewSkill />} />
@@ -68,14 +76,10 @@ function App() {
             <Route path=":course_id" element={<Course />} />
           </Route>
           <Route path="skills">
-            <Route path=":skill_id" >
+            <Route path=":skill_id">
               <Route index element={<Skill />} />
               <Route path="edit" element={<AdminEditSkill />} />
             </Route>
-          </Route>
-
-          <Route path="roles">
-            <Route path=":role_id" element={<Role />} />
           </Route>
         </Route>
 

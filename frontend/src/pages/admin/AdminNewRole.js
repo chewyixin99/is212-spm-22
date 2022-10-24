@@ -3,7 +3,7 @@ import React from 'react'
 import { Box } from '@mui/material'
 
 import SectionHeader from '../../components/common/SectionHeader'
-import CreateRoleStepper from '../../components/roles/CreateRoleStepper'
+import CreateEditRoleStepper from '../../components/roles/CreateEditRoleStepper'
 
 function AdminNewRole() {
   return (
@@ -18,7 +18,7 @@ function AdminNewRole() {
         })}
       >
         <SectionHeader header="Create new role" />
-        <CreateRoleStepper />
+        <CreateEditRoleStepper />
       </Box>
     </Box>
   )
