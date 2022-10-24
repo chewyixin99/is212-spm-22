@@ -103,7 +103,7 @@ function NewLearningJourney({ numRows }) {
     if (isEmpty) {
       return 'Total Number of Roles: 0'
     }
-    return `Total Number of Roles: ${total}`
+    return `Total Number of Roles: ${numActive()}`
   }
 
   const renderTableStatuses = () => {
@@ -121,13 +121,31 @@ function NewLearningJourney({ numRows }) {
     }
   }
 
+
+  const numActive = () => {
+    var total = 0
+    roleData.map((roleInfo) => {
+      if (roleInfo.status == 'Active'){
+        total += 1
+      }
+    return total
+    })
+  }
+
   const renderTableRows = () => {
     if (!isEmpty && !isLoading && !error && roleData) {
       return (
         <>
-          {roleData.map((roleInfo, index) => (
-            <RolesTableRow roleInfo={roleInfo} getData={getData} selectedRoleId={selectedRoleId} key={index} />
-          ))}
+          {roleData.map((roleInfo, index) => {
+            if (roleInfo.status != 'Active'){
+              return null
+            } else {
+              return (
+                <RolesTableRow roleInfo={roleInfo} getData={getData} selectedRoleId={selectedRoleId} key={index} />
+              )
+            }
+          }
+          )}
         </>
       )
     }
