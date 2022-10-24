@@ -5,7 +5,8 @@ from models.skill import Skill
 
 role_routes = Blueprint("roles", __name__)
 
-# Get All Roles
+
+# Get all Roles
 @role_routes.route("/roles")
 def get_all_roles():
     roles_list = Role.query.all()
@@ -16,7 +17,7 @@ def get_all_roles():
     return jsonify({"code": 404, "message": "There are no role records."}), 404
 
 
-# Get a Role by role_id
+# Get a Role by Id
 @role_routes.route("/roles/<int:role_id>")
 def get_role_by_id(role_id):
     role = Role.query.filter_by(role_id=role_id).first()
@@ -28,6 +29,7 @@ def get_role_by_id(role_id):
     )
 
 
+# Get role by Name
 @role_routes.route("/roles/<string:role_name>")
 def get_role_by_name(role_name):
     role = Role.query.filter_by(role_name=role_name).first()
@@ -39,6 +41,7 @@ def get_role_by_name(role_name):
     )
 
 
+# Create Role
 @role_routes.route("/roles/<string:role_name>", methods=["POST"])
 def create_role(role_name):
     if Role.query.filter_by(role_name=role_name).first():
@@ -64,7 +67,7 @@ def create_role(role_name):
             {
                 "code": 500,
                 "data": {"role_name": role_name},
-                "message": f"An error occured while creating the role record",
+                "message": "An error occurred while creating the role record",
             }
         )
     return jsonify(
@@ -76,6 +79,7 @@ def create_role(role_name):
     )
 
 
+# Update role
 @role_routes.route("/roles/<int:role_id>", methods=["PUT"])
 def update_role(role_id):
     role = Role.query.filter(Role.role_id == role_id).first()
@@ -98,7 +102,7 @@ def update_role(role_id):
             {
                 "code": 500,
                 "data": {"role_id": role_id},
-                "message": f"An error occured while updating role with role_id: {role_id}",
+                "message": f"An error occurred while updating role with role_id: {role_id}",
             }
         )
     return jsonify(
@@ -110,6 +114,7 @@ def update_role(role_id):
     )
 
 
+# Get Skills of Role
 @role_routes.route("/roles/<int:role_id>/skills")
 def get_skills_of_role(role_id):
     role = Role.query.filter_by(role_id=role_id).first()
@@ -128,6 +133,7 @@ def get_skills_of_role(role_id):
     )
 
 
+# Update Skills of Role
 @role_routes.route("/roles/<int:role_id>/skills", methods=["PUT"])
 def update_skills_of_role(role_id):
     role = Role.query.filter(Role.role_id == role_id).first()
@@ -143,12 +149,12 @@ def update_skills_of_role(role_id):
     add_skills = []
     for r in data["remove"]:
         to_remove = Skill.query.filter_by(skill_id=r).first()
-        if to_remove == None:
+        if to_remove is None:
             return jsonify({"code": 404, "message": f"Skill id {r} does not exist."})
         remove_skills.append(to_remove)
     for a in data["add"]:
         to_add = Skill.query.filter_by(skill_id=a).first()
-        if to_add == None:
+        if to_add is None:
             return jsonify({"code": 404, "message": f"Skill id {a} does not exist."})
         add_skills.append(to_add)
 
@@ -166,7 +172,7 @@ def update_skills_of_role(role_id):
             {
                 "code": 500,
                 "data": data,
-                "message": f"An error occured while updating role with data.",
+                "message": "An error occurred while updating role with data.",
             }
         )
 
