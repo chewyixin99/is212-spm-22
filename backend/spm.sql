@@ -46,13 +46,15 @@ DROP TABLE IF EXISTS `role`;
 CREATE TABLE IF NOT EXISTS `role` (
   `role_id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `role_name` varchar(50) NOT NULL,
+  `role_desc` varchar(255) NOT NULL,
+  `role_dept` varchar(50) NOT NULL,
   `status` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `role` (`role_id`, `role_name`, `status`) VALUES
-(1, 'Product Manager', 'ACTIVE'),
-(2, 'Software Engineer', 'ACTIVE'),
-(3, 'Full-stack developer', 'ACTIVE');
+INSERT INTO `role` (`role_id`, `role_name`, `role_desc`, `role_dept`, `status`) VALUES
+(1, 'Product Manager', 'product manager lor', 'Business Support', 'ACTIVE'),
+(2, 'Software Engineer', 'SWESWESWEDEN', 'Tech', 'ACTIVE'),
+(3, 'Full-stack developer', 'just being a jianlin', 'Tech', 'ACTIVE');
 COMMIT;
 
 --
@@ -191,12 +193,13 @@ INSERT INTO `learning_journey_course` (`learning_journey_id`, `course_id`) VALUE
 COMMIT;
 
 --
--- Table structure for table `staff_course`
+-- Table structure for table `staff_course` (Take note this is a db.Model, unlike other db.Tables)
 --
 DROP TABLE IF EXISTS `staff_course`;
 CREATE TABLE IF NOT EXISTS `staff_course` (
   `staff_id` int(11) NOT NULL,
-  `course_id` varchar(20) NOT NULL
+  `course_id` varchar(20) NOT NULL,
+  `completion_status` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `staff_course`

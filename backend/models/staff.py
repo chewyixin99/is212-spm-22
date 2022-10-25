@@ -1,8 +1,9 @@
 from extensions import db
-from models.staff_course import staff_course
+from models.staff_course import Staff_Course
 from models.staff_skill import Staff_Skill
 
 # fmt: off
+
 
 class Staff(db.Model):
     __tablename__ = "staff"
@@ -14,7 +15,7 @@ class Staff(db.Model):
     email = db.Column(db.String(50))
     type = db.Column(db.Integer)
     status = db.Column(db.String(50))
-    courses = db.relationship("Course", secondary=staff_course, backref="staff")
+    courses = db.relationship("Staff_Course", back_populates="staff")
     skills = db.relationship("Staff_Skill", back_populates="staff")
 
     def __init__(self, email, staff_fname, staff_lname, dept, type, status):
