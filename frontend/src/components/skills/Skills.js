@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-
-import { emphasize, styled } from '@mui/material/styles'
-import { blueGrey } from '@mui/material/colors'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import {
   Alert,
@@ -20,24 +17,9 @@ import {
 import { ENDPOINT, STATUS } from '../../constants'
 import DescriptionRows from '../common/DescriptionRows'
 import SnackbarAlert from '../common/SnackbarAlert'
+import StyledBreadcrumb from '../common/StyledBreadcrumb'
 import { KeyboardArrowLeft } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-
-const StyledBreadcrumb = styled(Link)(({ theme }) => ({
-  backgroundColor: blueGrey[50],
-  height: theme.spacing(6),
-  '&:hover, &:focus': {
-    backgroundColor: blueGrey[100],
-  },
-  '&:active': {
-    boxShadow: theme.shadows[1],
-    backgroundColor: emphasize(blueGrey[100], 0.12),
-  },
-  padding: theme.spacing(1),
-  textDecoration: 'none',
-  borderRadius: '12px',
-  border: '1px solid',
-}))
 
 function Skill() {
   const navigate = useNavigate()
@@ -95,14 +77,19 @@ function Skill() {
   const renderSkillCourses = (skillCourses) => {
     if (skillCourses.filter(checkActive).length > 0) {
       return (
-        <Breadcrumbs aria-label="breadcrumb">
-          {skillCourses.filter(checkActive).map((course) => (
-            <StyledBreadcrumb>
-              {/* to add link to the course page */}
-              {course.course_name}
-            </StyledBreadcrumb>
-          ))}
-        </Breadcrumbs>
+        <Stack>
+          <Typography sx={{ color: 'text.secondary' }} variant="subtitle1" display="block" gutterBottom>
+            Courses under skill
+          </Typography>
+          <Breadcrumbs aria-label="breadcrumb">
+            {skillCourses.filter(checkActive).map((course) => (
+              <StyledBreadcrumb>
+                {/* to add link to the course page */}
+                {course.course_name}
+              </StyledBreadcrumb>
+            ))}
+          </Breadcrumbs>
+        </Stack>
       )
     } else {
       return (
@@ -112,7 +99,7 @@ function Skill() {
           display="block"
           gutterBottom
         >
-          There are no courses that has this skill yet.
+          There are no active courses that has this skill yet.
         </Typography>
       )
     }

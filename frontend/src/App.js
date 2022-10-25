@@ -24,6 +24,7 @@ import AdminNewSkillPreview from './pages/admin/AdminNewSkillPreview'
 import AdminEditSkill from './pages/admin/AdminEditSkill'
 import StaffOutlet from './pages/staff/StaffOutlet'
 import StaffHomePage from './pages/staff/StaffHomePage'
+import StaffCoursesPage from './pages/staff/StaffCoursesPage'
 import ManagerOutlet from './pages/manager/ManagerOutlet'
 import ManagerHomePage from './pages/manager/ManagerHomePage'
 import AdminEditRole from './pages/admin/AdminEditRole'
@@ -51,6 +52,10 @@ function App() {
             {/* create new learning journey for this staff */}
             <Route path="new" element={<NewLearningJourney />} />
           </Route>
+          <Route path="courses" element={<StaffCoursesPage />} />
+          <Route path="courses">
+            <Route path=":course_id" element={<Course />} />
+          </Route>
         </Route>
 
         <Route path="/admin" element={<AdminOutlet />}>
@@ -66,15 +71,16 @@ function App() {
             <Route path="newrole" element={<AdminNewRole />} />
           </Route>
 
-          <Route path="skills" element={<AdminSkillsPage />} />
+          <Route path="courses">
+            <Route path=":course_id" element={<Course />} />
+          </Route>
+
           <Route path="newskill">
             <Route index element={<AdminNewSkill />} />
             <Route path="preview" element={<AdminNewSkillPreview />} />
           </Route>
 
-          <Route path="courses">
-            <Route path=":course_id" element={<Course />} />
-          </Route>
+          <Route path="skills" element={<AdminSkillsPage />} />
           <Route path="skills">
             <Route path=":skill_id">
               <Route index element={<Skill />} />

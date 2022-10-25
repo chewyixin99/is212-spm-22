@@ -95,16 +95,29 @@ def update_skill(skill_id):
         )
 
     data = request.get_json()
-    try:
-        for i in range(len(data["courses"])):
-            course = Course.query.filter_by(course_id=data["courses"][i]).first()
-            data["courses"][i] = course
-        # for i in range(len(data["roles"])):
-        #     role = Role.query.filter_by(role_name=data["roles"][i]).first()
-        #     data["roles"][i] = role
-        # for key in data.keys():
-        #     setattr(skill, key, data[key])
+    remove_courses = []
+    add_courses = []
 
+    for r in data["remove"]:
+        to_remove = Course.query.filter_by(course_id=r).first()
+        if to_remove is None:
+            return jsonify({"code": 404, "message": f"Course id {r} does not exist."})
+        remove_courses.append(to_remove)
+    for a in data["add"]:
+        to_add = Course.query.filter_by(course_id=a).first()
+        if to_add is None:
+            return jsonify({"code": 404, "message": f"Course id {a} does not exist."})
+        add_courses.append(to_add)
+
+    try:
+        setattr(skill, "status", data["status"])
+        setattr(skill, "skill_desc", data["skill_desc"])
+        for c in remove_courses:
+            if c in skill.courses:
+                skill.courses.remove(c)
+        for c in add_courses:
+            if c not in skill.courses:
+                skill.courses.append(c)
         db.session.commit()
 
     except Exception as e:

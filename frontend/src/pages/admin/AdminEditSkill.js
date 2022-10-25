@@ -38,6 +38,7 @@ function AdminEditSkill() {
   const [skillDescError, setSkillDescError] = useState(false)
   const [newSkillStatus, setNewSkillStatus] = useState(skillStatus)
   const [newCourses, setNewCourses] = useState([])
+  const [removeCourses, setRemoveCourses] = useState([])
   const [coursesError, setCoursesError] = useState(false)
 
   const [alertSeverity, setAlertSeverity] = useState('info')
@@ -65,6 +66,7 @@ function AdminEditSkill() {
           for (const course of responseJSON.data.courses) {
             newCoursesName.push(course.course_id)
           }
+          setRemoveCourses(newCoursesName)
           setNewCourses(newCoursesName)
         })
     }
@@ -108,7 +110,8 @@ function AdminEditSkill() {
       const requestBody = {
         status: newSkillStatus,
         skill_desc: newSkillDesc,
-        courses: newCourses,
+        add: newCourses,
+        remove: removeCourses,
       }
       const requestOptions = {
         method: 'PUT',

@@ -8,9 +8,9 @@ export const ROLES = {
 }
 
 export const STATUS = {
-  ACTIVE: 'ACTIVE',
-  PENDING: 'PENDING',
-  RETIRED: 'RETIRED',
+  ACTIVE: 'Active',
+  PENDING: 'Pending',
+  RETIRED: 'Retired',
 }
 
 export const RESPONSE_CODES = {
