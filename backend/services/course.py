@@ -128,7 +128,7 @@ def get_skills_of_course(course_id):
     )
 
 
-# Get Staffs of Course
+# Get Staffs that COMPLETED this course
 @course_routes.route("/courses/<string:course_id>/staffs")
 def get_staffs_of_course(course_id):
     course = Course.query.filter_by(course_id=course_id).first()
