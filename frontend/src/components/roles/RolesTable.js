@@ -21,7 +21,10 @@ import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
 
 function RolesTable({ numRows }) {
-  const [roleData, isLoading, total, error] = useRolesLoader(numRows, null)
+  const [roleData, isLoading, total, error, reloadData] = useRolesLoader(
+    numRows,
+    null
+  )
   // console.log('---> RolesTable, roleData: ', roleData)
   const isEmpty = roleData.length === 0
 
@@ -79,7 +82,11 @@ function RolesTable({ numRows }) {
       return (
         <>
           {roleData.map((roleInfo, index) => (
-            <RolesTableRow roleInfo={roleInfo} key={index} />
+            <RolesTableRow
+              roleInfo={roleInfo}
+              reloadData={reloadData}
+              key={index}
+            />
           ))}
         </>
       )

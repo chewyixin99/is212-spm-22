@@ -21,6 +21,7 @@ const editRoleService = async ({ roleId, roleName, roleDesc, roleStatus }) => {
       },
       body: JSON.stringify({
         role_name: roleName,
+        role_desc: roleDesc,
         status: roleStatus,
       }),
     })

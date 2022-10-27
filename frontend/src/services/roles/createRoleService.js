@@ -14,6 +14,7 @@ const createRoleService = async ({ roleName, roleDesc, roleStatus }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        role_desc: roleDesc,
         status: roleStatus,
       }),
     })

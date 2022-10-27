@@ -113,7 +113,7 @@ function Navbar({ role }) {
                     onClick={handleCloseNavMenu}
                     sx={{ my: 1, color: 'black', display: 'block' }}
                     component={Link}
-                    to="/staff"
+                    to={`/${role.toLowerCase()}`}
                   >
                     Home
                   </Button>
@@ -167,7 +167,7 @@ function Navbar({ role }) {
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: 'white', display: 'block' }}
               component={Link}
-              to="/staff"
+              to={`/${role.toLowerCase()}`}
             >
               Home
             </Button>
