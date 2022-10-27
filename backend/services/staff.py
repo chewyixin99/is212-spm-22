@@ -101,7 +101,7 @@ def update_staff(staff_id):
     )
 
 
-# Get Courses of Staff
+# Get COMPLETED Courses of Staff
 @staff_routes.route("/staffs/<int:staff_id>/courses")
 def get_courses_of_staff(staff_id):
     staff = Staff.query.filter_by(staff_id=staff_id).first()
@@ -120,7 +120,7 @@ def get_courses_of_staff(staff_id):
     )
 
 
-# Get Skills of Staff
+# Get COMPLETED Skills of Staff
 @staff_routes.route("/staffs/<int:staff_id>/skills")
 def get_skills_of_staff(staff_id):
     staff = Staff.query.filter_by(staff_id=staff_id).first()

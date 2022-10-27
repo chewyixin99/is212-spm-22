@@ -266,6 +266,7 @@ def update_courses_of_skill(skill_id):
     )
 
 
+# Get Staffs that COMPLETED this skill
 @skill_routes.route("/skills/<int:skill_id>/staffs")
 def get_staffs_of_skill(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
