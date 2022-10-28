@@ -46,3 +46,10 @@ class Course(db.Model):
             "course_type": self.course_type,
             "course_category": self.course_category,
         }
+
+    def to_dict(self):
+        columns = self.__mapper__.column_attrs.keys()
+        result = {}
+        for column in columns:
+            result[column] = getattr(self, column)
+        return result
