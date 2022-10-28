@@ -3,6 +3,7 @@ import { createContext } from 'react'
 const roleFormInitialValues = {
   roleName: '',
   roleDesc: '',
+  roleDept: '',
   roleStatus: '',
 }
 

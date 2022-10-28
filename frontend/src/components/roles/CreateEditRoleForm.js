@@ -58,6 +58,22 @@ const CreateEditRoleForm = ({ handleNext, handleBack, enter, isLoading }) => {
     )
   }
 
+  const renderRoleDeptField = (touched, errors) => {
+    if (isLoading) {
+      return <Skeleton variant="rounded" />
+    }
+    return (
+      <Field
+        as={TextField}
+        fullWidth
+        name="roleDept"
+        label="Enter department"
+        error={touched.roleDept && errors.roleDept}
+        helperText={touched.roleDept && errors.roleDept ? errors.roleDept : ''}
+      />
+    )
+  }
+
   const renderStatusRadioGroup = (values, errors, touched, handleChange) => {
     if (isLoading) {
       return <Skeleton variant="rounded" width="50%" />
@@ -119,6 +135,12 @@ const CreateEditRoleForm = ({ handleNext, handleBack, enter, isLoading }) => {
                     <FormLabel>Role Description</FormLabel>
                   </Box>
                   {renderDescriptionField(touched, errors)}
+                </Grid>
+                <Grid item sm={12}>
+                  <Box mb={1.5}>
+                    <FormLabel>Role Department</FormLabel>
+                  </Box>
+                  {renderRoleDeptField(touched, errors)}
                 </Grid>
                 <Grid item sm={12}>
                   <Box mb={isLoading ? 1.5 : 0}>

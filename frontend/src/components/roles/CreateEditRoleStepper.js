@@ -17,6 +17,7 @@ export default function CreateEditRoleStepper({
   const [roleFormValues, setRoleFormValues] = useState({
     roleName: '',
     roleDesc: '',
+    roleDept: '',
     roleStatus: '',
   })
   const navigate = useNavigate()
@@ -35,12 +36,14 @@ export default function CreateEditRoleStepper({
         role_id: roleId,
         role_name: roleName,
         role_desc: roleDesc,
+        role_dept: roleDept,
         status: roleStatus,
       } = initialData[0]
       setRoleFormValues({
         roleId,
         roleName,
         roleDesc,
+        roleDept,
         roleStatus,
       })
     }

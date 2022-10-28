@@ -7,6 +7,9 @@ const CreateEditRoleFormSchema = Yup.object({
   roleDesc: Yup.string()
     .max(255, 'Not more than 255 characters.')
     .required('Required'),
+  roleDept: Yup.string()
+    .max(50, 'Must be 50 characters or less.')
+    .required('Required'),
   roleStatus: Yup.string().required('Please select a status.'),
 })
 

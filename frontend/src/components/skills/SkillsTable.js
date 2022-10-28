@@ -22,7 +22,10 @@ import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useSkillsLoader from '../../services/skills/useSkillsLoader'
 
 function SkillsTable({ numRows }) {
-  const [skillData, isLoading, total, error] = useSkillsLoader(numRows)
+  // eslint-disable-next-line prettier/prettier
+  const [skillData, isLoading, total, error, reloadData] = useSkillsLoader(
+    numRows
+  )
 
   // console.log('---> SkillsTable, skillData: ', skillData)
   const isEmpty = skillData.length === 0
@@ -81,7 +84,11 @@ function SkillsTable({ numRows }) {
       return (
         <>
           {skillData.map((skillInfo, index) => (
-            <SkillsTableRow skillInfo={skillInfo} key={index} />
+            <SkillsTableRow
+              skillInfo={skillInfo}
+              reloadData={reloadData}
+              key={index}
+            />
           ))}
         </>
       )

@@ -65,6 +65,16 @@ const CreateEditRoleFormPreview = ({ handleBack, enter, edit }) => {
         </Grid>
         <Grid item sm={12}>
           <Box mb={1.5}>
+            <FormLabel>Role Name</FormLabel>
+          </Box>
+          <TextField
+            disabled
+            value={roleFormContext.roleFormValues.roleDept}
+            fullWidth
+          />
+        </Grid>
+        <Grid item sm={12}>
+          <Box mb={1.5}>
             <FormLabel>Role Status</FormLabel>
           </Box>
           <TextField

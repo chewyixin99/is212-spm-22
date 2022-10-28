@@ -1,32 +1,44 @@
-import React from 'react'
+import React, { useState } from 'react'
 import propTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
+import { useSnackbar } from 'notistack'
 
 import { TableCell, TableRow } from '@mui/material'
 
 import ActionMenu from '../common/ActionMenu'
 import { STATUS, ENDPOINT } from '../../constants'
-import { useNavigate } from 'react-router-dom'
+import ConfirmationDialog from '../common/ConfirmationDialog'
+import useDialogState from '../../services/common/useDialogState'
 
-const SkillsTableRow = ({ skillInfo }) => {
+const SkillsTableRow = ({ skillInfo, reloadData }) => {
   const navigate = useNavigate()
-  const { skill_desc, skill_id, skill_name, status } = skillInfo
+  const [isLoading, setIsLoading] = useState(false)
+  const removeSkillDialogState = useDialogState(false)
+  const { enqueueSnackbar } = useSnackbar()
+  const {
+    skill_desc: skillDesc,
+    skill_id: skillId,
+    skill_name: skillName,
+    status: skillStatus,
+  } = skillInfo
+
   const actionMenuConfigs = [
     {
       itemName: 'View',
       itemAction: () => {
-        navigate(`/admin/skills/${skill_id}`)
+        navigate(`/admin/skills/${skillId}`)
       },
     },
     {
       itemName: 'Edit',
       itemAction: () => {
-        navigate(`/admin/skills/${skill_id}/edit`, {
+        navigate(`/admin/skills/${skillId}/edit`, {
           state: {
             skillState: {
-              skillName: skill_name,
-              skillId: skill_id,
-              skillDesc: skill_desc,
-              skillStatus: status,
+              skillName,
+              skillId,
+              skillDesc,
+              skillStatus,
             },
           },
         })
@@ -34,28 +46,7 @@ const SkillsTableRow = ({ skillInfo }) => {
     },
     {
       itemName: 'Remove',
-      itemAction: () => {
-        const requestOptions = {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-        const url = `${ENDPOINT}/skills/${skill_id}`
-        fetch(url, requestOptions)
-          .then((response) => response.json())
-          .then((responseJSON) => {
-            console.log(responseJSON)
-            if (responseJSON.code > 399) {
-              console.log(responseJSON.message)
-            } else {
-              window.location.reload()
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      },
+      itemAction: removeSkillDialogState.open,
     },
   ]
 
@@ -68,6 +59,59 @@ const SkillsTableRow = ({ skillInfo }) => {
     textColor = 'green'
   }
 
+  const removeSkill = () => {
+    setIsLoading(true)
+    const requestOptions = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    const url = `${ENDPOINT}/skills/${skillId}`
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((responseJSON) => {
+        console.log(responseJSON)
+        const message = responseJSON?.message
+        if (responseJSON.code > 399) {
+          console.log(responseJSON.message)
+          enqueueSnackbar(
+            message || 'Unable to delete skill. Please try again.',
+            { variant: 'error' }
+          )
+        } else {
+          enqueueSnackbar('Skill successfully deleted.', { variant: 'success' })
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+        enqueueSnackbar('Unable to delete skill. Please try again.', {
+          variant: 'error',
+        })
+      })
+      .finally(() => {
+        setIsLoading(false)
+        reloadData()
+        removeSkillDialogState.close()
+      })
+  }
+
+  const renderRemoveSkillDialog = () => {
+    return (
+      <ConfirmationDialog
+        dialogTitle="Delete skill?"
+        dialogBody={`Once you delete this skill, you will not be able to recover it.
+        Consider want to setting status to "Retired" instead.`}
+        isOpen={removeSkillDialogState.isOpen}
+        closeCallback={removeSkillDialogState.close}
+        proceedCallback={removeSkill}
+        proceedButtonTitle="Delete"
+        proceedColor="error"
+        isLoading={isLoading}
+      />
+    )
+  }
+
   return (
     <TableRow>
       <TableCell>{skillInfo?.skill_id}</TableCell>
@@ -76,6 +120,7 @@ const SkillsTableRow = ({ skillInfo }) => {
       <TableCell align="right">
         <ActionMenu variant="kebab" menuItemConfigs={actionMenuConfigs} />
       </TableCell>
+      {renderRemoveSkillDialog()}
     </TableRow>
   )
 }
@@ -84,8 +129,10 @@ SkillsTableRow.propTypes = {
   skillInfo: propTypes.shape({
     skill_id: propTypes.number,
     skill_name: propTypes.string,
+    skill_desc: propTypes.string,
     status: propTypes.string,
   }),
+  reloadData: propTypes.func,
 }
 
 export default SkillsTableRow

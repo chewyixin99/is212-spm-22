@@ -1,11 +1,18 @@
 import { RESPONSE_CODES, ENDPOINT } from '../../constants'
 
-const editRoleService = async ({ roleId, roleName, roleDesc, roleStatus }) => {
+const editRoleService = async ({
+  roleId,
+  roleName,
+  roleDesc,
+  roleDept,
+  roleStatus,
+}) => {
   console.log(
     '---> editRoleService, props: ',
     roleId,
     roleName,
     roleDesc,
+    roleDept,
     roleStatus
   )
   const result = {
@@ -22,6 +29,7 @@ const editRoleService = async ({ roleId, roleName, roleDesc, roleStatus }) => {
       body: JSON.stringify({
         role_name: roleName,
         role_desc: roleDesc,
+        role_dept: roleDept,
         status: roleStatus,
       }),
     })
@@ -35,7 +43,8 @@ const editRoleService = async ({ roleId, roleName, roleDesc, roleStatus }) => {
       result.error = responseJSON.message
     }
   } catch (e) {
-    result.error = e
+    console.log('editRoleService, error: ', e)
+    result.error = 'Unable to edit role. Please try again later.'
   }
 
   return result
