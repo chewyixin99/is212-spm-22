@@ -25,6 +25,8 @@ import AdminEditSkill from './pages/admin/AdminEditSkill'
 import StaffOutlet from './pages/staff/StaffOutlet'
 import StaffHomePage from './pages/staff/StaffHomePage'
 import StaffCoursesPage from './pages/staff/StaffCoursesPage'
+import StaffCompletedCoursesPage from './pages/staff/StaffCompletedCoursesPage'
+import StaffCompletedSkillsPage from './pages/staff/StaffCompletedSkillsPage'
 import ManagerOutlet from './pages/manager/ManagerOutlet'
 import ManagerHomePage from './pages/manager/ManagerHomePage'
 import AdminEditRole from './pages/admin/AdminEditRole'
@@ -52,6 +54,14 @@ function App() {
             {/* create new learning journey for this staff */}
             <Route path="new" element={<NewLearningJourney />} />
           </Route>
+          <Route
+            path="completed-courses"
+            element={<StaffCompletedCoursesPage />}
+          />
+          <Route
+            path="completed-skills"
+            element={<StaffCompletedSkillsPage />}
+          />
           <Route path="courses" element={<StaffCoursesPage />} />
           <Route path="courses">
             <Route path=":course_id" element={<Course />} />

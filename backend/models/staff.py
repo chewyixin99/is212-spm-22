@@ -15,8 +15,8 @@ class Staff(db.Model):
     email = db.Column(db.String(50))
     type = db.Column(db.Integer)
     status = db.Column(db.String(50))
-    courses = db.relationship("Staff_Course", back_populates="staff")
-    skills = db.relationship("Staff_Skill", back_populates="staff")
+    courses = db.relationship("Course", secondary=Staff_Course, backref="staff")
+    skills = db.relationship("Skill", secondary=Staff_Skill, backref="staff")
 
     def __init__(self, email, staff_fname, staff_lname, dept, type, status):
         self.staff_fname = staff_fname

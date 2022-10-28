@@ -17,9 +17,9 @@ class Course(db.Model):
     course_status = db.Column(db.String(15))
     course_type = db.Column(db.String(10))
     course_category = db.Column(db.String(50))
-    staffs = db.relationship("Staff_Course", back_populates="course", viewonly=True)
+    staffs = db.relationship("Staff", secondary=Staff_Course, backref="course", viewonly=True)
     skills = db.relationship("Skill", secondary=skill_course, backref="course", viewonly=True)
-    learning_journeys = db.relationship("Learning_Journey", secondary=learning_journey_course, backref="course", viewonly=True,)
+    learning_journeys = db.relationship("Learning_Journey", secondary=learning_journey_course, backref="course", viewonly=True)
 
     def __init__(
         self,

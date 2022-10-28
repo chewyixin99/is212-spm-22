@@ -2,18 +2,26 @@ import { useEffect, useState } from 'react'
 import { RESPONSE_CODES } from '../../constants'
 import { ENDPOINT } from '../../constants'
 
-const useCoursesLoader = (numRows = -1, courseId = null, init = true) => {
+const useCoursesLoader = (
+  numRows = -1,
+  staffId = null,
+  completed = false,
+  courseId = null,
+  init = true
+) => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [coursesData, setCoursesData] = useState([])
   const [total, setTotal] = useState(0)
+
+  console.log(`useCoursesLoader: ${staffId}, ${completed}`)
 
   const setData = (response) => {
     if (response?.code === RESPONSE_CODES.SUCCESS) {
       setTotal(response.data.courses.length)
       if (courseId) {
         setCoursesData([response?.data])
-      } else if (numRows == -1) {
+      } else if (numRows === -1) {
         setCoursesData(response?.data?.courses)
       } else {
         setCoursesData(response?.data?.courses.slice(0, numRows))
@@ -39,10 +47,28 @@ const useCoursesLoader = (numRows = -1, courseId = null, init = true) => {
       })
   }
 
+  const loadCompletedCourses = () => {
+    setIsLoading(true)
+    fetch(`${ENDPOINT}/staffs/${staffId}/courses`)
+      .then((response) => response.json())
+      .then((responseJSON) => {
+        setData(responseJSON)
+        setIsLoading(false)
+      })
+      .catch((e) => {
+        setError(e)
+        setIsLoading(false)
+      })
+  }
+
   const reloadData = () => loadCourses() // TODO: Not tested yet
 
   useEffect(() => {
-    loadCourses()
+    if (completed && staffId != null) {
+      loadCompletedCourses()
+    } else {
+      loadCourses()
+    }
   }, [courseId, init])
 
   return [coursesData, isLoading, total, error, reloadData]

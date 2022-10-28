@@ -21,8 +21,12 @@ import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useCoursesLoader from '../../services/courses/useCoursesLoader'
 
-function CoursesTable({ numRows }) {
-  const [coursesData, isLoading, total, error] = useCoursesLoader(numRows)
+function CoursesTable({ numRows, staffId, completed, header = 'Courses' }) {
+  const [coursesData, isLoading, total, error] = useCoursesLoader(
+    numRows,
+    staffId,
+    completed
+  )
 
   // console.log('---> CoursesTable, coursesData: ', coursesData)
   const isEmpty = coursesData.length === 0
@@ -89,7 +93,7 @@ function CoursesTable({ numRows }) {
       })}
     >
       <SectionHeader
-        header="Courses"
+        header={header}
         subHeader={renderSubheader()}
         sectionButtonComponent={sectionButtonRenderer()}
       />
@@ -115,6 +119,9 @@ function CoursesTable({ numRows }) {
 
 CoursesTable.propTypes = {
   numRows: propTypes.number,
+  completed: propTypes.bool,
+  staffId: propTypes.number,
+  header: propTypes.string,
 }
 
 export default CoursesTable

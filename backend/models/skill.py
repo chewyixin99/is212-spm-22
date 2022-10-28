@@ -18,7 +18,7 @@ class Skill(db.Model):
     status = db.Column(db.String(50))
     roles = db.relationship('Role', secondary=role_skill, backref='skill', viewonly=True)
     courses = db.relationship('Course', secondary=skill_course, backref='skill')
-    staffs = db.relationship("Staff_Skill", back_populates="skill")
+    staffs = db.relationship("Staff", secondary=Staff_Skill, backref="skill", viewonly=True)
 
     def __init__(self, skill_name, skill_desc, status):
         self.skill_name = skill_name

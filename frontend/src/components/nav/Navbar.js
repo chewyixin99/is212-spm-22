@@ -29,6 +29,7 @@ function Navbar({ role }) {
   const [anchorElNav, setAnchorElNav] = useState(null)
   const [anchorElUser, setAnchorElUser] = useState(null)
   const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorElCompleted, setAnchorElCompleted] = useState(null)
   // const outletContext = useOutletContext()
 
   console.log('---> role: ', role)
@@ -47,12 +48,20 @@ function Navbar({ role }) {
     setAnchorElUser(event.currentTarget)
   }
 
+  const handleOpenCompleted = (event) => {
+    setAnchorElCompleted(event.currentTarget)
+  }
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null)
   }
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
+  }
+
+  const handleCloseCompleted = () => {
+    setAnchorElCompleted(null)
   }
 
   return (
@@ -129,6 +138,32 @@ function Navbar({ role }) {
                     sx={{ my: 1, color: 'black', display: 'block' }}
                   >
                     Learning Journey
+                  </Button>
+                </Typography>
+              </MenuItem>
+
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    to="completed-courses"
+                    sx={{ my: 1, color: 'black', display: 'block' }}
+                  >
+                    Completed courses
+                  </Button>
+                </Typography>
+              </MenuItem>
+
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    to="completed-skills"
+                    sx={{ my: 1, color: 'black', display: 'block' }}
+                  >
+                    Completed skills
                   </Button>
                 </Typography>
               </MenuItem>
@@ -210,6 +245,43 @@ function Navbar({ role }) {
                 to="learning-journey/3"
               >
                 Journey to be a Consultant 1
+              </MenuItem>
+            </Menu>
+
+            <Button
+              onClick={handleOpenCompleted}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              id="completed-button"
+              aria-controls={
+                Boolean(anchorElCompleted) ? 'completed-menu' : undefined
+              }
+              aria-haspopup="true"
+              aria-expanded={Boolean(anchorElCompleted) ? 'true' : undefined}
+            >
+              My completed
+            </Button>
+            <Menu
+              id="completed-menu"
+              anchorEl={anchorElCompleted}
+              open={Boolean(anchorElCompleted)}
+              onClose={handleCloseCompleted}
+              MenuListProps={{
+                'aria-labelledby': 'completed-button',
+              }}
+            >
+              <MenuItem
+                onClick={handleCloseCompleted}
+                component={Link}
+                to="completed-courses"
+              >
+                Courses
+              </MenuItem>
+              <MenuItem
+                onClick={handleCloseCompleted}
+                component={Link}
+                to="completed-skills"
+              >
+                Skills
               </MenuItem>
             </Menu>
           </Box>
