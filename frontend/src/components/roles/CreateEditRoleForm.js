@@ -13,6 +13,11 @@ import {
   FormHelperText,
   Slide,
   Skeleton,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Chip,
 } from '@mui/material'
 
 import { STATUS } from '../../constants'
@@ -20,9 +25,15 @@ import CreateEditRoleFormSchema from '../../schemas/createEditRoleFormSchema'
 import CreateEditRoleFormContext from '../../contexts/roles/createEditRoleFormContext'
 import BackNextButtons from '../common/BackNextButtons'
 
-const CreateEditRoleForm = ({ handleNext, handleBack, enter, isLoading }) => {
+const CreateEditRoleForm = ({
+  allSkillsData,
+  handleNext,
+  handleBack,
+  enter,
+  isLoading,
+}) => {
   const roleFormContext = useContext(CreateEditRoleFormContext)
-  console.log('CreateEditRoleForm, roleFormContext: ', roleFormContext)
+  console.log('---> CreateEditRoleForm, roleFormContext: ', roleFormContext)
 
   const renderRoleNameField = (touched, errors) => {
     if (isLoading) {
@@ -107,6 +118,54 @@ const CreateEditRoleForm = ({ handleNext, handleBack, enter, isLoading }) => {
     )
   }
 
+  const renderSkillsField = (values, touched, errors, handleChange) => {
+    const skillsSelectLabel = 'Select relevant skill'
+    const renderSelectChip = (selectedSkills) => {
+      const chips = []
+      selectedSkills.map((selectedSkillId) => {
+        const selectedSkillData = allSkillsData.filter(
+          (skill) => skill.skill_id === selectedSkillId
+        )[0]
+        chips.push(
+          <Chip
+            key={selectedSkillData?.skill_id}
+            label={selectedSkillData?.skill_name}
+            sx={{ mr: 0.5 }}
+          />
+        )
+      })
+      return chips
+    }
+
+    if (isLoading) {
+      return <Skeleton variant="rounded" />
+    }
+    return (
+      <FormControl fullWidth error={touched.skills && errors.skills}>
+        <InputLabel>{skillsSelectLabel}</InputLabel>
+        <Select
+          variant="outlined"
+          multiple
+          value={values.skills}
+          fullWidth
+          name="skills"
+          onChange={handleChange}
+          label={skillsSelectLabel}
+          renderValue={renderSelectChip}
+        >
+          {allSkillsData.map((skill) => (
+            <MenuItem key={skill.skill_id} value={skill.skill_id}>
+              {skill.skill_name}
+            </MenuItem>
+          ))}
+        </Select>
+        <FormHelperText error={touched.skills && errors.skills}>
+          {touched.skills && errors.skills ? errors.skills : ''}
+        </FormHelperText>
+      </FormControl>
+    )
+  }
+
   return (
     <Slide direction="right" in={enter}>
       <Box>
@@ -143,6 +202,12 @@ const CreateEditRoleForm = ({ handleNext, handleBack, enter, isLoading }) => {
                   {renderRoleDeptField(touched, errors)}
                 </Grid>
                 <Grid item sm={12}>
+                  <Box mb={1.5}>
+                    <FormLabel>Relevant Skills</FormLabel>
+                  </Box>
+                  {renderSkillsField(values, touched, errors, handleChange)}
+                </Grid>
+                <Grid item sm={12}>
                   <Box mb={isLoading ? 1.5 : 0}>
                     <FormLabel>Role Status</FormLabel>
                   </Box>
@@ -173,6 +238,7 @@ const CreateEditRoleForm = ({ handleNext, handleBack, enter, isLoading }) => {
 export default CreateEditRoleForm
 
 CreateEditRoleForm.propTypes = {
+  allSkillsData: propTypes.array,
   handleNext: propTypes.func,
   handleBack: propTypes.func,
   enter: propTypes.bool,

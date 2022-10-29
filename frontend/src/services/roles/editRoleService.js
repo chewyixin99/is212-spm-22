@@ -6,15 +6,17 @@ const editRoleService = async ({
   roleDesc,
   roleDept,
   roleStatus,
+  skills,
 }) => {
-  console.log(
-    '---> editRoleService, props: ',
-    roleId,
-    roleName,
-    roleDesc,
-    roleDept,
-    roleStatus
-  )
+  const requestBody = JSON.stringify({
+    role_name: roleName,
+    role_desc: roleDesc,
+    role_dept: roleDept,
+    status: roleStatus,
+    skills,
+  })
+  console.log('---> editRoleService, props: ', requestBody)
+
   const result = {
     data: null,
     error: null,
@@ -26,12 +28,7 @@ const editRoleService = async ({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        role_name: roleName,
-        role_desc: roleDesc,
-        role_dept: roleDept,
-        status: roleStatus,
-      }),
+      body: requestBody,
     })
 
     const responseJSON = await response.json()

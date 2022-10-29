@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react'
-import { RESPONSE_CODES } from '../../constants'
-import { ENDPOINT } from '../../constants'
+import { RESPONSE_CODES, ENDPOINT } from '../../constants'
 
-const useSkillsLoader = (
-  numRows = -1,
-  skillsId = null,
-  init = true
-) => {
+const useSkillsLoader = (numRows = -1, skillsId = null, init = true) => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [skillsData, setSkillsData] = useState([])
@@ -17,11 +12,11 @@ const useSkillsLoader = (
       setTotal(response.data.skills.length)
       if (skillsId) {
         setSkillsData([response?.data])
-      } else if (numRows == -1) { 
+      } else if (numRows === -1) {
         setSkillsData(response?.data?.skills)
       } else {
         setSkillsData(response?.data?.skills.slice(0, numRows))
-      } 
+      }
     } else if (response?.code === RESPONSE_CODES.NOT_FOUND) {
       setSkillsData([])
     }
@@ -33,7 +28,7 @@ const useSkillsLoader = (
     fetch(skillsId ? `${ENDPOINT}/skills/${skillsId}` : `${ENDPOINT}/skills`)
       .then((response) => response.json())
       .then((responseJSON) => {
-        // console.log('---> useSkillsLoader, responseJSON: ', responseJSON)
+        console.log('---> useSkillsLoader, responseJSON: ', responseJSON)
         setData(responseJSON)
         setIsLoading(false)
       })

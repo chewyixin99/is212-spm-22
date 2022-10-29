@@ -33,12 +33,13 @@ const useRolesLoader = (numRows = -1, roleId = null, init = true) => {
         setIsLoading(false)
       })
       .catch((e) => {
+        console.log('---> useRolesLoader, erorr: ', e)
         setError(e)
         setIsLoading(false)
       })
   }
 
-  const reloadData = () => loadRoles() // TODO: Not tested yet
+  const reloadData = () => loadRoles()
 
   useEffect(() => {
     if (init) {

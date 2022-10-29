@@ -4,8 +4,12 @@ import { Box } from '@mui/material'
 
 import SectionHeader from '../../components/common/SectionHeader'
 import CreateEditRoleStepper from '../../components/roles/CreateEditRoleStepper'
+import useSkillsLoader from '../../services/skills/useSkillsLoader'
 
 function AdminNewRole() {
+  const [allSkillsData, allSkillsLoading, , allSkillsError] = useSkillsLoader()
+  console.log('---> AdminNewRole, allSkillsLoading: ', allSkillsLoading)
+  console.log('---> AdminNewRole, allSkillsError: ', allSkillsError)
   return (
     <Box my={5}>
       <Box
@@ -18,7 +22,7 @@ function AdminNewRole() {
         })}
       >
         <SectionHeader header="Create new role" />
-        <CreateEditRoleStepper />
+        <CreateEditRoleStepper allSkillsData={allSkillsData} />
       </Box>
     </Box>
   )

@@ -5,14 +5,16 @@ const createRoleService = async ({
   roleDesc,
   roleDept,
   roleStatus,
+  skills,
 }) => {
-  console.log(
-    '---> createRoleService, props: ',
-    roleName,
-    roleDesc,
-    roleDept,
-    roleStatus
-  )
+  const requestBody = JSON.stringify({
+    role_desc: roleDesc,
+    role_dept: roleDept,
+    status: roleStatus,
+    skills,
+  })
+  console.log('---> createRoleService, props: ', requestBody)
+
   const result = {
     data: null,
     error: null,
@@ -24,11 +26,7 @@ const createRoleService = async ({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        role_desc: roleDesc,
-        role_dept: roleDept,
-        status: roleStatus,
-      }),
+      body: requestBody,
     })
 
     const responseJSON = await response.json()

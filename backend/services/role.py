@@ -57,8 +57,21 @@ def create_role(role_name):
 
     data = request.get_json()
 
+    # Verify skills for creation
+    skills = []
+    request_skills_id = data.pop("skills", [])
+
+    for skill_id in request_skills_id:
+        skill = Skill.query.filter_by(skill_id=skill_id).first()
+        if skill is None:
+            return jsonify(
+                {"code": 404, "message": f"Skill id {skill_id} does not exist."}
+            )
+        skills.append(skill)
+
     try:
-        role = Role(role_name, **data)
+        role = Role(role_name, **data)  # Init role with basic data
+        role.skills = skills  # Add skills to role
         db.session.add(role)
         db.session.commit()
     except Exception as e:
@@ -92,10 +105,27 @@ def update_role(role_id):
         )
 
     data = request.get_json()
+
+    # Verify skills for update
+    skills = []
+    request_skills_id = data.pop("skills", [])
+
+    for skill_id in request_skills_id:
+        skill = Skill.query.filter_by(skill_id=skill_id).first()
+        if skill is None:
+            return jsonify(
+                {"code": 404, "message": f"Skill id {skill_id} does not exist."}
+            )
+        skills.append(skill)
+
+    # Update DB
     try:
+        # Update general attributes
         for key in data.keys():
             setattr(role, key, data[key])
-            db.session.commit()
+        role.skills = skills  # Update skills attributes
+        db.session.commit()
+
     except Exception as e:
         print(e)
         return jsonify(

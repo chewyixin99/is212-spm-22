@@ -5,6 +5,7 @@ const roleFormInitialValues = {
   roleDesc: '',
   roleDept: '',
   roleStatus: '',
+  skills: [],
 }
 
 const CreateEditRoleFormContext = createContext({

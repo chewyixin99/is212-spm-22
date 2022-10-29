@@ -10,15 +10,23 @@ import CreateEditRoleFormPreview from './CreateEditRoleFormPreview'
 
 export default function CreateEditRoleStepper({
   edit,
-  initialData,
-  isLoading,
+  rolesInitialData,
+  skillsInitialData,
+  allSkillsData,
+  rolesLoading,
+  skillsLoading,
+  allSkillsLoading,
 }) {
+  const [isLoading, setIsLoading] = useState(
+    rolesLoading || skillsLoading || allSkillsLoading
+  )
   const [activeStep, setActiveStep] = useState(0)
   const [roleFormValues, setRoleFormValues] = useState({
     roleName: '',
     roleDesc: '',
     roleDept: '',
     roleStatus: '',
+    skills: [],
   })
   const navigate = useNavigate()
   const steps = []
@@ -31,23 +39,26 @@ export default function CreateEditRoleStepper({
 
   useEffect(() => {
     // Initialise form values (if edit)
-    if (edit && !isLoading) {
+    if (edit && !rolesLoading && !skillsLoading && !allSkillsLoading) {
+      // error here when failed roles/skills loading modal
       const {
         role_id: roleId,
         role_name: roleName,
         role_desc: roleDesc,
         role_dept: roleDept,
         status: roleStatus,
-      } = initialData[0]
+      } = rolesInitialData[0]
       setRoleFormValues({
         roleId,
         roleName,
         roleDesc,
         roleDept,
         roleStatus,
+        skills: skillsInitialData.map((skill) => skill.skill_id),
       })
+      setIsLoading(false)
     }
-  }, [initialData])
+  }, [rolesInitialData, skillsInitialData])
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -64,6 +75,7 @@ export default function CreateEditRoleStepper({
     if (activeStep === 0) {
       return (
         <CreateEditRoleForm
+          allSkillsData={allSkillsData}
           handleNext={handleNext}
           handleBack={handleBack}
           enter={activeStep === 0}
@@ -73,6 +85,7 @@ export default function CreateEditRoleStepper({
     }
     return (
       <CreateEditRoleFormPreview
+        allSkillsData={allSkillsData}
         handleBack={handleBack}
         enter={activeStep === 1}
         edit={edit}
@@ -103,12 +116,18 @@ export default function CreateEditRoleStepper({
 }
 
 CreateEditRoleStepper.propTypes = {
-  initialData: propTypes.object,
+  rolesInitialData: propTypes.object,
+  skillsInitialData: propTypes.object,
+  allSkillsData: propTypes.array,
   edit: propTypes.bool,
-  isLoading: propTypes.bool,
+  rolesLoading: propTypes.bool,
+  skillsLoading: propTypes.bool,
+  allSkillsLoading: propTypes.bool,
 }
 
-CreateEditRoleStepper.propTypes = {
+CreateEditRoleStepper.defaultProps = {
   edit: false,
-  isLoading: false,
+  rolesLoading: false,
+  skillsLoading: false,
+  allSkillsLoading: false,
 }

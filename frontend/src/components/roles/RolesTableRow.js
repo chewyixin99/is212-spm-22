@@ -36,7 +36,6 @@ const RolesTableRow = ({ roleInfo, reloadData }) => {
       },
     },
   ]
-
   const getTextColor = () => {
     if (roleInfo.status === STATUS.RETIRED) {
       return 'red'

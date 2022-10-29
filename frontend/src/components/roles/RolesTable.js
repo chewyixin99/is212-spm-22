@@ -26,7 +26,7 @@ function RolesTable({ numRows }) {
     null
   )
   // console.log('---> RolesTable, roleData: ', roleData)
-  const isEmpty = roleData.length === 0
+  const isEmpty = total === 0
 
   const renderSubheader = () => {
     if (isLoading) {
