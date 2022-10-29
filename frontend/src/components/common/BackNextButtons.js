@@ -28,13 +28,6 @@ const BackNextButtons = ({
       >
         {backButtonLabel}
       </Button>
-      {/* <Button
-        variant="contained"
-        endIcon={<KeyboardArrowRight />}
-        onClick={handleNextClick}
-      >
-        {nextButtonLabel}
-      </Button> */}
       <LoadingButton
         variant="contained"
         loading={isLoading}

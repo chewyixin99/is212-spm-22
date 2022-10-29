@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 
 import { Alert, Box, Breadcrumbs, Stack, Typography } from '@mui/material'
 import { ENDPOINT, STATUS } from '../../constants'
-import DescriptionRows from '../common/DescriptionRows'
+import DescriptionRow from '../common/DescriptionRow'
 import StyledBreadcrumb from '../common/StyledBreadcrumb'
 
 function Course() {
@@ -49,11 +49,16 @@ function Course() {
     return skill.status === STATUS.ACTIVE
   }
 
-  const renderCourseSkills = (courseSkills) => {
+  const renderCourseSkills = () => {
     if (courseSkills.filter(checkActive).length > 0) {
       return (
         <Stack>
-          <Typography sx={{ color: 'text.secondary' }} variant="subtitle1" display="block" gutterBottom>
+          <Typography
+            sx={{ color: 'text.secondary' }}
+            variant="subtitle1"
+            display="block"
+            gutterBottom
+          >
             Skills under course
           </Typography>
           <Breadcrumbs aria-label="breadcrumb">
@@ -98,16 +103,23 @@ function Course() {
       />
       <Box sx={{ marginBottom: '10vh', justifyContent: 'center' }}>
         <Typography variant="h4" component="div" gutterBottom>
-          {course_id}: {course.course_name}
+          {/* eslint-disable-next-line */}
+          {course_id}:{course.course_name}
         </Typography>
         <Stack spacing={4} sx={{ marginTop: '5vh', marginBottom: '10vh ' }}>
           {renderAlertMessage(course.course_status)}
           {renderCourseSkills(courseSkills)}
-          {DescriptionRows('Course ID', course.course_id)}
-          {DescriptionRows('Course type', course.course_type)}
-          {DescriptionRows('Course category', course.course_category)}
-          {DescriptionRows('Course description', course.course_desc)}
-          {DescriptionRows('Course status', course.course_status)}
+          <DescriptionRow title="Course ID" value={course.course_id} />
+          <DescriptionRow title="Course type" value={course.course_type} />
+          <DescriptionRow
+            title="Course category"
+            value={course.course_category}
+          />
+          <DescriptionRow
+            title="Course description"
+            value={course.course_desc}
+          />
+          <DescriptionRow title="Course status" value={course.course_status} />
         </Stack>
       </Box>
     </Box>

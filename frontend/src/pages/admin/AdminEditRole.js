@@ -11,18 +11,11 @@ import useSkillsLoader from '../../services/skills/useSkillsLoader'
 
 const AdminEditRole = () => {
   const params = useParams()
-  const [rolesInitialData, rolesLoading, , rolesError] = useRolesLoader(
-    -1,
+  const [rolesInitialData, rolesLoading] = useRolesLoader(-1, params?.role_id)
+  const [skillsInitialData, skillsLoading] = useRolesSkillsLoader(
     params?.role_id
   )
-  // prettier-ignore
-  // eslint-disable-next-line
-  const [skillsInitialData, skillsLoading, , skillsError] = useRolesSkillsLoader(params?.role_id)
-  const [allSkillsData, allSkillsLoading, , allSkillsError] = useSkillsLoader()
-
-  console.log('---> AdminEditRole, rolesError: ', rolesError)
-  console.log('---> AdminEditRole, skillsError: ', skillsError)
-  console.log('---> AdminEditRole, allSkillsError: ', allSkillsError)
+  const [allSkillsData, allSkillsLoading] = useSkillsLoader()
 
   return (
     <Box my={5}>

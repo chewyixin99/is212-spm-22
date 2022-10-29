@@ -1,40 +1,25 @@
-import { useEffect, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useSnackbar } from 'notistack'
 
-import {
-  Alert,
-  Box,
-  Breadcrumbs,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Stack,
-  Typography,
-} from '@mui/material'
+import { Alert, Box, Breadcrumbs, Stack, Typography } from '@mui/material'
+
 import { ENDPOINT, STATUS } from '../../constants'
-import DescriptionRows from '../common/DescriptionRows'
-import SnackbarAlert from '../common/SnackbarAlert'
+import DescriptionRow from '../common/DescriptionRow'
 import StyledBreadcrumb from '../common/StyledBreadcrumb'
-import { KeyboardArrowLeft } from '@mui/icons-material'
-import { LoadingButton } from '@mui/lab'
+import EditButtons from '../common/EditButtons'
+import ConfirmationDialog from '../common/ConfirmationDialog'
+import useDialogState from '../../services/common/useDialogState'
 
 function Skill() {
   const navigate = useNavigate()
-  const location = useLocation()
-
   const { skill_id } = useParams()
   const baseUrl = ENDPOINT
   const [skill, setSkill] = useState([])
   const [skillCourses, setSkillCourses] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [alertMessage, setAlertMessage] = useState('Skill successfully edited')
-  const [alertSeverity, setAlertSeverity] = useState('success')
-  // modal controls
-  const [openModal, setOpenModal] = useState(false)
+  const { enqueueSnackbar } = useSnackbar()
+  const deleteDialogState = useDialogState()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,11 +59,16 @@ function Skill() {
     return course.course_status === STATUS.ACTIVE
   }
 
-  const renderSkillCourses = (skillCourses) => {
+  const renderSkillCourses = () => {
     if (skillCourses.filter(checkActive).length > 0) {
       return (
         <Stack>
-          <Typography sx={{ color: 'text.secondary' }} variant="subtitle1" display="block" gutterBottom>
+          <Typography
+            sx={{ color: 'text.secondary' }}
+            variant="subtitle1"
+            display="block"
+            gutterBottom
+          >
             Courses under skill
           </Typography>
           <Breadcrumbs aria-label="breadcrumb">
@@ -110,7 +100,6 @@ function Skill() {
   }
 
   const handleEditClick = () => {
-    console.log(`edit clicked`)
     navigate(`/admin/skills/${skill.skill_id}/edit`, {
       state: {
         skillState: {
@@ -122,11 +111,6 @@ function Skill() {
         from: 'Skills',
       },
     })
-  }
-
-  const handleDeleteClick = () => {
-    console.log(`delete clicked`)
-    setOpenModal(true)
   }
 
   const handleConfirmDeleteClick = () => {
@@ -143,10 +127,9 @@ function Skill() {
       .then((responseJSON) => {
         setIsLoading(false)
         if (responseJSON.code > 399) {
-          setAlertMessage(responseJSON.message)
-          setAlertSeverity('error')
-          setSnackbarOpen(true)
+          enqueueSnackbar(responseJSON.message, { variant: 'error' })
         } else {
+          enqueueSnackbar('Skill successfully deleted.', { variant: 'success' })
           navigate('/admin/skills', {
             replace: true,
           })
@@ -154,15 +137,11 @@ function Skill() {
       })
       .catch(() => {
         setIsLoading(false)
-        setAlertMessage('Internal server error, please try again.')
-        setAlertSeverity('error')
-        setSnackbarOpen(true)
-        setOpenModal(false)
+        deleteDialogState.close()
+        enqueueSnackbar('Internal server error, please try again.', {
+          variant: 'error',
+        })
       })
-  }
-
-  const handleModalClose = () => {
-    setOpenModal(false)
   }
 
   return (
@@ -188,63 +167,28 @@ function Skill() {
         <Stack spacing={4} sx={{ marginTop: '5vh', marginBottom: '10vh ' }}>
           {renderAlertMessage(skill.status)}
           {renderSkillCourses(skillCourses)}
-          {DescriptionRows('Skill ID', skill.skill_id)}
-          {DescriptionRows('Skill description', skill.skill_desc)}
-          {DescriptionRows('Skill status', skill.status)}
-          <form>
-            <Button
-              variant="outlined"
-              sx={{ mr: 3 }}
-              startIcon={<KeyboardArrowLeft />}
-              onClick={handleBackClick}
-            >
-              Back
-            </Button>
-            <Button
-              variant="contained"
-              sx={{ mr: 3 }}
-              onClick={handleEditClick}
-            >
-              Edit
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{ mr: 3 }}
-              onClick={handleDeleteClick}
-            >
-              Delete
-            </Button>
-          </form>
+          <DescriptionRow title="Skill ID" value={skill.skill_id} />
+          <DescriptionRow title="Skill Desciption" value={skill.skill_desc} />
+          <DescriptionRow title="Skill Status" value={skill.status} />
+          <EditButtons
+            handleBackClick={handleBackClick}
+            handleEditClick={handleEditClick}
+            handleDeleteClick={deleteDialogState.open}
+          />
         </Stack>
       </Box>
-      <SnackbarAlert
-        open={snackbarOpen}
-        alertMessage={alertMessage}
-        alertSeverity={alertSeverity}
-      ></SnackbarAlert>
-      <Dialog open={openModal} onClose={handleModalClose}>
-        <DialogTitle>{'Delete skill?'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Once you delete this skill, you will not be able to recover it.
-            Consider want to setting status to "Retired" instead.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleModalClose} autoFocus>
-            Back
-          </Button>
-          <LoadingButton
-            variant="contained"
-            loading={isLoading}
-            color="error"
-            onClick={handleConfirmDeleteClick}
-          >
-            Delete
-          </LoadingButton>
-        </DialogActions>
-      </Dialog>
+      <ConfirmationDialog
+        dialogTitle="Delete skill?"
+        dialogBody='Once you delete this skill, you will not be able to recover it.
+        Consider want to setting status to "Retired" instead.'
+        isOpen={deleteDialogState.isOpen}
+        closeCallback={deleteDialogState.open}
+        backCallback={deleteDialogState.close}
+        proceedCallback={handleConfirmDeleteClick}
+        proceedButtonTitle="Delete"
+        proceedColor="error"
+        isLoading={isLoading}
+      />
     </Box>
   )
 }

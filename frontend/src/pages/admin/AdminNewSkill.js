@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useSnackbar } from 'notistack'
+
 import {
   Box,
   TextField,
@@ -6,7 +9,6 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  Button,
   Typography,
   InputLabel,
   Select,
@@ -14,16 +16,11 @@ import {
   MenuItem,
   FormHelperText,
   Chip,
-  OutlinedInput,
 } from '@mui/material'
 
 import SectionHeader from '../../components/common/SectionHeader'
-import { STATUS } from '../../constants'
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
-import { useNavigate } from 'react-router-dom'
-import { ENDPOINT } from '../../constants'
-import SnackbarAlert from '../../components/common/SnackbarAlert'
-import { LoadingButton } from '@mui/lab'
+import BackNextButtons from '../../components/common/BackNextButtons'
+import { STATUS, ENDPOINT } from '../../constants'
 
 function AdminNewSkill() {
   // error handling already built in TextField
@@ -40,9 +37,7 @@ function AdminNewSkill() {
     skillStatus: STATUS.ACTIVE,
   })
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [alertMessage, setAlertMessage] = useState('Default alert message')
-  const [alertSeverity, setAlertSeverity] = useState('error')
+  const { enqueueSnackbar } = useSnackbar()
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -56,46 +51,27 @@ function AdminNewSkill() {
     fetchData().catch(console.error)
   }, [])
 
-  useEffect(() => {
-    if (
-      !(
-        alertSeverity === 'error' ||
-        formValues.skillName.length > 50 ||
-        formValues.skillDesc.length > 255 ||
-        courses.length < 1
-      )
-    ) {
-      navigate('/admin/newskill/preview', {
-        state: {
-          formValues: formValues,
-          courses: courses,
-        },
-      })
-    }
-  }, [alertSeverity])
-
   const checkSkillName = async () => {
     await fetch(`${ENDPOINT}/skills/${formValues.skillName}`)
       .then((response) => response.json())
       .then((responseJSON) => {
         if (responseJSON.code < 299) {
           setSkillNameError(true)
-          setSnackbarOpen(true)
-          setAlertMessage(
-            `Skill ${formValues.skillName} already exists, unable to create skill`
+          enqueueSnackbar(
+            `Skill ${formValues.skillName} already exists, unable to create skill`,
+            { variant: 'error' }
           )
         } else if (responseJSON.code > 499) {
-          setSnackbarOpen(true)
-          setAlertMessage('Internal server error, please try again')
-        } else {
-          setAlertSeverity('success')
+          enqueueSnackbar('Internal server error, please try again', {
+            variant: 'error',
+          })
         }
         setIsLoading(false)
       })
-      .catch((err) => {
-        setSnackbarOpen(true)
-        setAlertMessage('Internal server error, please try again')
-        console.log(err)
+      .catch(() => {
+        enqueueSnackbar('Internal server error, please try again', {
+          variant: 'error',
+        })
         setIsLoading(false)
       })
   }
@@ -120,26 +96,43 @@ function AdminNewSkill() {
     // 'Form submission canceled because the form is not connected'
     e.preventDefault()
 
-    setAlertSeverity('error')
     setSkillNameError(false)
     setSkillDescError(false)
     setCoursesError(false)
-    setSnackbarOpen(false)
     setIsLoading(true)
 
     // check if skill is already present
     checkSkillName()
 
-    if (formValues.skillName == '' || formValues.skillName.length > 50) {
+    // prettier-ignore
+    // eslint-disable-next-line prettier/prettier
+    const skillNameErr = formValues.skillName === '' || formValues.skillName.length > 50
+    // prettier-ignore
+    // eslint-disable-next-line prettier/prettier
+    const skillDescErr = formValues.skillDesc === '' || formValues.skillDesc.length > 255
+    const coursesErr = courses.length < 1
+
+    if (skillNameErr) {
       setSkillNameError(true)
     }
 
-    if (formValues.skillDesc == '' || formValues.skillDesc.length > 255) {
+    if (skillDescErr) {
       setSkillDescError(true)
     }
 
-    if (courses.length < 1) {
+    if (coursesErr) {
       setCoursesError(true)
+      console.log('setting courses error')
+    }
+
+    if (!skillNameErr && !skillDescErr && !coursesErr) {
+      console.log(coursesError)
+      navigate('/admin/newskill/preview', {
+        state: {
+          formValues,
+          courses,
+        },
+      })
     }
   }
 
@@ -163,7 +156,7 @@ function AdminNewSkill() {
             display="block"
             gutterBottom
           >
-            Skill name
+            Skill Name
           </Typography>
           <TextField
             id="skill-name"
@@ -185,7 +178,7 @@ function AdminNewSkill() {
             display="block"
             gutterBottom
           >
-            Skill description
+            Skill Description
           </Typography>
           <TextField
             id="skill-desc"
@@ -213,18 +206,15 @@ function AdminNewSkill() {
             Courses
           </Typography>
           <FormControl fullWidth sx={{ marginBottom: 3 }} error={coursesError}>
-            <InputLabel id="courses">Select course</InputLabel>
+            <InputLabel>Select course</InputLabel>
             <Select
-              labelId="courses"
-              id="courses-select"
               value={courses}
               name="courses"
-              label="Course"
+              label="Select course"
               multiple
               onChange={(e) => {
                 handleCoursesChange(e)
               }}
-              input={<OutlinedInput label="Chip" />}
               renderValue={(selectedCourse) => {
                 return (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -279,30 +269,14 @@ function AdminNewSkill() {
               />
             </RadioGroup>
           </FormControl>
-          <Button
-            variant="outlined"
-            sx={{ my: 3, mr: 3 }}
-            startIcon={<KeyboardArrowLeft />}
-            onClick={handleBackClick}
-          >
-            Back
-          </Button>
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            sx={{ my: 3 }}
-            loading={isLoading}
-            loadingPosition="end"
-            endIcon={<KeyboardArrowRight />}
-          >
-            Next
-          </LoadingButton>
+          <Box my={3}>
+            <BackNextButtons
+              handleBackClick={handleBackClick}
+              handleNextClick={handleSubmit}
+              isLoading={isLoading}
+            />
+          </Box>
         </form>
-        <SnackbarAlert
-          open={snackbarOpen}
-          alertMessage={alertMessage}
-          alertSeverity={alertSeverity}
-        />
       </Box>
     </Box>
   )

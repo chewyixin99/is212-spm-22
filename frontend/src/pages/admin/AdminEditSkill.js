@@ -1,7 +1,9 @@
-import { KeyboardArrowRight } from '@mui/icons-material'
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useSnackbar } from 'notistack'
+
 import {
   Box,
-  Button,
   FormLabel,
   FormControlLabel,
   TextField,
@@ -11,18 +13,15 @@ import {
   FormControl,
   InputLabel,
   Select,
-  OutlinedInput,
   Chip,
   MenuItem,
   FormHelperText,
 } from '@mui/material'
-import { useLocation, useNavigate } from 'react-router-dom'
+
 import SectionHeader from '../../components/common/SectionHeader'
-import SnackbarAlert from '../../components/common/SnackbarAlert'
-import DescriptionRows from '../../components/common/DescriptionRows'
+import DescriptionRow from '../../components/common/DescriptionRow'
+import BackNextButtons from '../../components/common/BackNextButtons'
 import { STATUS, ENDPOINT } from '../../constants'
-import { useEffect, useState } from 'react'
-import { LoadingButton } from '@mui/lab'
 
 function AdminEditSkill() {
   const location = useLocation()
@@ -41,13 +40,7 @@ function AdminEditSkill() {
   const [removeCourses, setRemoveCourses] = useState([])
   const [coursesError, setCoursesError] = useState(false)
 
-  const [alertSeverity, setAlertSeverity] = useState('info')
-  const [alertMessage, setAlertMessage] = useState('')
-  const [snackbarState, setSnackbarState] = useState({
-    open: false,
-    vertical: 'bottom',
-    horizontal: 'right',
-  })
+  const { enqueueSnackbar } = useSnackbar()
 
   // get skill courses from db first load
   useEffect(() => {
@@ -62,10 +55,9 @@ function AdminEditSkill() {
       await fetch(`${ENDPOINT}/skills/${skillId}/courses`)
         .then((response) => response.json())
         .then((responseJSON) => {
-          let newCoursesName = []
-          for (const course of responseJSON.data.courses) {
-            newCoursesName.push(course.course_id)
-          }
+          const newCoursesName = responseJSON.data.courses.map(
+            (course) => course.course_id
+          )
           setRemoveCourses(newCoursesName)
           setNewCourses(newCoursesName)
         })
@@ -75,27 +67,12 @@ function AdminEditSkill() {
     })
   }, [])
 
-  // only navigate if success
-  useEffect(() => {
-    if (alertSeverity === 'success' && snackbarState.open) {
-      navigate(-1)
-      navigate(`/admin/skills/${skillId}`, {
-        state: {
-          snackbarState: snackbarState,
-          from: 'AdminEditSkill',
-        },
-        replace: true,
-      })
-    }
-  }, [alertSeverity, snackbarState])
-
   const handleSubmit = (e) => {
     e.preventDefault()
 
     setIsLoading(true)
     setSkillDescError(false)
     setCoursesError(false)
-    setSnackbarState({ ...snackbarState, open: false })
 
     if (newSkillDesc === '' || newSkillDesc.length > 255) {
       setSkillDescError(true)
@@ -128,20 +105,18 @@ function AdminEditSkill() {
           setIsLoading(false)
 
           if (responseJSON.code > 399) {
-            setAlertMessage(responseJSON.message)
-            setAlertSeverity('error')
-            setSnackbarState({ ...snackbarState, open: true })
+            enqueueSnackbar(responseJSON.message, { variant: 'error' })
           } else {
-            setAlertMessage(`Skill ${skillName} successfully updated.`)
-            setAlertSeverity('success')
-            setSnackbarState({ ...snackbarState, open: true })
+            enqueueSnackbar(`Skill ${skillName} successfully updated.`, {
+              variant: 'success',
+            })
+            navigate(`/admin/skills/${skillId}`)
           }
         })
-        .catch((e) => {
-          setIsLoading(false)
-          setAlertMessage(`Internal server error, please try again.`)
-          setAlertSeverity('error')
-          setSnackbarState({ ...snackbarState, open: true })
+        .catch(() => {
+          enqueueSnackbar('Internal server error, please try again.', {
+            variant: 'error',
+          })
         })
     } else {
       setIsLoading(false)
@@ -172,8 +147,8 @@ function AdminEditSkill() {
       >
         <SectionHeader header="Edit skill" />
         <form onSubmit={handleSubmit}>
-          {DescriptionRows('Skill ID', skillId)}
-          {DescriptionRows('Skill Name', skillName)}
+          <DescriptionRow title="Skill ID" value={skillId} />
+          <DescriptionRow title="Skill Name" value={skillName} />
           <Box sx={{ mb: 1 }}>
             <Typography
               sx={{ color: 'text.secondary' }}
@@ -181,7 +156,7 @@ function AdminEditSkill() {
               display="block"
               gutterBottom
             >
-              Skill description
+              Skill Description
             </Typography>
             <TextField
               id="skill-desc"
@@ -211,18 +186,15 @@ function AdminEditSkill() {
             Courses
           </Typography>
           <FormControl fullWidth sx={{ marginBottom: 3 }} error={coursesError}>
-            <InputLabel id="courses">Select course</InputLabel>
+            <InputLabel>Select course</InputLabel>
             <Select
-              labelId="courses"
-              id="courses-select"
               value={newCourses}
               name="courses"
-              label="Course"
+              label="Select course"
               multiple
               onChange={(e) => {
                 handleCoursesChange(e)
               }}
-              input={<OutlinedInput label="Chip" />}
               renderValue={(selectedCourse) => {
                 return (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -274,29 +246,15 @@ function AdminEditSkill() {
               label="Retired"
             />
           </RadioGroup>
-          <Button
-            variant="outlined"
-            sx={{ my: 3, mr: 3 }}
-            onClick={handleCancelClick}
-          >
-            Cancel
-          </Button>
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            sx={{ my: 3, mr: 3 }}
-            endIcon={<KeyboardArrowRight />}
-            loading={isLoading}
-            loadingPosition="end"
-          >
-            Confirm
-          </LoadingButton>
+          <Box my={3}>
+            <BackNextButtons
+              handleBackClick={handleCancelClick}
+              handleNextClick={handleSubmit}
+              isLoading={isLoading}
+              backButtonLabel="Cancel"
+            />
+          </Box>
         </form>
-        <SnackbarAlert
-          open={snackbarState.open}
-          alertMessage={alertMessage}
-          alertSeverity={alertSeverity}
-        />
       </Box>
     </Box>
   )

@@ -32,6 +32,7 @@
       ],
     "no-else-return": "off",
     "array-callback-return": "off",
+    "camelcase": "off",
     "react/jsx-filename-extension": [
       1,
       {

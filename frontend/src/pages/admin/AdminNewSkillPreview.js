@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import SectionHeader from '../../components/common/SectionHeader'
 import SnackbarAlert from '../../components/common/SnackbarAlert'
 import { ENDPOINT } from '../../constants'
-import DescriptionRows from '../../components/common/DescriptionRows'
+import DescriptionRow from '../../components/common/DescriptionRow'
 
 function AdminNewSkillPreview() {
   const location = useLocation()
@@ -53,7 +53,7 @@ function AdminNewSkillPreview() {
     const requestBody = {
       skill_desc: skillDesc,
       status: skillStatus,
-      courses: courses,
+      courses,
     }
     const requestOptions = {
       method: 'POST',
@@ -108,10 +108,13 @@ function AdminNewSkillPreview() {
         <SectionHeader header="Skill preview" />
         {/* id, name, status, description */}
         <form onSubmit={handleSubmit}>
-          {DescriptionRows('Skill name', skillName)}
-          {DescriptionRows('Skill description', skillDesc)}
-          {DescriptionRows('Skill status', skillStatus)}
-          {DescriptionRows('Courses', location.state.courses.join(', '))}
+          <DescriptionRow title="Skill Name" value={skillName} />
+          <DescriptionRow title="Skill Description" value={skillDesc} />
+          <DescriptionRow title="Skill Status" value={skillStatus} />
+          <DescriptionRow
+            title="Courses"
+            value={location.state.courses.join(', ')}
+          />
           <Button
             variant="outlined"
             sx={{ my: 3, mr: 3 }}
