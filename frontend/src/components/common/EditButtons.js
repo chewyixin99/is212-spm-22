@@ -4,6 +4,9 @@ import propTypes from 'prop-types'
 import { LoadingButton } from '@mui/lab'
 import { Box, Button } from '@mui/material'
 import { KeyboardArrowLeft } from '@mui/icons-material'
+import { useOutletContext } from 'react-router-dom'
+
+import { ROLES } from '../../constants'
 
 const EditButtons = ({
   handleBackClick,
@@ -16,6 +19,7 @@ const EditButtons = ({
   deleteButtonLabel,
   editButtonLabel,
 }) => {
+  const { role } = useOutletContext()
   return (
     <Box
       sx={{
@@ -31,29 +35,33 @@ const EditButtons = ({
       >
         {backButtonLabel}
       </Button>
-      <Box sx={{ display: 'flex' }}>
-        <Box>
-          <LoadingButton
-            variant="contained"
-            loading={isEditing}
-            loadingPosition="end"
-            onClick={handleEditClick}
-          >
-            {editButtonLabel}
-          </LoadingButton>
+      {role === ROLES.STAFF ? (
+        <Box />
+      ) : (
+        <Box sx={{ display: 'flex' }}>
+          <Box>
+            <LoadingButton
+              variant="contained"
+              loading={isEditing}
+              loadingPosition="end"
+              onClick={handleEditClick}
+            >
+              {editButtonLabel}
+            </LoadingButton>
+          </Box>
+          <Box ml={2}>
+            <LoadingButton
+              variant="contained"
+              loading={isDeleting}
+              loadingPosition="end"
+              color="error"
+              onClick={handleDeleteClick}
+            >
+              {deleteButtonLabel}
+            </LoadingButton>
+          </Box>
         </Box>
-        <Box ml={2}>
-          <LoadingButton
-            variant="contained"
-            loading={isDeleting}
-            loadingPosition="end"
-            color="error"
-            onClick={handleDeleteClick}
-          >
-            {deleteButtonLabel}
-          </LoadingButton>
-        </Box>
-      </Box>
+      )}
     </Box>
   )
 }

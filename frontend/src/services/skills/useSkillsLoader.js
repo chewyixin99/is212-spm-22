@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react'
 import { RESPONSE_CODES, ENDPOINT } from '../../constants'
 
-const useSkillsLoader = (numRows = -1, skillsId = null, init = true) => {
+const useSkillsLoader = (
+  numRows = -1,
+  staffId = null,
+  completed = false,
+  skillsId = null,
+  init = true
+) => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [skillsData, setSkillsData] = useState([])
@@ -38,10 +44,28 @@ const useSkillsLoader = (numRows = -1, skillsId = null, init = true) => {
       })
   }
 
+  const loadCompletedSkills = () => {
+    setIsLoading(true)
+    fetch(`${ENDPOINT}/staffs/${staffId}/skills`)
+      .then((response) => response.json())
+      .then((responseJSON) => {
+        setData(responseJSON)
+        setIsLoading(false)
+      })
+      .catch((e) => {
+        setError(e)
+        setIsLoading(false)
+      })
+  }
+
   const reloadData = () => loadSkills() // TODO: Not tested yet
 
   useEffect(() => {
-    loadSkills()
+    if (completed && staffId != null) {
+      loadCompletedSkills()
+    } else {
+      loadSkills()
+    }
   }, [skillsId, init])
 
   return [skillsData, isLoading, total, error, reloadData]

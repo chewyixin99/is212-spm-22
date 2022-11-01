@@ -2,8 +2,13 @@ import React from 'react'
 import propTypes from 'prop-types'
 
 import { Box, Typography } from '@mui/material'
+import { useOutletContext } from 'react-router-dom'
+
+import { ROLES } from '../../constants'
 
 const SectionHeader = ({ header, subHeader, sectionButtonComponent }) => {
+  const { role } = useOutletContext()
+
   const renderHeader = () => (
     <Typography variant="h4" gutterBottom>
       {header}
@@ -29,7 +34,11 @@ const SectionHeader = ({ header, subHeader, sectionButtonComponent }) => {
         {header && renderHeader()}
         {subHeader && renderSubHeader()}
       </Box>
-      <Box>{sectionButtonComponent}</Box>
+      {role === ROLES.STAFF ? (
+        <Typography />
+      ) : (
+        <Box>{sectionButtonComponent}</Box>
+      )}
     </Box>
   )
 }

@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import propTypes from 'prop-types'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
 
 import { TableCell, TableRow } from '@mui/material'
 
 import ActionMenu from '../common/ActionMenu'
-import { STATUS, ENDPOINT } from '../../constants'
+import { STATUS, ENDPOINT, ROLES } from '../../constants'
 import ConfirmationDialog from '../common/ConfirmationDialog'
 import useDialogState from '../../services/common/useDialogState'
 
@@ -21,18 +21,19 @@ const SkillsTableRow = ({ skillInfo, reloadData }) => {
     skill_name: skillName,
     status: skillStatus,
   } = skillInfo
+  const { role } = useOutletContext()
 
-  const actionMenuConfigs = [
+  const adminActionMenuConfigs = [
     {
       itemName: 'View',
       itemAction: () => {
-        navigate(`/admin/skills/${skillId}`)
+        navigate(`/${role.toLowerCase()}/skills/${skillId}`)
       },
     },
     {
       itemName: 'Edit',
       itemAction: () => {
-        navigate(`/admin/skills/${skillId}/edit`, {
+        navigate(`/${role.toLowerCase()}/skills/${skillId}/edit`, {
           state: {
             skillState: {
               skillName,
@@ -47,6 +48,15 @@ const SkillsTableRow = ({ skillInfo, reloadData }) => {
     {
       itemName: 'Remove',
       itemAction: removeSkillDialogState.open,
+    },
+  ]
+
+  const staffActionMenuConfigs = [
+    {
+      itemName: 'View',
+      itemAction: () => {
+        navigate(`/${role.toLowerCase()}/skills/${skillId}`)
+      },
     },
   ]
 
@@ -118,7 +128,14 @@ const SkillsTableRow = ({ skillInfo, reloadData }) => {
       <TableCell>{skillInfo?.skill_name}</TableCell>
       <TableCell sx={{ color: textColor }}>{skillInfo?.status}</TableCell>
       <TableCell align="right">
-        <ActionMenu variant="kebab" menuItemConfigs={actionMenuConfigs} />
+        <ActionMenu
+          variant="kebab"
+          menuItemConfigs={
+            role === ROLES.STAFF
+              ? staffActionMenuConfigs
+              : adminActionMenuConfigs
+          }
+        />
       </TableCell>
       {renderRemoveSkillDialog()}
     </TableRow>

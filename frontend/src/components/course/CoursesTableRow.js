@@ -3,12 +3,13 @@ import propTypes from 'prop-types'
 
 import { TableCell, TableRow } from '@mui/material'
 
+import { STATUS } from '../../constants'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import ActionMenu from '../common/ActionMenu'
-import { STATUS, ENDPOINT } from '../../constants'
-import { useNavigate } from 'react-router-dom'
 
 const CoursesTableRow = ({ courseInfo }) => {
   const navigate = useNavigate()
+  const { role } = useOutletContext()
   const {
     course_id,
     course_name,
@@ -21,7 +22,7 @@ const CoursesTableRow = ({ courseInfo }) => {
     {
       itemName: 'View',
       itemAction: () => {
-        navigate(`/staff/courses/${course_id}`)
+        navigate(`/${role.toLowerCase()}/courses/${course_id}`)
       },
     },
   ]

@@ -21,10 +21,11 @@ import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useSkillsLoader from '../../services/skills/useSkillsLoader'
 
-function SkillsTable({ numRows }) {
-  // eslint-disable-next-line prettier/prettier
+function SkillsTable({ numRows, staffId, completed, header = 'Skills' }) {
   const [skillData, isLoading, total, error, reloadData] = useSkillsLoader(
-    numRows
+    numRows,
+    staffId,
+    completed
   )
 
   // console.log('---> SkillsTable, skillData: ', skillData)
@@ -106,7 +107,7 @@ function SkillsTable({ numRows }) {
       })}
     >
       <SectionHeader
-        header="Skills"
+        header={header}
         subHeader={renderSubheader()}
         sectionButtonComponent={sectionButtonRenderer()}
       />
@@ -132,6 +133,9 @@ function SkillsTable({ numRows }) {
 
 SkillsTable.propTypes = {
   numRows: propTypes.number,
+  completed: propTypes.bool,
+  staffId: propTypes.number,
+  header: propTypes.string,
 }
 
 export default SkillsTable

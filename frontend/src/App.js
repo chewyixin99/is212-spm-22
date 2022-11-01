@@ -62,6 +62,11 @@ function App() {
             path="completed-skills"
             element={<StaffCompletedSkillsPage />}
           />
+          <Route path="skills">
+            <Route path=":skill_id">
+              <Route index element={<Skill />} />
+            </Route>
+          </Route>
           <Route path="courses" element={<StaffCoursesPage />} />
           <Route path="courses">
             <Route path=":course_id" element={<Course />} />
@@ -70,6 +75,14 @@ function App() {
 
         <Route path="/admin" element={<AdminOutlet />}>
           <Route index element={<AdminHomePage />} />
+          <Route
+            path="completed-courses"
+            element={<StaffCompletedCoursesPage />}
+          />
+          <Route
+            path="completed-skills"
+            element={<StaffCompletedSkillsPage />}
+          />
           <Route path="roles">
             {/* All Role */}
             <Route index element={<AdminRolesPage />} />
