@@ -42,7 +42,6 @@ const StaffHomePage = () => {
   const getRoleData = async () => {
     const response = await axios.get(`${ENDPOINT}/roles`)
     const data = response.data.data.roles
-    console.log(data)
     setRoleList(data)
   }
 

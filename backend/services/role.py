@@ -143,6 +143,40 @@ def update_role(role_id):
         }
     )
 
+# Delete Role
+@role_routes.route("/roles/<int:role_id>", methods=["DELETE"])
+def delete_role(role_id):
+    role = Role.query.filter_by(role_id=role_id).first()
+    if not (role):
+        return jsonify(
+            {
+                "code": 404,
+                "data": {"role_id": role_id},
+                "message": f"Role {role_id} does not exist.",
+            }
+        )
+
+    try:
+        db.session.delete(role)
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        return jsonify(
+            {
+                "code": 500,
+                "data": {"role_id": role_id},
+                "message": "An error occurred while deleting the role.",
+            }
+        )
+
+    return jsonify(
+        {
+            "code": 201,
+            "role_id": role_id,
+            "message": f"Successfully deleted role {role_id}.",
+        }
+    )
+
 
 # Get Skills of Role
 @role_routes.route("/roles/<int:role_id>/skills")

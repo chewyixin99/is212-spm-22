@@ -166,8 +166,8 @@ function Skill() {
         </Typography>
         <Stack spacing={4} sx={{ marginTop: '5vh', marginBottom: '10vh ' }}>
           {renderAlertMessage(skill.status)}
-          {renderSkillCourses(skillCourses)}
-          <DescriptionRow title="Skill ID" value={skill.skill_id} />
+          {renderSkillCourses()}
+          <DescriptionRow title="Skill ID" value={skill.skill_id?.toString()} />
           <DescriptionRow title="Skill Desciption" value={skill.skill_desc} />
           <DescriptionRow title="Skill Status" value={skill.status} />
           <EditButtons

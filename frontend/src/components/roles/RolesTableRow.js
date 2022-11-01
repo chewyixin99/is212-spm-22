@@ -72,7 +72,7 @@ const RolesTableRow = ({ roleInfo, reloadData }) => {
     return (
       <ConfirmationDialog
         dialogTitle="Retire role?"
-        dialogBody={`This action will reitre the ${roleInfo?.role_name} role. Learning journeys that are dependent on this role will be notified of the retirement of this role.`}
+        dialogBody={`This action will retire the ${roleInfo?.role_name} role. Learning journeys that are dependent on this role will be notified of the retirement of this role.`}
         isOpen={removeRoleDialogState.isOpen}
         closeCallback={removeRoleDialogState.close}
         proceedCallback={retireRole}

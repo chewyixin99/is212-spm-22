@@ -43,7 +43,6 @@ const EditButtons = ({
             <LoadingButton
               variant="contained"
               loading={isEditing}
-              loadingPosition="end"
               onClick={handleEditClick}
             >
               {editButtonLabel}
@@ -53,7 +52,6 @@ const EditButtons = ({
             <LoadingButton
               variant="contained"
               loading={isDeleting}
-              loadingPosition="end"
               color="error"
               onClick={handleDeleteClick}
             >

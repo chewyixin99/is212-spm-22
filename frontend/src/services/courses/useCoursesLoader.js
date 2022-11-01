@@ -14,8 +14,6 @@ const useCoursesLoader = (
   const [coursesData, setCoursesData] = useState([])
   const [total, setTotal] = useState(0)
 
-  console.log(`useCoursesLoader: ${staffId}, ${completed}`)
-
   const setData = (response) => {
     if (response?.code === RESPONSE_CODES.SUCCESS) {
       setTotal(response.data.courses.length)
