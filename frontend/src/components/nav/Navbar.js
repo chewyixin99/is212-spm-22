@@ -207,16 +207,35 @@ function Navbar({ role }) {
               Home
             </Button>
             <Button
-              onClick={handleClick}
+              onClick={handleCloseNavMenu}
               sx={{ my: 2, color: 'white', display: 'block' }}
-              id="basic-button"
-              aria-controls={open ? 'basic-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}
+              component={Link}
+              to={`/${role.toLowerCase()}` + "/roles"}
+            >
+              Roles
+            </Button>
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              component={Link}
+              to={`/${role.toLowerCase()}`+ "/courses"}
+            >
+              Courses
+            </Button>
+
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              component={Link}
+              to={`/${role.toLowerCase()}` + "/learning-journey"}
+            // id="basic-button"
+            // aria-controls={open ? 'basic-menu' : undefined}
+            // aria-haspopup="true"
+            // aria-expanded={open ? 'true' : undefined}
             >
               Learning Journey
             </Button>
-            <Menu
+            {/* <Menu
               id="basic-menu"
               anchorEl={anchorEl}
               open={open}
@@ -246,7 +265,7 @@ function Navbar({ role }) {
               >
                 Journey to be a Consultant 1
               </MenuItem>
-            </Menu>
+            </Menu> */}
 
             <Button
               onClick={handleOpenCompleted}
@@ -308,13 +327,13 @@ function Navbar({ role }) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
+              {/* {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
-              ))}
+              ))} */}
               <MenuItem>
-                <Typography component={Link} to="/login" textAlign="center">
+                <Typography component={Link} to="/login" textAlign="center" sx={{textDecoration: 'none', color: 'black'}}>
                   Log Out
                 </Typography>
               </MenuItem>
