@@ -145,3 +145,55 @@ def update_course_in_learning_journey(learning_journey_id):
             },
         }
     )
+
+
+# Create Learning Journey
+@learning_journey_routes.route(
+    "/learning_journeys/<string:learning_journey_id>", methods=["POST"]
+)
+def create_learning_journey(learning_journey_id):
+    if Learning_Journey.query.filter_by(
+        learning_journey_id=learning_journey_id
+    ).first():
+        # exist, return 400
+        return jsonify(
+            {
+                "code": 400,
+                "data": {"learning_journey_id": learning_journey_id},
+                "message": f"Learning Journey of this learning_journey_id: {learning_journey_id} already exists.",
+            }
+        )
+
+    data = request.get_json()
+
+    try:
+        learning_journey = Learning_Journey(
+            learning_journey_id,
+            data["learning_journey_name"],
+            data["role_id"],
+            data["staff_id"],
+        )
+        for course_id in data["courses"]:
+            course = Course.query.filter_by(course_id=course_id).first()
+            learning_journey.courses.append(course)
+
+        db.session.add(learning_journey)
+        db.session.commit()
+    except Exception as e:
+        # failed to add, return 500
+        print(e)
+        return jsonify(
+            {
+                "code": 500,
+                "data": {"learning_journey_id": learning_journey_id},
+                "message": "An error occurred while creating the learning_journey record.",
+            }
+        )
+    # success, return 200
+    return jsonify(
+        {
+            "code": 201,
+            "data": learning_journey.json(),
+            "message": f"Learning Journey successfully created for learning_journey_id {learning_journey_id}",
+        }
+    )
