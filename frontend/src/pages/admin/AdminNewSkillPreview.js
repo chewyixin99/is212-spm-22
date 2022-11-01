@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSnackbar } from 'notistack'
 import { Box, Button } from '@mui/material'
 
 import { LoadingButton } from '@mui/lab'
@@ -25,6 +26,7 @@ function AdminNewSkillPreview() {
     vertical: 'bottom',
     horizontal: 'right',
   })
+  const { enqueueSnackbar } = useSnackbar()
 
   // only navigate if success
   useEffect(() => {
@@ -84,6 +86,7 @@ function AdminNewSkillPreview() {
           )
           setAlertSeverity('success')
           setSnackbarState({ ...snackbarState, open: true })
+          enqueueSnackbar('Skill successfully created.', { variant: 'success' })
         }
       })
       .catch(() => {

@@ -211,7 +211,7 @@ function AdminEditSkill() {
                     value={singleCourse.course_id}
                     key={singleCourse.course_id}
                   >
-                    {singleCourse.course_id}
+                    {singleCourse.course_id}: {singleCourse.course_name}
                   </MenuItem>
                 )
               })}

@@ -75,7 +75,7 @@ function Skill() {
             {skillCourses.filter(checkActive).map((course) => (
               <StyledBreadcrumb>
                 {/* to add link to the course page */}
-                {course.course_name}
+                {course.course_id}: {course.course_name}
               </StyledBreadcrumb>
             ))}
           </Breadcrumbs>

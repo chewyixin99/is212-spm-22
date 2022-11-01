@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSnackbar } from 'notistack'
 
 import {
   Box,
@@ -21,6 +20,7 @@ import {
 import SectionHeader from '../../components/common/SectionHeader'
 import BackNextButtons from '../../components/common/BackNextButtons'
 import { STATUS, ENDPOINT } from '../../constants'
+import SnackbarAlert from '../../components/common/SnackbarAlert'
 
 function AdminNewSkill() {
   // error handling already built in TextField
@@ -37,7 +37,10 @@ function AdminNewSkill() {
     skillStatus: STATUS.ACTIVE,
   })
 
-  const { enqueueSnackbar } = useSnackbar()
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('Default alert message')
+  const [alertSeverity, setAlertSeverity] = useState('error')
+
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -51,27 +54,46 @@ function AdminNewSkill() {
     fetchData().catch(console.error)
   }, [])
 
+  useEffect(() => {
+    if (
+      !(
+        alertSeverity === 'error' ||
+        formValues.skillName.length > 50 ||
+        formValues.skillDesc.length > 255 ||
+        courses.length < 1
+      )
+    ) {
+      navigate('/admin/newskill/preview', {
+        state: {
+          formValues: formValues,
+          courses: courses,
+        },
+      })
+    }
+  }, [alertSeverity])
+
   const checkSkillName = async () => {
     await fetch(`${ENDPOINT}/skills/${formValues.skillName}`)
       .then((response) => response.json())
       .then((responseJSON) => {
         if (responseJSON.code < 299) {
           setSkillNameError(true)
-          enqueueSnackbar(
-            `Skill ${formValues.skillName} already exists, unable to create skill`,
-            { variant: 'error' }
+          setSnackbarOpen(true)
+          setAlertMessage(
+            `Skill ${formValues.skillName} already exists, unable to create skill`
           )
         } else if (responseJSON.code > 499) {
-          enqueueSnackbar('Internal server error, please try again', {
-            variant: 'error',
-          })
+          setSnackbarOpen(true)
+          setAlertMessage('Internal server error, please try again')
+        } else {
+          setAlertSeverity('success')
         }
         setIsLoading(false)
       })
-      .catch(() => {
-        enqueueSnackbar('Internal server error, please try again', {
-          variant: 'error',
-        })
+      .catch((err) => {
+        setSnackbarOpen(true)
+        setAlertMessage('Internal server error, please try again')
+        console.log(err)
         setIsLoading(false)
       })
   }
@@ -96,43 +118,26 @@ function AdminNewSkill() {
     // 'Form submission canceled because the form is not connected'
     e.preventDefault()
 
+    setAlertSeverity('error')
     setSkillNameError(false)
     setSkillDescError(false)
     setCoursesError(false)
+    setSnackbarOpen(false)
     setIsLoading(true)
 
     // check if skill is already present
     checkSkillName()
 
-    // prettier-ignore
-    // eslint-disable-next-line prettier/prettier
-    const skillNameErr = formValues.skillName === '' || formValues.skillName.length > 50
-    // prettier-ignore
-    // eslint-disable-next-line prettier/prettier
-    const skillDescErr = formValues.skillDesc === '' || formValues.skillDesc.length > 255
-    const coursesErr = courses.length < 1
-
-    if (skillNameErr) {
+    if (formValues.skillName == '' || formValues.skillName.length > 50) {
       setSkillNameError(true)
     }
 
-    if (skillDescErr) {
+    if (formValues.skillDesc == '' || formValues.skillDesc.length > 255) {
       setSkillDescError(true)
     }
 
-    if (coursesErr) {
+    if (courses.length < 1) {
       setCoursesError(true)
-      console.log('setting courses error')
-    }
-
-    if (!skillNameErr && !skillDescErr && !coursesErr) {
-      console.log(coursesError)
-      navigate('/admin/newskill/preview', {
-        state: {
-          formValues,
-          courses,
-        },
-      })
     }
   }
 
@@ -231,7 +236,7 @@ function AdminNewSkill() {
                     value={singleCourse.course_id}
                     key={singleCourse.course_id}
                   >
-                    {singleCourse.course_id}
+                    {singleCourse.course_id}: {singleCourse.course_name}
                   </MenuItem>
                 )
               })}
@@ -277,6 +282,11 @@ function AdminNewSkill() {
             />
           </Box>
         </form>
+        <SnackbarAlert
+          open={snackbarOpen}
+          alertMessage={alertMessage}
+          alertSeverity={alertSeverity}
+        />
       </Box>
     </Box>
   )
