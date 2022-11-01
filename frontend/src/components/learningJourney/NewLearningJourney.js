@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
 import propTypes from 'prop-types'
 
 import {
@@ -49,7 +50,6 @@ import { RESPONSE_CODES, ENDPOINT } from '../../constants'
 
 const steps = ['Input Learning Journey Name and Role', 'Select Skills and Courses', 'Review Learning Journey']
 
-
 function NewLearningJourney({ numRows }) {
   const [roleData, isLoading, total, error] = useRolesLoader(numRows)
   const isEmpty = roleData.length === 0
@@ -63,11 +63,13 @@ function NewLearningJourney({ numRows }) {
 
   const [learningJourneyName, setLearningJourneyName] = React.useState("");
   const [selectedCourses, setSelectedCourses] = React.useState({});
+  const [isCourseSelected, setIsCourseSelected] = React.useState(false);
 
   // select courses by skill start ----------------------------
 
   // collate all selected courses by skill
   const handleAddCourses = (coursesArr, name) => {
+
     setSelectedCourses(prevState => ({
       ...prevState,
       [name]: coursesArr
@@ -125,7 +127,7 @@ function NewLearningJourney({ numRows }) {
   const numActive = () => {
     var total = 0
     roleData.map((roleInfo) => {
-      if (roleInfo.status == 'Active'){
+      if (roleInfo.status == 'Active') {
         total += 1
       }
     })
@@ -137,7 +139,7 @@ function NewLearningJourney({ numRows }) {
       return (
         <>
           {roleData.map((roleInfo, index) => {
-            if (roleInfo.status != 'Active'){
+            if (roleInfo.status != 'Active') {
               return null
             } else {
               return (
@@ -173,6 +175,10 @@ function NewLearningJourney({ numRows }) {
       // submit learning journey
       submitLearningJourney();
     }
+    // else if (activeStep === 1) {
+
+    //   alert("Please select at least one skill and course.");
+    // }
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
@@ -197,13 +203,15 @@ function NewLearningJourney({ numRows }) {
     });
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
+  const navigate = useNavigate()
+
+  const handleRedirect = () => {
+    navigate('/staff/learning-journey')
   };
 
   const submitLearningJourney = () => {
     // submit learning journey
-    console.log("submit learning journey");
+    alert(JSON.stringify(selectedCourses) + JSON.stringify(learningJourneyName) + JSON.stringify(selectedRoleName));
   }
 
   // stepper form functions end ------------------------
@@ -216,8 +224,28 @@ function NewLearningJourney({ numRows }) {
   };
   // select skill functions start ------------------------
 
+  const handleDeleteCourses = () => {
+    let flag = false
+
+    Object.keys(selectedCourses).forEach((function (k) {
+      console.log(selectedCourses[k]);
+      if (selectedCourses[k].length > 0) {
+        flag = true
+      }
+    }
+    ))
+
+    if (flag) {
+      setIsCourseSelected(true);
+    }
+    else {
+      setIsCourseSelected(false);
+    }
+  }
+
 
   useEffect(() => {
+    handleDeleteCourses();
   }, [selectedCourses, selectedRoleId, selectedRoleName]);
 
   return (
@@ -244,131 +272,138 @@ function NewLearningJourney({ numRows }) {
       </Stepper>
       {activeStep === steps.length ? (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button onClick={handleReset}>Reset</Button>
+          <Box sx={{ height: '50vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Typography variant='h6' sx={{ mt: 2, mb: 1}}>
+              You have successfully created {learningJourneyName !== "" ? learningJourneyName : "a new Learning Journey"}!
+            </Typography>
           </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Box sx={{ flex: '1 1 auto' }} />
+              <Button onClick={handleRedirect}>Redirect</Button>
+            </Box>
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          {(() => {
-            switch (activeStep) {
-              // step 1 represents the learning journey name input and role selection
-              case 0:
-                return (
-                  <Box sx={{}}>
-                    <React.Fragment>
-                      <Typography variant="h6" gutterBottom>
-                        Learning Journey Name
-                      </Typography>
-                      <Grid container spacing={3}>
-                        <Grid item xs={12} sm={6}>
-                          <TextField
-                            required
-                            id="learningJourneyName"
-                            name="learningJourneyName"
-                            label="Name of learning Journey"
-                            fullWidth
-                            variant="standard"
-                            onChange={e => setLearningJourneyName(e.target.value)}
-                          />
+          <Box sx={{ minHeight: '60vh', padding: '1rem' }}>
+            <Typography sx={{ mt: 2, mb: 3 }}>Step {activeStep + 1}</Typography>
+            {(() => {
+              switch (activeStep) {
+                // step 1 represents the learning journey name input and role selection
+                case 0:
+                  return (
+                    <Box sx={{}}>
+                      <React.Fragment>
+                        <Typography variant="h6" gutterBottom>
+                          Learning Journey Name
+                        </Typography>
+                        <Grid container spacing={3}>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              required
+                              id="learningJourneyName"
+                              name="learningJourneyName"
+                              label="Name of learning Journey"
+                              fullWidth
+                              variant="standard"
+                              onChange={e => setLearningJourneyName(e.target.value)}
+                            />
+                          </Grid>
+
                         </Grid>
 
-                      </Grid>
+                        <Box
+                          sx={(theme) => ({
+                            // [theme.breakpoints.up('md')]: {
+                            //   width: '50%',
+                            // },
+                            // width: '80%',
+                            // margin: 'auto',
+                          })}
+                        >
+                          <Typography variant="h6" mt={5}>
+                            Select Role
+                          </Typography>
+                          <SectionHeader
+                            // header="New Learning Journey"
+                            subHeader={renderSubheader()}
+                          />
 
-                      <Box
-                        sx={(theme) => ({
-                          // [theme.breakpoints.up('md')]: {
-                          //   width: '50%',
-                          // },
-                          // width: '80%',
-                          // margin: 'auto',
+                          <TableContainer component={Paper}>
+                            <Table>
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>ID</TableCell>
+                                  <TableCell>Name</TableCell>
+                                  <TableCell>Status</TableCell>
+                                  <TableCell align="center">Actions</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {renderTableStatuses()}
+                                {renderTableRows()}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                          <Typography variant="h6" mt={5} gutterBottom>
+                            {selectedRoleName == 'N.A.' ? 'Please select a role' : `Selected Role: ${selectedRoleName}`}
+                          </Typography>
+                        </Box>
+                      </React.Fragment>
+                    </Box>
+                  );
+                // step 2 represents skills and courses selection
+                case 1:
+                  return (
+                    <Box sx={{ minHeight: '50vh' }}>
+                      <React.Fragment>
+                        <Typography variant="subtitle1" sx={{ fontSize: '1rem' }}>
+                          Minimum 1 course selected.
+                        </Typography>
+                        {skillData?.map((item) => {
+                          return (<CoursesBySkill
+                            item={item}
+                            key={item.skill_id}
+                            handleAddCourses={handleAddCourses}
+                          />)
                         })}
-                      >
-                        <Typography variant="h6" mt={5}>
-                          Select Role
+                      </React.Fragment>
+                    </Box>
+                  );
+                // step 3 represents the learning journey summary before submission
+                case 2:
+                  return (
+                    <Box>
+                      <React.Fragment>
+                        <Typography variant="h6" gutterBottom>
+                          Learning Journey Summary
                         </Typography>
-                        <SectionHeader
-                          // header="New Learning Journey"
-                          subHeader={renderSubheader()}
-                        />
-
-                        <TableContainer component={Paper}>
-                          <Table>
-                            <TableHead>
-                              <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Status</TableCell>
-                                <TableCell align="center">Actions</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {renderTableStatuses()}
-                              {renderTableRows()}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                        <Typography variant="h6" mt={5} gutterBottom>
-                          {selectedRoleName == 'N.A.' ? 'Please select a role' : `Selected Role: ${selectedRoleName}`}
-                        </Typography>
-                      </Box>
-                    </React.Fragment>
-                  </Box>
-                );
-              // step 2 represents skills and courses selection
-              case 1:
-                return (
-                  <Box sx={{ height: '50vh' }}>
-                    <React.Fragment>
-                      {skillData?.map((item) => {
-                        return (<CoursesBySkill
-                          item={item}
-                          key={item.skill_id}
-                          handleAddCourses={handleAddCourses}
-                        />)
-                      })}
-                    </React.Fragment>
-                  </Box>
-                );
-              // step 3 represents the learning journey summary before submission
-              case 2:
-                return (
-                  <Box>
-                    <React.Fragment>
-                      <Typography variant="h6" gutterBottom>
-                        Learning Journey Summary
-                      </Typography>
-                      <ListItem sx={{ py: 1, px: 0 }} >
-                        <ListItemText primary='Learning Journey Name' />
-                        <Typography variant="body2">{learningJourneyName}</Typography>
-                      </ListItem>
-                      <ListItem sx={{ py: 1, px: 0 }} >
-                        <ListItemText primary='Role' />
-                        <Typography variant="body2">{selectedRoleName}</Typography>
-                      </ListItem>
+                        <ListItem sx={{ py: 1, px: 0 }} >
+                          <ListItemText primary='Learning Journey Name' />
+                          <Typography variant="body2">{learningJourneyName}</Typography>
+                        </ListItem>
+                        <ListItem sx={{ py: 1, px: 0 }} >
+                          <ListItemText primary='Role' />
+                          <Typography variant="body2">{selectedRoleName}</Typography>
+                        </ListItem>
 
 
-                      {
-                        Object.keys(selectedCourses).map(k => (
-                          <ListItem sx={{ py: 1, px: 0 }} key={k}>
-                            <ListItemText primary={k} />
-                            <Typography variant="body2">{selectedCourses[k].length > 1 ? selectedCourses[k].join(', ') : selectedCourses[k]}</Typography>
+                        {
+                          Object.keys(selectedCourses).map(k => (
+                            <ListItem sx={{ py: 1, px: 0 }} key={k}>
+                              <ListItemText primary={k} />
+                              <Typography variant="body2">{selectedCourses[k].length > 1 ? selectedCourses[k].join(', ') : selectedCourses[k]}</Typography>
 
-                          </ListItem>
-                        ))
-                      }
-                    </React.Fragment>
-                  </Box>
-                );
-              default:
-                return <h1>Error - Page do not exist!</h1>;
-            }
-          })()}
+                            </ListItem>
+                          ))
+                        }
+                      </React.Fragment>
+                    </Box>
+                  );
+                default:
+                  return <h1>Error - Page do not exist!</h1>;
+              }
+            })()}
+          </Box>
 
           {/* Stepper form control buttons start ------------------ */}
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
@@ -387,16 +422,20 @@ function NewLearningJourney({ numRows }) {
               </Button>
             )}
 
-            <Button onClick={handleNext}>
+            <Button onClick={handleNext}
+              disabled={activeStep === 0 ? selectedRoleName !== 'N.A.' ? false : true : activeStep === 1 ? isCourseSelected ? false : true : activeStep === 2 ? false : true}
+            >
 
-              {activeStep === steps.length - 1 ? 'Finish' : activeStep === 2 ? selectedSkill !== "" ? 'Next' : '' : 'Next'}
+              {activeStep === steps.length - 1 ? 'Confirm' : 'Next'}
 
             </Button>
           </Box>
           {/* Stepper form control buttons end ---------------- */}
         </React.Fragment>
       )
+
       }
+
     </Box>
   );
 
