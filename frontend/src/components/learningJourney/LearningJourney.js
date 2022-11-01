@@ -44,21 +44,8 @@ function LearningJourneyPage() {
 
   return (
     <Box sx={{ width: '50%', margin: 'auto' }}>
-      <Typography
-        variant="h3"
-        noWrap
-        component="a"
-        sx={{
-          mr: 2,
-          my: 3,
-          display: { xs: 'none', md: 'flex' },
-          letterSpacing: '.3rem',
-          textDecoration: 'none',
-          fontSize: '2rem',
-        }}
-      >
-        My Learning Journey
-      </Typography>
+      <Box sx={{ display: 'flex', padding: '2rem', justifyContent: 'space-between'}}>
+      <h1>My Learning Journey</h1>
       <IconButton
         size="large"
         aria-label="account of current user"
@@ -70,9 +57,10 @@ function LearningJourneyPage() {
       >
         <AddIcon />
       </IconButton>
+      </Box>
 
       <Stack spacing={2}>
-        {learningJourneyList?.map((item) => (
+        {learningJourneyList?.length > 0 ? (learningJourneyList.map((item) => (
           <Item
             key={item?.learning_journey_id}
             component={Link}
@@ -129,7 +117,7 @@ function LearningJourneyPage() {
               </Grid>
             </Grid>
           </Item>
-        ))}
+        ))) : (<h3>No Learning Journey found.</h3>)}
       </Stack>
     </Box>
   )

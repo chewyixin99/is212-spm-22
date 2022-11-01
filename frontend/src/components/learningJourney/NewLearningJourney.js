@@ -22,7 +22,7 @@ import {
 import { Link } from 'react-router-dom'
 
 import SectionHeader from '../common/SectionHeader'
-import RolesTableRow from '../learningJourney/RolesTableRow'
+import RolesTableRow from '../learningjourney/RolesTableRow'
 import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
@@ -169,6 +169,10 @@ function NewLearningJourney({ numRows }) {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
+    if (activeStep === steps.length - 1) {
+      // submit learning journey
+      submitLearningJourney();
+    }
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
@@ -196,6 +200,11 @@ function NewLearningJourney({ numRows }) {
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  const submitLearningJourney = () => {
+    // submit learning journey
+    console.log("submit learning journey");
+  }
 
   // stepper form functions end ------------------------
 
