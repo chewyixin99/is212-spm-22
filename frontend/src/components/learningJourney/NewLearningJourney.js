@@ -23,7 +23,7 @@ import {
 import { Link } from 'react-router-dom'
 
 import SectionHeader from '../common/SectionHeader'
-import RolesTableRow from '../learningjourney/RolesTableRow'
+import RolesTableRow from '../learningJourney/RolesTableRow'
 import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
@@ -443,4 +443,3 @@ function NewLearningJourney({ numRows }) {
 }
 
 export default NewLearningJourney
-
