@@ -153,7 +153,7 @@ const StaffHomePage = () => {
         <Grid container spacing={4}>
           {roleList?.length > 0 ? (
             roleList.map((item) => (
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={4} key={item.role_id}>
                 <Card sx={{ maxWidth: 345 }}>
                   <CardMedia
                     component="img"

@@ -28,6 +28,7 @@ const useRolesLoader = (numRows = -1, roleId = null, init = true) => {
     fetch(roleId ? `${ENDPOINT}/roles/${roleId}` : `${ENDPOINT}/roles`)
       .then((response) => response.json())
       .then((responseJSON) => {
+
         // console.log('---> useRolesLoader, responseJSON: ', responseJSON)
         setData(responseJSON)
         setIsLoading(false)
