@@ -35,6 +35,12 @@ def create_app():
 
     db.init_app(app)
     CORS(app)
+    # cors = CORS(app, resource={
+    # r"/*":{
+    #     "origins":"*"
+    # }
+    # })
+
     app.config["CORS_HEADERS"] = "Content-Type"
 
     @app.route("/")
