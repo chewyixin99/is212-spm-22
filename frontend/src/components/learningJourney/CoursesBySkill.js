@@ -37,6 +37,7 @@ const CoursesBySkill = (props) => {
 
     // sets selected id of courses
     const handleCourses = (value) => {
+        console.log(value);
         if (selectedCourses.includes(value)) {
             setSelectedCourses(selectedCourses.filter((item) => item !== value));
         } else {

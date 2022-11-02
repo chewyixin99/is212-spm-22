@@ -23,7 +23,8 @@ import {
 import { Link } from 'react-router-dom'
 
 import SectionHeader from '../common/SectionHeader'
-import RolesTableRow from '../learningJourney/RolesTableRow'
+
+import RolesTableRow from './RolesTableRow'
 import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
@@ -64,7 +65,7 @@ function NewLearningJourney({ numRows }) {
   const [learningJourneyName, setLearningJourneyName] = React.useState("");
   const [selectedCourses, setSelectedCourses] = React.useState({});
   const [isCourseSelected, setIsCourseSelected] = React.useState(false);
-
+  const [selectedCourseIds, setSelectedCourseIds] = React.useState([]);
   // select courses by skill start ----------------------------
 
   // collate all selected courses by skill
@@ -74,7 +75,11 @@ function NewLearningJourney({ numRows }) {
       ...prevState,
       [name]: coursesArr
     }));
+
+    console.log(selectedCourses);
   }
+
+
 
   // retrieve skills based on role id
   const getData = async (id, name) => {
@@ -127,7 +132,7 @@ function NewLearningJourney({ numRows }) {
   const numActive = () => {
     var total = 0
     roleData.map((roleInfo) => {
-      if (roleInfo.status == 'Active') {
+      if (roleInfo.status == 'ACTIVE') {
         total += 1
       }
     })
@@ -136,10 +141,11 @@ function NewLearningJourney({ numRows }) {
 
   const renderTableRows = () => {
     if (!isEmpty && !isLoading && !error && roleData) {
+
       return (
         <>
           {roleData.map((roleInfo, index) => {
-            if (roleInfo.status != 'Active') {
+            if (roleInfo.status != 'ACTIVE') {
               return null
             } else {
               return (
@@ -209,9 +215,53 @@ function NewLearningJourney({ numRows }) {
     navigate('/staff/learning-journey')
   };
 
-  const submitLearningJourney = () => {
+  const handleAddCourseIds = (course_names) => {
+
+    return axios.get(`${ENDPOINT}/courses`)
+      .then((response) => {
+          
+          return response.data.data.courses.filter((course) => { 
+            return course_names.includes(course.course_name)
+
+          }).map((course) => {
+            return course.course_id
+          })
+
+          // setSelectedCourseIds(test);
+        
+      })
+    
+  }
+
+  const submitLearningJourney = async () => {
     // submit learning journey
-    alert(JSON.stringify(selectedCourses) + JSON.stringify(learningJourneyName) + JSON.stringify(selectedRoleName));
+
+    const course_names = Object.values(selectedCourses).flat();
+    
+    const body = {
+        learning_journey_name: learningJourneyName,
+        staff_id: '130001',
+        role_id: selectedRoleId.toString(),
+        courses: await handleAddCourseIds(course_names)
+    }
+    console.log(body);
+
+    axios
+    .post(`${ENDPOINT}/learning-journeys/130001_${selectedRoleId}`, body,
+    {
+      headers: {
+         'Content-Type': 'application/json'
+      } 
+    })
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    }
+    );
+
+
   }
 
   // stepper form functions end ------------------------
@@ -246,7 +296,7 @@ function NewLearningJourney({ numRows }) {
 
   useEffect(() => {
     handleDeleteCourses();
-  }, [selectedCourses, selectedRoleId, selectedRoleName]);
+  }, [selectedCourses, selectedRoleId, selectedRoleName, selectedCourseIds]);
 
   return (
     <Box sx={{ width: '50%', margin: 'auto', padding: '40px 0' }}>

@@ -32,8 +32,8 @@ function LearningJourneyPage() {
   const [learningJourneyList, setlearningJourneyList] = useState([])
 
   const getLJData = async (id) => {
-    const response = await axios.get(`${ENDPOINT}/learning_journeys/${id}`)
-    const data = response.data.data
+    const response = await axios.get(`${ENDPOINT}/learning_journeys`)
+    const data = response.data.data.learning_journeys
     setlearningJourneyList(data)
   }
 
@@ -87,7 +87,7 @@ function LearningJourneyPage() {
                   }}
                 >
                   <Box sx={{ width: '80%', mr: 1 }}>
-                    {item.progress === 100 ? (
+                    {/* {item.progress === 100 ? (
                       <LinearProgress
                         variant="determinate"
                         value={item.progress}
@@ -98,7 +98,7 @@ function LearningJourneyPage() {
                         variant="determinate"
                         value={item.progress}
                       />
-                    )}
+                    )} */}
                   </Box>
                   <Box sx={{ minWidth: 35 }}>
                     <Typography variant="body2" color="text.secondary">

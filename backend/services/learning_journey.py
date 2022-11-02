@@ -197,3 +197,8 @@ def create_learning_journey(learning_journey_id):
             "message": f"Learning Journey successfully created for learning_journey_id {learning_journey_id}",
         }
     )
+
+# def corsify_actual_response(response):
+#     header = response.headers
+#     header["Access-Control-Allow-Origin"] = "*"
+#     return response
