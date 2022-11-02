@@ -27,6 +27,9 @@ import StaffHomePage from './pages/staff/StaffHomePage'
 import StaffCoursesPage from './pages/staff/StaffCoursesPage'
 import StaffCompletedCoursesPage from './pages/staff/StaffCompletedCoursesPage'
 import StaffCompletedSkillsPage from './pages/staff/StaffCompletedSkillsPage'
+import StaffRolesPage from './pages/staff/StaffRolesPage'
+
+// Context imports
 import ManagerOutlet from './pages/manager/ManagerOutlet'
 import ManagerHomePage from './pages/manager/ManagerHomePage'
 import AdminEditRole from './pages/admin/AdminEditRole'
@@ -70,6 +73,10 @@ function App() {
           <Route path="courses" element={<StaffCoursesPage />} />
           <Route path="courses">
             <Route path=":course_id" element={<Course />} />
+          </Route>
+          <Route path="roles" element={<StaffRolesPage />} />
+          <Route path="roles">
+            <Route path=":role_id" element={<Role />} />
           </Route>
         </Route>
 

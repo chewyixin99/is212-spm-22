@@ -9,9 +9,9 @@ import ActionMenu from '../common/ActionMenu'
 import ConfirmationDialog from '../common/ConfirmationDialog'
 import useDialogState from '../../services/common/useDialogState'
 import editRoleService from '../../services/roles/editRoleService'
-import { STATUS } from '../../constants'
+import { ROLES, STATUS } from '../../constants'
 
-const RolesTableRow = ({ roleInfo, reloadData }) => {
+const RolesTableRow = ({ userRole, roleInfo, reloadData }) => {
   const naviate = useNavigate()
   const removeRoleDialogState = useDialogState()
   const [isLoading, setIsLoading] = useState(false)
@@ -20,22 +20,28 @@ const RolesTableRow = ({ roleInfo, reloadData }) => {
     {
       itemName: 'View',
       itemAction: () => {
-        naviate(`/admin/roles/${roleInfo?.role_id}`)
-      },
-    },
-    {
-      itemName: 'Edit',
-      itemAction: () => {
-        naviate(`/admin/roles/${roleInfo?.role_id}/edit`)
-      },
-    },
-    {
-      itemName: 'Remove',
-      itemAction: () => {
-        removeRoleDialogState.open()
+        naviate(`/${userRole.toLowerCase()}/roles/${roleInfo?.role_id}`)
       },
     },
   ]
+
+  if (userRole === ROLES.ADMIN) {
+    actionMenuConfigs.push(
+      {
+        itemName: 'Edit',
+        itemAction: () => {
+          naviate(`/admin/roles/${roleInfo?.role_id}/edit`)
+        },
+      },
+      {
+        itemName: 'Remove',
+        itemAction: () => {
+          removeRoleDialogState.open()
+        },
+      }
+    )
+  }
+
   const getTextColor = () => {
     if (roleInfo.status === STATUS.RETIRED) {
       return 'red'
@@ -97,6 +103,7 @@ const RolesTableRow = ({ roleInfo, reloadData }) => {
 }
 
 RolesTableRow.propTypes = {
+  userRole: propTypes.string,
   roleInfo: propTypes.shape({
     role_id: propTypes.number,
     role_name: propTypes.string,
@@ -104,6 +111,10 @@ RolesTableRow.propTypes = {
     status: propTypes.string,
   }),
   reloadData: propTypes.func,
+}
+
+RolesTableRow.defaultProps = {
+  userRole: ROLES.ADMIN,
 }
 
 export default RolesTableRow

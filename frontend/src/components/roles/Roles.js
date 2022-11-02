@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
 
 import { Alert, Box, Breadcrumbs, Stack, Typography } from '@mui/material'
-import { ENDPOINT, STATUS } from '../../constants'
+import { ENDPOINT, ROLES, STATUS } from '../../constants'
 import editRoleService from '../../services/roles/editRoleService'
 import StyledBreadcrumb from '../common/StyledBreadcrumb'
 import DescriptionRow from '../common/DescriptionRow'
 import ConfirmationDialog from '../common/ConfirmationDialog'
 import useDialogState from '../../services/common/useDialogState'
 import EditButtons from '../common/EditButtons'
+import BackNextButtons from '../common/BackNextButtons'
 
 function Roles() {
+  const { role: userCurrentRole } = useOutletContext()
   const { role_id } = useParams()
   const baseUrl = ENDPOINT
   const [role, setRole] = React.useState([])
@@ -56,7 +58,7 @@ function Roles() {
   }
 
   // filter for breadcrumbs
-  const checkActive = (role) => {
+  const checkActive = () => {
     return role.status === STATUS.ACTIVE
   }
 
@@ -115,37 +117,6 @@ function Roles() {
     })
   }
 
-  // const handleConfirmDeleteClick = () => {
-  //   setIsLoading(true)
-  //   const requestOptions = {
-  //     method: 'DELETE',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //   }
-  //   const url = `${ENDPOINT}/roles/${role.role_id}`
-  //   fetch(url, requestOptions)
-  //     .then((response) => response.json())
-  //     .then((responseJSON) => {
-  //       setIsLoading(false)
-  //       if (responseJSON.code > 399) {
-  //         enqueueSnackbar(responseJSON.message, { variant: 'error' })
-  //       } else {
-  //         enqueueSnackbar('Role successfully deleted.', { variant: 'success' })
-  //         navigate('/admin/roles', {
-  //           replace: true,
-  //         })
-  //       }
-  //     })
-  //     .catch(() => {
-  //       setIsLoading(false)
-  //       deleteDialogState.close()
-  //       enqueueSnackbar('Internal server error, please try again.', {
-  //         variant: 'error',
-  //       })
-  //     })
-  // }
-
   const handleConfirmRetireClick = async () => {
     setIsLoading(true)
     editRoleService({
@@ -169,6 +140,30 @@ function Roles() {
         })
         deleteDialogState.close()
       })
+  }
+
+  const renderActionButtons = () => {
+    if (userCurrentRole === ROLES.STAFF) {
+      return (
+        <BackNextButtons
+          handleBackClick={handleBackClick}
+          handleNextClick={() => {
+            console.log('Roles.renderActionButtons: Should initiate new LJ.')
+          }}
+          nextButtonLabel="Create Learning Journey"
+          disableNextClick={
+            role.status === STATUS.RETIRED || role.status === STATUS.PENDING
+          }
+        />
+      )
+    }
+    return (
+      <EditButtons
+        handleBackClick={handleBackClick}
+        handleEditClick={handleEditClick}
+        handleDeleteClick={deleteDialogState.open}
+      />
+    )
   }
 
   return (
@@ -199,11 +194,7 @@ function Roles() {
           <DescriptionRow title="Role Department" value={role.role_dept} />
           <DescriptionRow title="Role Description" value={role.role_desc} />
           <DescriptionRow title="Role Status" value={role.status} />
-          <EditButtons
-            handleBackClick={handleBackClick}
-            handleEditClick={handleEditClick}
-            handleDeleteClick={deleteDialogState.open}
-          />
+          {renderActionButtons()}
         </Stack>
       </Box>
       <ConfirmationDialog

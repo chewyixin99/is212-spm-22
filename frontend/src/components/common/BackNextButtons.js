@@ -8,6 +8,7 @@ import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material'
 const BackNextButtons = ({
   handleBackClick,
   handleNextClick,
+  disableNextClick,
   isLoading,
   justifyContent,
   backButtonLabel,
@@ -34,6 +35,7 @@ const BackNextButtons = ({
         loadingPosition="end"
         onClick={handleNextClick}
         endIcon={<KeyboardArrowRight />}
+        disabled={isLoading || disableNextClick}
       >
         {nextButtonLabel}
       </LoadingButton>
@@ -46,6 +48,7 @@ export default BackNextButtons
 BackNextButtons.propTypes = {
   handleBackClick: propTypes.func,
   handleNextClick: propTypes.func,
+  disableNextClick: propTypes.bool,
   isLoading: propTypes.bool,
   justifyContent: propTypes.string,
   backButtonLabel: propTypes.string,
@@ -53,6 +56,7 @@ BackNextButtons.propTypes = {
 }
 
 BackNextButtons.defaultProps = {
+  disableNextClick: false,
   isLoading: false,
   justifyContent: 'space-between',
   backButtonLabel: 'Back',

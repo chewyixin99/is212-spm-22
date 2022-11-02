@@ -19,8 +19,9 @@ import RolesTableRow from './RolesTableRow'
 import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
+import { ROLES } from '../../constants'
 
-function RolesTable({ numRows }) {
+function RolesTable({ numRows, role }) {
   const [roleData, isLoading, total, error, reloadData] = useRolesLoader(
     numRows,
     null
@@ -39,6 +40,10 @@ function RolesTable({ numRows }) {
   }
 
   const sectionButtonRenderer = () => {
+    if (role === ROLES.STAFF) {
+      return <Box />
+    }
+
     return numRows === -1 ? (
       <Box>
         <Button variant="outlined" component={Link} to="/admin/roles/newrole">
@@ -83,6 +88,7 @@ function RolesTable({ numRows }) {
         <>
           {roleData.map((roleInfo, index) => (
             <RolesTableRow
+              userRole={role}
               roleInfo={roleInfo}
               reloadData={reloadData}
               key={index}
@@ -131,6 +137,11 @@ function RolesTable({ numRows }) {
 
 RolesTable.propTypes = {
   numRows: propTypes.number,
+  role: propTypes.string,
+}
+
+RolesTable.defaultProps = {
+  role: ROLES.ADMIN,
 }
 
 export default RolesTable
