@@ -34,11 +34,7 @@ const SectionHeader = ({ header, subHeader, sectionButtonComponent }) => {
         {header && renderHeader()}
         {subHeader && renderSubHeader()}
       </Box>
-      {role === ROLES.STAFF ? (
-        <Typography />
-      ) : (
-        <Box>{sectionButtonComponent}</Box>
-      )}
+      <Box>{sectionButtonComponent}</Box>
     </Box>
   )
 }

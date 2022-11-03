@@ -11,15 +11,17 @@ import {
   TableCell,
   TableBody,
   Button,
+  Typography,
 } from '@mui/material'
 
-import { Link } from 'react-router-dom'
+import { Link, useOutletContext } from 'react-router-dom'
 
 import SectionHeader from '../common/SectionHeader'
 import SkillsTableRow from './SkillsTableRow'
 import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useSkillsLoader from '../../services/skills/useSkillsLoader'
+import { ROLES } from '../../constants'
 
 function SkillsTable({ numRows, staffId, completed, header = 'Skills' }) {
   const [skillData, isLoading, total, error, reloadData] = useSkillsLoader(
@@ -27,6 +29,7 @@ function SkillsTable({ numRows, staffId, completed, header = 'Skills' }) {
     staffId,
     completed
   )
+  const { role } = useOutletContext()
 
   // console.log('---> SkillsTable, skillData: ', skillData)
   const isEmpty = skillData.length === 0
@@ -44,9 +47,13 @@ function SkillsTable({ numRows, staffId, completed, header = 'Skills' }) {
   const sectionButtonRenderer = () => {
     return numRows === -1 ? (
       <Box sx={{ my: 1 }}>
-        <Button variant="outlined" component={Link} to="/admin/newskill">
-          Create New Skill
-        </Button>
+        {role === ROLES.STAFF || completed ? (
+          <Typography />
+        ) : (
+          <Button variant="outlined" component={Link} to="/admin/newskill">
+            Create New Skill
+          </Button>
+        )}
       </Box>
     ) : (
       <Box sx={{ display: 'flex' }}>
@@ -56,11 +63,15 @@ function SkillsTable({ numRows, staffId, completed, header = 'Skills' }) {
           </Button>
         </Box>
 
-        <Box>
-          <Button variant="outlined" component={Link} to="/admin/newskill">
-            Create New Skills
-          </Button>
-        </Box>
+        {role === ROLES.STAFF || completed ? (
+          <Typography />
+        ) : (
+          <Box>
+            <Button variant="outlined" component={Link} to="/admin/newskill">
+              Create New Skills
+            </Button>
+          </Box>
+        )}
       </Box>
     )
   }

@@ -98,6 +98,10 @@ function AdminNewSkill() {
       })
   }
 
+  const checkActiveCourse = (course) => {
+    return course.course_status === STATUS.ACTIVE
+  }
+
   const handleBackClick = () => {
     navigate(-1)
   }
@@ -230,7 +234,7 @@ function AdminNewSkill() {
                 )
               }}
             >
-              {allCourses.map((singleCourse) => {
+              {allCourses.filter(checkActiveCourse).map((singleCourse) => {
                 return (
                   <MenuItem
                     value={singleCourse.course_id}

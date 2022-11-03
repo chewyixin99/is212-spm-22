@@ -55,9 +55,9 @@ function AdminEditSkill() {
       await fetch(`${ENDPOINT}/skills/${skillId}/courses`)
         .then((response) => response.json())
         .then((responseJSON) => {
-          const newCoursesName = responseJSON.data.courses.map(
-            (course) => course.course_id
-          )
+          const newCoursesName = responseJSON.data.courses
+            .filter(checkActiveCourse)
+            .map((course) => course.course_id)
           setRemoveCourses(newCoursesName)
           setNewCourses(newCoursesName)
         })
@@ -82,7 +82,13 @@ function AdminEditSkill() {
       setCoursesError(true)
     }
 
-    if (!(newSkillDesc.length > 255 || newCourses.length < 1)) {
+    if (
+      !(
+        newSkillDesc.length > 255 ||
+        newSkillDesc.length < 1 ||
+        newCourses.length < 1
+      )
+    ) {
       // handle submit
       const requestBody = {
         status: newSkillStatus,
@@ -121,6 +127,10 @@ function AdminEditSkill() {
     } else {
       setIsLoading(false)
     }
+  }
+
+  const checkActiveCourse = (course) => {
+    return course.course_status === STATUS.ACTIVE
   }
 
   const handleCancelClick = () => {
@@ -205,7 +215,7 @@ function AdminEditSkill() {
                 )
               }}
             >
-              {allCourses.map((singleCourse) => {
+              {allCourses.filter(checkActiveCourse).map((singleCourse) => {
                 return (
                   <MenuItem
                     value={singleCourse.course_id}
