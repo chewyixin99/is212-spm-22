@@ -19,7 +19,8 @@ import {
   MenuItem,
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
-import AdbIcon from '@mui/icons-material/Adb'
+// import AdbIcon from '@mui/icons-material/Adb'
+import SchoolIcon from '@mui/icons-material/School';
 
 // const pages = ['Home', 'Learning Journey']
 const settings = ['Profile', 'Account', 'Dashboard']
@@ -68,7 +69,7 @@ function Navbar({ role }) {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <SchoolIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -84,9 +85,10 @@ function Navbar({ role }) {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            LJPS
           </Typography>
 
+          {/* Start of mobile navbar */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -133,43 +135,102 @@ function Navbar({ role }) {
                 <Typography textAlign="center">
                   <Button
                     onClick={handleCloseNavMenu}
-                    component={Link}
-                    to="/staff/learning-journey"
                     sx={{ my: 1, color: 'black', display: 'block' }}
+                    component={Link}
+                    to={`/${role.toLowerCase()}` + "/roles"}
                   >
-                    Learning Journey
+                    Roles
                   </Button>
                 </Typography>
               </MenuItem>
+
+              {/* {console.log(role)} */}
+              {role.toLowerCase() == 'admin' ?
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">
+                    <Button
+                      onClick={handleCloseNavMenu}
+                      sx={{ my: 1, color: 'black', display: 'block' }}
+                      component={Link}
+                      to={`/${role.toLowerCase()}` + "/skills"}
+                    >
+                      Skills
+                    </Button>
+                  </Typography>
+                </MenuItem> :
+                <></>
+              }
 
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
                   <Button
                     onClick={handleCloseNavMenu}
-                    component={Link}
-                    to="completed-courses"
                     sx={{ my: 1, color: 'black', display: 'block' }}
+                    component={Link}
+                    to={`/${role.toLowerCase()}` + "/courses"}
                   >
-                    Completed courses
+                    Courses
                   </Button>
                 </Typography>
               </MenuItem>
 
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">
-                  <Button
-                    onClick={handleCloseNavMenu}
-                    component={Link}
-                    to="completed-skills"
-                    sx={{ my: 1, color: 'black', display: 'block' }}
-                  >
-                    Completed skills
-                  </Button>
-                </Typography>
-              </MenuItem>
+              {role.toLowerCase() == 'staff' ?
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">
+                    <Button
+                      onClick={handleCloseNavMenu}
+                      component={Link}
+                      to="/staff/learning-journey"
+                      sx={{ my: 1, color: 'black', display: 'block' }}
+                    >
+                      Learning Journey
+                    </Button>
+                  </Typography>
+                </MenuItem> :
+                <></>
+              }
+
+              {role.toLowerCase() == 'staff' ?
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">
+                    <Button
+                      onClick={handleCloseNavMenu}
+                      component={Link}
+                      to="completed-courses"
+                      sx={{ my: 1, color: 'black', display: 'block' }}
+                    >
+                      Completed courses
+                    </Button>
+                  </Typography>
+                </MenuItem> :
+                <></>
+              }
+
+              {role.toLowerCase() == 'staff' ?
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">
+                    <Button
+                      onClick={handleCloseNavMenu}
+                      component={Link}
+                      to="completed-skills"
+                      sx={{ my: 1, color: 'black', display: 'block' }}
+                    >
+                      Completed skills
+                    </Button>
+                  </Typography>
+                </MenuItem> :
+                <></>
+              }
+
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+
+          {/* End of mobile navbar */}
+
+
+          {/* Start of desktop navbar */}
+
+          <SchoolIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -186,7 +247,7 @@ function Navbar({ role }) {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            LJPS
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {/* {pages.map((page) => (
@@ -214,6 +275,19 @@ function Navbar({ role }) {
             >
               Roles
             </Button>
+
+            {role.toLowerCase() == 'admin' ?
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+                component={Link}
+                to={`/${role.toLowerCase()}` + "/skills"}
+              >
+                Skills
+              </Button> :
+              <></>
+            }
+
             <Button
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: 'white', display: 'block' }}
@@ -223,62 +297,38 @@ function Navbar({ role }) {
               Courses
             </Button>
 
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-              component={Link}
-              to={`/${role.toLowerCase()}` + "/learning-journey"}
-            // id="basic-button"
-            // aria-controls={open ? 'basic-menu' : undefined}
-            // aria-haspopup="true"
-            // aria-expanded={open ? 'true' : undefined}
-            >
-              Learning Journey
-            </Button>
-            {/* <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}
-            >
-              <MenuItem
-                onClick={handleClose}
+            {role.toLowerCase() == 'staff' ?
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
                 component={Link}
-                to="learning-journey/1"
+                to={`/${role.toLowerCase()}` + "/learning-journey"}
+              // id="basic-button"
+              // aria-controls={open ? 'basic-menu' : undefined}
+              // aria-haspopup="true"
+              // aria-expanded={open ? 'true' : undefined}
               >
-                Journey to be a Manager 1
-              </MenuItem>
-              <MenuItem
-                onClick={handleClose}
-                component={Link}
-                to="learning-journey/2"
-              >
-                Journey to be a Manager 2
-              </MenuItem>
-              <MenuItem
-                onClick={handleClose}
-                component={Link}
-                to="learning-journey/3"
-              >
-                Journey to be a Consultant 1
-              </MenuItem>
-            </Menu> */}
+                Learning Journey
+              </Button> :
+              <></>
+            }
 
-            <Button
-              onClick={handleOpenCompleted}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-              id="completed-button"
-              aria-controls={
-                Boolean(anchorElCompleted) ? 'completed-menu' : undefined
-              }
-              aria-haspopup="true"
-              aria-expanded={Boolean(anchorElCompleted) ? 'true' : undefined}
-            >
-              My completed
-            </Button>
+            {role.toLowerCase() == 'staff' ?
+              <Button
+                onClick={handleOpenCompleted}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+                id="completed-button"
+                aria-controls={
+                  Boolean(anchorElCompleted) ? 'completed-menu' : undefined
+                }
+                aria-haspopup="true"
+                aria-expanded={Boolean(anchorElCompleted) ? 'true' : undefined}
+              >
+                My completed
+              </Button> :
+              <></>
+            }
+
             <Menu
               id="completed-menu"
               anchorEl={anchorElCompleted}
@@ -305,10 +355,17 @@ function Navbar({ role }) {
             </Menu>
           </Box>
 
+          {/* End of desktop navbar */}
+
+
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
+                {role.toLowerCase() == 'admin' ?
+                  <Avatar>HR</Avatar> : 
+                  <Avatar>S</Avatar>
+                }
               </IconButton>
             </Tooltip>
             <Menu

@@ -22,6 +22,7 @@ import AdminSkillsPage from './pages/admin/AdminSkillsPage'
 import AdminNewSkill from './pages/admin/AdminNewSkill'
 import AdminNewSkillPreview from './pages/admin/AdminNewSkillPreview'
 import AdminEditSkill from './pages/admin/AdminEditSkill'
+import AdminCoursesPage from './pages/admin/AdminCoursesPage'
 import StaffOutlet from './pages/staff/StaffOutlet'
 import StaffHomePage from './pages/staff/StaffHomePage'
 import StaffCoursesPage from './pages/staff/StaffCoursesPage'
@@ -101,6 +102,7 @@ function App() {
             <Route path="newrole" element={<AdminNewRole />} />
           </Route>
 
+          <Route path="courses" element={<AdminCoursesPage />} />
           <Route path="courses">
             <Route path=":course_id" element={<Course />} />
           </Route>
