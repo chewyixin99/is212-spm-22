@@ -198,6 +198,46 @@ def create_learning_journey(learning_journey_id):
         }
     )
 
+
+# Delete Role
+@learning_journey_routes.route(
+    "/learning_journeys/<string:learning_journey_id>", methods=["DELETE"]
+)
+def delete_learning_journey(learning_journey_id):
+    learning_journey = Learning_Journey.query.filter_by(
+        learning_journey_id=learning_journey_id
+    ).first()
+    if not (learning_journey):
+        return jsonify(
+            {
+                "code": 404,
+                "data": {"learning_journey_id": learning_journey_id},
+                "message": f"Learning_journey {learning_journey_id} does not exist.",
+            }
+        )
+
+    try:
+        db.session.delete(learning_journey)
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        return jsonify(
+            {
+                "code": 500,
+                "data": {"learning_journey_id": learning_journey_id},
+                "message": "An error occurred while deleting the learning journey.",
+            }
+        )
+
+    return jsonify(
+        {
+            "code": 201,
+            "learning_journey_id": learning_journey_id,
+            "message": f"Successfully deleted learning_journey {learning_journey_id}.",
+        }
+    )
+
+
 # def corsify_actual_response(response):
 #     header = response.headers
 #     header["Access-Control-Allow-Origin"] = "*"
