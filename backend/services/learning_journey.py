@@ -50,7 +50,9 @@ def get_learning_journey_by_id(staff_id):
 
 
 # Get Courses of Learning Journey
-@learning_journey_routes.route("/learning_journeys/<int:learning_journey_id>/courses")
+@learning_journey_routes.route(
+    "/learning_journeys/<string:learning_journey_id>/courses"
+)
 def get_courses_of_learning_journey(learning_journey_id):
     learning_journey = Learning_Journey.query.filter_by(
         learning_journey_id=learning_journey_id
@@ -75,7 +77,7 @@ def get_courses_of_learning_journey(learning_journey_id):
 
 # Update Course in Learning Journey
 @learning_journey_routes.route(
-    "/learning_journeys/<int:learning_journey_id>/courses", methods=["PUT"]
+    "/learning_journeys/<string:learning_journey_id>/courses", methods=["PUT"]
 )
 def update_course_in_learning_journey(learning_journey_id):
     learning_journey = Learning_Journey.query.filter_by(
