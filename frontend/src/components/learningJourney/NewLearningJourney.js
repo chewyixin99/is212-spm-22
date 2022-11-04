@@ -132,7 +132,7 @@ function NewLearningJourney({ numRows }) {
   const numActive = () => {
     var total = 0
     roleData.map((roleInfo) => {
-      if (roleInfo.status == 'ACTIVE') {
+      if (roleInfo.status == 'Active') {
         total += 1
       }
     })
@@ -145,7 +145,7 @@ function NewLearningJourney({ numRows }) {
       return (
         <>
           {roleData.map((roleInfo, index) => {
-            if (roleInfo.status != 'ACTIVE') {
+            if (roleInfo.status != 'Active') {
               return null
             } else {
               return (
@@ -247,7 +247,7 @@ function NewLearningJourney({ numRows }) {
     console.log(body);
 
     axios
-    .post(`${ENDPOINT}/learning-journeys/130001_${selectedRoleId}`, body,
+    .post(`${ENDPOINT}/learning_journeys/130001_${selectedRoleId}`, body,
     {
       headers: {
          'Content-Type': 'application/json'
