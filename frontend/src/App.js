@@ -4,8 +4,8 @@ import './App.css'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 // Component imports
-import LearningJourneyPage from './components/learningjourney/LearningJourney'
-import MyLearningJourney from './components/learningjourney/MyLearningJourney'
+import LearningJourneys from './components/learningjourney/LearningJourneys'
+import LearningJourney from './components/learningjourney/LearningJourney'
 import NewLearningJourney from './components/learningjourney/NewLearningJourney'
 import Course from './components/course/Course'
 import Skill from './components/skills/Skills'
@@ -52,9 +52,9 @@ function App() {
           <Route index element={<StaffHomePage />} />
           <Route path="learning-journey">
             {/* shows all learning journey for this staff */}
-            <Route index element={<LearningJourneyPage />} />
+            <Route index element={<LearningJourneys />} />
             {/* shows a specific learning journey for this staff */}
-            <Route path=":id" element={<MyLearningJourney />} />
+            <Route path=":id" element={<LearningJourney />} />
             {/* create new learning journey for this staff */}
             <Route path="new" element={<NewLearningJourney />} />
           </Route>

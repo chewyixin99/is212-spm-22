@@ -48,6 +48,31 @@ def get_learning_journey_by_id(staff_id):
         }
     )
 
+# Get Learning Journey by Learning Journey ID
+@learning_journey_routes.route(
+    "/learning_journeys/<string:learning_journey_id>/"
+)
+def get_learning_journey_by_lj_id(learning_journey_id):
+    learning_journey = Learning_Journey.query.filter_by(
+        learning_journey_id=learning_journey_id
+    ).first()
+    if not learning_journey:
+        return jsonify(
+            {
+                "code": 404,
+                "message": "Learning Journey cannot be found. Please try again.",
+            }
+        )
+    return jsonify(
+        {
+            "code": 200,
+            "data": {
+                "learning_journey": learning_journey.json(),
+                "courses": [course.json() for course in learning_journey.courses]
+            }
+        }
+    )
+
 
 # Get Courses of Learning Journey
 @learning_journey_routes.route(
