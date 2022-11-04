@@ -192,29 +192,10 @@ CREATE TABLE IF NOT EXISTS `role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `role` (`role_id`, `role_name`, `role_desc`, `role_dept`, `status`) VALUES
-(1, 'Product Manager', 'product manager lor', 'Business Support', 'ACTIVE'),
-(2, 'Software Engineer', 'SWESWESWEDEN', 'Tech', 'ACTIVE'),
-(3, 'Data Analyst', 'just being a data-man', 'Tech', 'ACTIVE');
+(1, 'Product Manager', 'product manager lor', 'Business Support', 'Active'),
+(2, 'Software Engineer', 'SWESWESWEDEN', 'Tech', 'Active'),
+(3, 'Data Analyst', 'just being a data-man', 'Tech', 'Active');
 COMMIT;
-
---
--- Table structure for table `registration`
---
--- DROP TABLE IF EXISTS `registration`;
--- CREATE TABLE IF NOT EXISTS `registration` (
---   `reg_id` int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
---   `course_id` varchar(50) NOT NULL,
---   `staff_id` varchar(50) NOT NULL,
---   `reg_status` varchar(50) NOT NULL,
---   `completion_status` varchar(50) NOT NULL
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- INSERT INTO `role` (`role_id`, `role_name`, `status`) VALUES
--- (1, 'Product Manager', 'Active'),
--- (2, 'Software Engineer', 'Active'),
--- (3, 'Full-stack developer', 'Active');
--- COMMIT;
-
 
 --
 -- Table structure for table `learning_journey`
@@ -249,11 +230,11 @@ CREATE TABLE IF NOT EXISTS `skill` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `skill` (`skill_id`, `skill_name`, `skill_desc`, `status`) VALUES
-(1, 'Python', 'General-purpose Programming language', 'ACTIVE'),
-(2, 'Leadership', 'Leadership skill', 'ACTIVE'),
-(3, 'Info-sec', 'Info-sec framework', 'ACTIVE'),
-(4, 'Data analysis', 'Foundations of data analytics', 'ACTIVE'),
-(5, 'Management', 'Management techniques and ideologies', 'ACTIVE');
+(1, 'Python', 'General-purpose Programming language', 'Active'),
+(2, 'Leadership', 'Leadership skill', 'Active'),
+(3, 'Info-sec', 'Info-sec framework', 'Active'),
+(4, 'Data analysis', 'Foundations of data analytics', 'Active'),
+(5, 'Management', 'Management techniques and ideologies', 'Active');
 COMMIT;
 
 --
