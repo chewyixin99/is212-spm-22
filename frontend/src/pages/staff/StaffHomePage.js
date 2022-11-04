@@ -34,7 +34,7 @@ const StaffHomePage = () => {
   const [roleList, setRoleList] = useState([])
 
   const getLJData = async (id) => {
-    const response = await axios.get(`${ENDPOINT}/learning_journeys/${id}`)
+    const response = await axios.get(`${ENDPOINT}/learning_journeys/130001`)
     const data = response.data.data
     setlearningJourneyList(data)
   }
