@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Alert, Box, Breadcrumbs, Stack, Typography } from '@mui/material'
 import DescriptionRow from '../common/DescriptionRow'
 import StyledBreadcrumb from '../common/StyledBreadcrumb'
@@ -8,6 +8,7 @@ import ConfirmationDialog from '../common/ConfirmationDialog'
 import useDialogState from '../../services/common/useDialogState'
 import EditButtons from '../common/EditButtons'
 import BackNextButtons from '../common/BackNextButtons'
+import EditIcon from '@mui/icons-material/Edit';
 
 import { ENDPOINT, STATUS } from '../../constants'
 
@@ -128,7 +129,7 @@ function LearningJourney() {
           </Typography>
           <Breadcrumbs aria-label="breadcrumb">
             {courses.filter(checkCourseActive).map((course) => (
-              <StyledBreadcrumb key={course.course_id}>
+              <StyledBreadcrumb key={course.course_id} to={`/staff/courses/${course.course_id}`}>
                 {course?.course_name}
               </StyledBreadcrumb>
 
@@ -182,8 +183,7 @@ function LearningJourney() {
           </Typography>
           <Breadcrumbs aria-label="breadcrumb">
             {skills.filter(checkRoleActive).map((skill) => (
-              <StyledBreadcrumb key={skill.skill_id}>
-                {/* to add link to the course page */}
+              <StyledBreadcrumb key={skill.skill_id} to={`/staff/skills/${skill.skill_id}`}>
                 {skill.skill_name}
               </StyledBreadcrumb>
             ))}
@@ -223,6 +223,9 @@ function LearningJourney() {
       <Box sx={{ marginBottom: '10vh', justifyContent: 'center' }}>
         <Typography variant="h4" component="div" gutterBottom>
           {learningJourney.learning_journey_name}
+          <Link to="/staff">
+            <EditIcon sx={{marginLeft: "1rem"}}/>
+          </Link>
         </Typography>
         <Stack spacing={4} sx={{ marginTop: '5vh', marginBottom: '10vh ' }}>
           <DescriptionRow title="Role ID" value={role.role_id?.toString()} />
@@ -243,12 +246,11 @@ function LearningJourney() {
             <Breadcrumbs aria-label="breadcrumb">
 
               {Object.keys(skillsInCourses).map(k => (
-                <StyledBreadcrumb key={k}>
-                  {/* to add link to the course page */}
-                  {skillsInCourses[k] ? skillsInCourses[k].skill_name : "N.A."}
-                </StyledBreadcrumb>
+                  <StyledBreadcrumb key={k} to={`/staff/skills/${k}`}>
+                    {skillsInCourses[k] ? skillsInCourses[k].skill_name : "N.A."}
+                  </StyledBreadcrumb>
               ))}
-              
+
             </Breadcrumbs>
           </Stack>
 
