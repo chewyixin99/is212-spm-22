@@ -81,12 +81,15 @@ const CoursesBySkill = (props) => {
                     renderValue={(selected) => selected.join(', ')}
                     MenuProps={MenuProps}
                 >
-                    {retrievedCourses.map((course) => (
-                        <MenuItem key={course.course_id} value={course.course_name}>
-                            <Checkbox checked={courses.indexOf(course.course_name) > -1} value={course.course_id} onChange={e => { handleCourses(e.target.value) }} />
-                            <ListItemText primary={course.course_name} />
-                        </MenuItem>
-                    ))}
+                    {retrievedCourses
+                        .filter((item) => item.course_name !== null)
+                        .map((course) => (
+                            <MenuItem key={course.course_id} value={course.course_name}>
+                                <Checkbox checked={courses.indexOf(course.course_name) > -1} value={course.course_id} onChange={e => { handleCourses(e.target.value) }} />
+                                <ListItemText primary={course.course_name} />
+                            </MenuItem>
+                        ))
+                    }
                 </Select>
             </FormControl>
         </>
