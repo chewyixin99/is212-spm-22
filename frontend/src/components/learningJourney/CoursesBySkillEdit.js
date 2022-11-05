@@ -37,7 +37,6 @@ const CoursesBySkillEdit = (props) => {
 
     // sets selected id of courses
     const handleCourses = (value) => {
-        console.log(value);
         if (selectedCourses.includes(value)) {
             setSelectedCourses(selectedCourses.filter((item) => item !== value));
         } else {
@@ -50,7 +49,6 @@ const CoursesBySkillEdit = (props) => {
         console.log(skill_id);
         axios.get(`${ENDPOINT}/skills/${skill_id}/courses`)
             .then((response) => {
-                console.log(response.data.data.courses);
                 setRetrievedCourses(response.data.data.courses);
             })
             .catch((error) => {
@@ -69,13 +67,8 @@ const CoursesBySkillEdit = (props) => {
             return course.course_name
         }
         )
-
-
-
-        console.log(test);
         props.handleAddCourses(typeof test === 'string' ? test.split(',') : test, props.item.skill_name)
         setCourses(test);
-        // console.log(courses);
 
     }
 

@@ -139,7 +139,13 @@ const StaffEditLearningJourney = () => {
       return course
     })
 
-    return [add]
+    const remove = selectedCourses.filter((course) => {
+      return !new_names.includes(course)}
+    ).map((course) => {
+      return course
+    })
+
+    return [add, remove]
   }
 
   const convertNameToIds = (course_names) => {
@@ -163,10 +169,11 @@ const StaffEditLearningJourney = () => {
 
     const course_names = Object.values(selectedEditCourses).flat();
     const add = filterNewOld(course_names)[0]
+    const remove = filterNewOld(course_names)[1]
     const body = {
         learning_journey_name: learningJourneyName,
         add: await convertNameToIds(add),
-        remove: []
+        remove: await convertNameToIds(remove)
     }
     console.log(body);
 
