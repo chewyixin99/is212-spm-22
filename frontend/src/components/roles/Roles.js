@@ -148,7 +148,17 @@ function Roles() {
         <BackNextButtons
           handleBackClick={handleBackClick}
           handleNextClick={() => {
-            console.log('Roles.renderActionButtons: Should initiate new LJ.')
+            navigate('/staff/learning-journey/new', {
+              state: {
+                roleState: {
+                  roleName: role.role_name,
+                  roleDept: role.role_dept,
+                  roleDesc: role.role_desc,
+                  roleId: role.role_id,
+                  roleStatus: role.status,
+                },
+              },
+            })
           }}
           nextButtonLabel="Create Learning Journey"
           disableNextClick={

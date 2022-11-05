@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import propTypes from 'prop-types'
 
 import {
@@ -52,6 +52,7 @@ import { RESPONSE_CODES, ENDPOINT } from '../../constants'
 const steps = ['Input Learning Journey Name and Role', 'Select Skills and Courses', 'Review Learning Journey']
 
 function NewLearningJourney({ numRows }) {
+  const preSelectedRoleData = useLocation()
   const [roleData, isLoading, total, error] = useRolesLoader(numRows)
   const isEmpty = roleData.length === 0
 
@@ -59,8 +60,12 @@ function NewLearningJourney({ numRows }) {
   const [skipped, setSkipped] = React.useState(new Set());
   const [skillData, setSkillData] = React.useState([]);
   const [selectedSkill, setSelectedSkill] = React.useState("");
-  const [selectedRoleId, setSelectedRoleId] = React.useState(0);
-  const [selectedRoleName, setSelectedRoleName] = React.useState("N.A.");
+  const [selectedRoleId, setSelectedRoleId] = React.useState(
+    preSelectedRoleData.state?.roleState.roleId
+  )
+  const [selectedRoleName, setSelectedRoleName] = React.useState(
+    preSelectedRoleData.state?.roleState.roleName
+  )
 
   const [learningJourneyName, setLearningJourneyName] = React.useState("");
   const [selectedCourses, setSelectedCourses] = React.useState({});
