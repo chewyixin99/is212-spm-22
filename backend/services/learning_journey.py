@@ -101,7 +101,7 @@ def get_courses_of_learning_journey(learning_journey_id):
 
 # Update Course in Learning Journey
 @learning_journey_routes.route(
-    "/learning_journeys/<string:learning_journey_id>/courses", methods=["PUT"]
+    "/learning_journeys/<string:learning_journey_id>/update", methods=["PUT"]
 )
 def update_course_in_learning_journey(learning_journey_id):
     learning_journey = Learning_Journey.query.filter_by(
@@ -118,6 +118,8 @@ def update_course_in_learning_journey(learning_journey_id):
     data = request.get_json()
     remove_courses = []
     add_courses = []
+
+    learning_journey.learning_journey_name = data["learning_journey_name"]
 
     for r in data["remove"]:
         to_remove = Course.query.filter_by(course_id=r).first()
