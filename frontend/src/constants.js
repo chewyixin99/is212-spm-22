@@ -7,6 +7,14 @@ export const ROLES = {
   MANAGER: 'MANAGER',
 }
 
+export const ROLEDEPT = [
+  'Human Resource',
+  'Information Technology',
+  'Operations',
+  'Finance',
+  'Sales',
+]
+
 export const STATUS = {
   ACTIVE: 'Active',
   PENDING: 'Pending',

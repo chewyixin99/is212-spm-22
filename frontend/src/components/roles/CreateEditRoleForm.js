@@ -20,7 +20,7 @@ import {
   Chip,
 } from '@mui/material'
 
-import { STATUS } from '../../constants'
+import { STATUS, ROLEDEPT } from '../../constants'
 import CreateEditRoleFormSchema from '../../schemas/createEditRoleFormSchema'
 import CreateEditRoleFormContext from '../../contexts/roles/createEditRoleFormContext'
 import BackNextButtons from '../common/BackNextButtons'
@@ -69,19 +69,33 @@ const CreateEditRoleForm = ({
     )
   }
 
-  const renderRoleDeptField = (touched, errors) => {
+  const renderRoleDeptField = (values, touched, errors, handleChange) => {
+    const selectRoleDeptLabel = 'Select role'
+
     if (isLoading) {
       return <Skeleton variant="rounded" />
     }
     return (
-      <Field
-        as={TextField}
-        fullWidth
-        name="roleDept"
-        label="Enter department"
-        error={touched.roleDept && errors.roleDept}
-        helperText={touched.roleDept && errors.roleDept ? errors.roleDept : ''}
-      />
+      <FormControl fullWidth error={touched.roleDept && errors.roleDept}>
+        <InputLabel>{selectRoleDeptLabel}</InputLabel>
+        <Select
+          variant="outlined"
+          value={values.roleDept}
+          fullWidth
+          name="roleDept"
+          onChange={handleChange}
+          label={selectRoleDeptLabel}
+        >
+          {ROLEDEPT.map((role, idx) => (
+            <MenuItem key={idx} value={role}>
+              {role}
+            </MenuItem>
+          ))}
+        </Select>
+        <FormHelperText error={touched.roleDept && errors.roleDept}>
+          {touched.roleDept && errors.roleDept ? errors.roleDept : ''}
+        </FormHelperText>
+      </FormControl>
     )
   }
 
@@ -199,7 +213,7 @@ const CreateEditRoleForm = ({
                   <Box mb={1.5}>
                     <FormLabel>Role Department</FormLabel>
                   </Box>
-                  {renderRoleDeptField(touched, errors)}
+                  {renderRoleDeptField(values, touched, errors, handleChange)}
                 </Grid>
                 <Grid item sm={12}>
                   <Box mb={1.5}>

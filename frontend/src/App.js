@@ -36,7 +36,6 @@ import ManagerOutlet from './pages/manager/ManagerOutlet'
 import ManagerHomePage from './pages/manager/ManagerHomePage'
 import AdminEditRole from './pages/admin/AdminEditRole'
 
-
 function App() {
   return (
     <>
