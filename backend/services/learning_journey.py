@@ -48,10 +48,9 @@ def get_learning_journey_by_id(staff_id):
         }
     )
 
+
 # Get Learning Journey by Learning Journey ID
-@learning_journey_routes.route(
-    "/learning_journeys/<string:learning_journey_id>/"
-)
+@learning_journey_routes.route("/learning_journeys/<string:learning_journey_id>/")
 def get_learning_journey_by_lj_id(learning_journey_id):
     learning_journey = Learning_Journey.query.filter_by(
         learning_journey_id=learning_journey_id
@@ -68,8 +67,8 @@ def get_learning_journey_by_lj_id(learning_journey_id):
             "code": 200,
             "data": {
                 "learning_journey": learning_journey.json(),
-                "courses": [course.json() for course in learning_journey.courses]
-            }
+                "courses": [course.json() for course in learning_journey.courses],
+            },
         }
     )
 
@@ -239,7 +238,7 @@ def delete_learning_journey(learning_journey_id):
             {
                 "code": 404,
                 "data": {"learning_journey_id": learning_journey_id},
-                "message": f"Learning_journey {learning_journey_id} does not exist.",
+                "message": f"Learning journey {learning_journey_id} does not exist.",
             }
         )
 
@@ -260,7 +259,7 @@ def delete_learning_journey(learning_journey_id):
         {
             "code": 201,
             "learning_journey_id": learning_journey_id,
-            "message": f"Successfully deleted learning_journey {learning_journey_id}.",
+            "message": f"Successfully deleted learning journey {learning_journey_id}.",
         }
     )
 
