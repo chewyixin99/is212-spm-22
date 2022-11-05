@@ -4,9 +4,9 @@ import './App.css'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 // Component imports
-import LearningJourneys from './components/learningjourney/LearningJourneys'
-import LearningJourney from './components/learningjourney/LearningJourney'
-import NewLearningJourney from './components/learningjourney/NewLearningJourney'
+import LearningJourneys from './components/learningJourney/LearningJourneys'
+import LearningJourney from './components/learningJourney/LearningJourney'
+import NewLearningJourney from './components/learningJourney/NewLearningJourney'
 import Course from './components/course/Course'
 import Skill from './components/skills/Skills'
 import Role from './components/roles/Roles'
