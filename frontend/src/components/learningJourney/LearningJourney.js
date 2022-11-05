@@ -204,8 +204,6 @@ function LearningJourney() {
     }
   }
 
- 
-
   return (
     <Box sx={{ width: '50%', margin: 'auto' }}>
       <Typography
