@@ -223,7 +223,7 @@ function LearningJourney() {
       <Box sx={{ marginBottom: '10vh', justifyContent: 'center' }}>
         <Typography variant="h4" component="div" gutterBottom>
           {learningJourney.learning_journey_name}
-          <Link to="/staff">
+          <Link to="edit">
             <EditIcon sx={{marginLeft: "1rem"}}/>
           </Link>
         </Typography>

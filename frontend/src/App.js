@@ -4,9 +4,9 @@ import './App.css'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 // Component imports
-import LearningJourneys from './components/learningjourney/LearningJourneys'
-import LearningJourney from './components/learningjourney/LearningJourney'
-import NewLearningJourney from './components/learningjourney/NewLearningJourney'
+import LearningJourneys from './components/learningJourney/LearningJourneys'
+import LearningJourney from './components/learningJourney/LearningJourney'
+import NewLearningJourney from './components/learningJourney/NewLearningJourney'
 import Course from './components/course/Course'
 import Skill from './components/skills/Skills'
 import Role from './components/roles/Roles'
@@ -29,11 +29,13 @@ import StaffCoursesPage from './pages/staff/StaffCoursesPage'
 import StaffCompletedCoursesPage from './pages/staff/StaffCompletedCoursesPage'
 import StaffCompletedSkillsPage from './pages/staff/StaffCompletedSkillsPage'
 import StaffRolesPage from './pages/staff/StaffRolesPage'
+import StaffEditLearningJourney from './pages/staff/StaffEditLearningJourney'
 
 // Context imports
 import ManagerOutlet from './pages/manager/ManagerOutlet'
 import ManagerHomePage from './pages/manager/ManagerHomePage'
 import AdminEditRole from './pages/admin/AdminEditRole'
+
 
 function App() {
   return (
@@ -54,7 +56,10 @@ function App() {
             {/* shows all learning journey for this staff */}
             <Route index element={<LearningJourneys />} />
             {/* shows a specific learning journey for this staff */}
-            <Route path=":id" element={<LearningJourney />} />
+            <Route path=":id">
+              <Route index element={<LearningJourney />} />
+              <Route path="edit" element={<StaffEditLearningJourney />} />
+            </Route>
             {/* create new learning journey for this staff */}
             <Route path="new" element={<NewLearningJourney />} />
           </Route>
