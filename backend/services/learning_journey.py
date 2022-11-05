@@ -49,6 +49,30 @@ def get_learning_journey_by_id(staff_id):
     )
 
 
+# Get Learning Journey by Learning Journey ID
+@learning_journey_routes.route("/learning_journeys/<string:learning_journey_id>/")
+def get_learning_journey_by_lj_id(learning_journey_id):
+    learning_journey = Learning_Journey.query.filter_by(
+        learning_journey_id=learning_journey_id
+    ).first()
+    if not learning_journey:
+        return jsonify(
+            {
+                "code": 404,
+                "message": "Learning Journey cannot be found. Please try again.",
+            }
+        )
+    return jsonify(
+        {
+            "code": 200,
+            "data": {
+                "learning_journey": learning_journey.json(),
+                "courses": [course.json() for course in learning_journey.courses],
+            },
+        }
+    )
+
+
 # Get Courses of Learning Journey
 @learning_journey_routes.route(
     "/learning_journeys/<string:learning_journey_id>/courses"
@@ -77,7 +101,7 @@ def get_courses_of_learning_journey(learning_journey_id):
 
 # Update Course in Learning Journey
 @learning_journey_routes.route(
-    "/learning_journeys/<string:learning_journey_id>/courses", methods=["PUT"]
+    "/learning_journeys/<string:learning_journey_id>/update", methods=["PUT"]
 )
 def update_course_in_learning_journey(learning_journey_id):
     learning_journey = Learning_Journey.query.filter_by(
@@ -94,6 +118,8 @@ def update_course_in_learning_journey(learning_journey_id):
     data = request.get_json()
     remove_courses = []
     add_courses = []
+
+    learning_journey.learning_journey_name = data["learning_journey_name"]
 
     for r in data["remove"]:
         to_remove = Course.query.filter_by(course_id=r).first()
@@ -214,7 +240,7 @@ def delete_learning_journey(learning_journey_id):
             {
                 "code": 404,
                 "data": {"learning_journey_id": learning_journey_id},
-                "message": f"Learning_journey {learning_journey_id} does not exist.",
+                "message": f"Learning journey {learning_journey_id} does not exist.",
             }
         )
 
@@ -235,7 +261,7 @@ def delete_learning_journey(learning_journey_id):
         {
             "code": 201,
             "learning_journey_id": learning_journey_id,
-            "message": f"Successfully deleted learning_journey {learning_journey_id}.",
+            "message": f"Successfully deleted learning journey {learning_journey_id}.",
         }
     )
 
