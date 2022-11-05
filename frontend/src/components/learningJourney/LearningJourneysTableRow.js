@@ -34,6 +34,7 @@ const LearningJourneysTableRow = ({ learningJourneyInfo, reloadData }) => {
     {
       itemName: 'Edit',
       itemAction: () => {
+        naviate(`${learningJourneyInfo?.learning_journey_id}/edit`)
         console.log('--->LearningJourneysTableRow, edit')
       },
     },
