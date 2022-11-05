@@ -82,7 +82,7 @@ const CoursesBySkill = (props) => {
                     MenuProps={MenuProps}
                 >
                     {retrievedCourses
-                        .filter((item) => item.course_name !== null)
+                        .filter((item) => item.course_status == 'Active')
                         .map((course) => (
                             <MenuItem key={course.course_id} value={course.course_name}>
                                 <Checkbox checked={courses.indexOf(course.course_name) > -1} value={course.course_id} onChange={e => { handleCourses(e.target.value) }} />
