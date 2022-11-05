@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import propTypes from 'prop-types'
 
 import {
   Box,
@@ -18,8 +19,9 @@ import LearningJourneysTableRow from './LearningJourneysTableRow'
 import useAllLearningJourneysLoader from '../../services/learningJourneys/useAllLearningJourneysLoader'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
+import useStaffLearningJourneyLoader from '../../services/learningJourneys/useStaffLearningJourneyLoader'
 
-const LearningJourneysTable = () => {
+const LearningJourneysTable = ({ staffId, numRows }) => {
   // eslint-disable-next-line
   const [
     learningJourneyData,
@@ -27,8 +29,10 @@ const LearningJourneysTable = () => {
     total,
     error,
     reloadData, // eslint-disable-next-line
-  ] = useAllLearningJourneysLoader()
-
+  ] =
+    staffId > 0
+      ? useStaffLearningJourneyLoader(staffId)
+      : useAllLearningJourneysLoader()
   let isEmpty = total === 0
   useEffect(() => {
     isEmpty = total === 0
@@ -45,11 +49,37 @@ const LearningJourneysTable = () => {
   }
 
   const sectionButtonRenderer = () => {
-    return (
+    return numRows === -1 ? (
       <Box>
-        <Button variant="outlined" component={Link} to="new">
-          Create New Learning Journey
+        <Button
+          variant="outlined"
+          component={Link}
+          to="/staff/learning-journey/new"
+        >
+          Create
         </Button>
+      </Box>
+    ) : (
+      <Box sx={{ display: 'flex' }}>
+        <Box mx={1}>
+          <Button
+            variant="outlined"
+            component={Link}
+            to="/staff/learning-journey"
+          >
+            View All
+          </Button>
+        </Box>
+
+        <Box>
+          <Button
+            variant="outlined"
+            component={Link}
+            to="/staff/learning-journey/new"
+          >
+            Create
+          </Button>
+        </Box>
       </Box>
     )
   }
@@ -122,6 +152,15 @@ const LearningJourneysTable = () => {
       </TableContainer>
     </Box>
   )
+}
+
+LearningJourneysTable.propTypes = {
+  staffId: propTypes.number,
+  numRows: propTypes.number,
+}
+
+LearningJourneysTable.defaultProps = {
+  staffId: 0,
 }
 
 export default LearningJourneysTable

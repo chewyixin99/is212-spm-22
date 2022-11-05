@@ -1,14 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 
-import { styled } from '@mui/material/styles'
 import {
   Box,
-  Paper,
-  Stack,
   Button,
   Grid,
-  LinearProgress,
   Typography,
   Card,
   CardActions,
@@ -18,26 +14,11 @@ import {
 
 import SectionHeader from '../../components/common/SectionHeader'
 import { ENDPOINT } from '../../constants'
-import axios from 'axios'
 import CoursesTable from '../../components/course/CoursesTable'
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}))
+import LearningJourneysTable from '../../components/learningJourney/LearningJourneysTable'
 
 const StaffHomePage = () => {
-  const [learningJourneyList, setlearningJourneyList] = useState([])
   const [roleList, setRoleList] = useState([])
-
-  const getLJData = async (id) => {
-    const response = await axios.get(`${ENDPOINT}/learning_journeys/130001`)
-    const data = response.data.data
-    setlearningJourneyList(data)
-  }
 
   const getRoleData = async () => {
     const response = await axios.get(`${ENDPOINT}/roles`)
@@ -46,109 +27,20 @@ const StaffHomePage = () => {
   }
 
   useEffect(() => {
-    getLJData(1)
     getRoleData()
   }, [])
 
   return (
     <Box sx={{ margin: 'auto' }}>
-      <Typography
-        variant="h3"
-        noWrap
-        component="a"
-        sx={{
-          mr: 2,
-          my: 3,
-          display: { xs: 'none', md: 'flex' },
-          fontFamily: 'monospace',
-          fontWeight: 700,
-          letterSpacing: '.3rem',
-          color: 'inherit',
-          textDecoration: 'none',
-        }}
-      />
-      <Box
-        sx={{
-          marginBottom: '10vh',
-          justifyContent: 'center',
-          width: '50%',
-          margin: 'auto',
-        }}
-      >
-        <Typography variant="h4" component="div" gutterBottom>
-          Learning Journey
-        </Typography>
-        <Stack spacing={2}>
-          {learningJourneyList?.length > 0 ? (
-            learningJourneyList.slice(0, 2).map((item) => (
-              <Item
-                key={item?.learning_journey_id}
-                component={Link}
-                to={`learning-journey/${item.learning_journey_id}`}
-                sx={{ textDecoration: 'none' }}
-              >
-                <Grid container spacing={4}>
-                  <Grid item xs={12} md={10}>
-                    <Typography variant="h5" component="div">
-                      {item.learning_journey_name}
-                    </Typography>
-                    <Typography variant="body1" component="div">
-                      {item.role_id}
-                    </Typography>
-                    <Typography variant="body1" component="div">
-                      {item.status}
-                    </Typography>
-                    {/* <Box sx={{ display: 'flex', alignItems: 'center', marginTop: '1rem', justifyContent: 'center' }}>
-                  <Box sx={{ width: '80%', mr: 1 }}>
-                    {
-                      item.progress == 100 ?
-                      <LinearProgress variant="determinate" value={item.progress} color="success"/> :
-                      <LinearProgress variant="determinate" value={item.progress} />
-                    }
-                  </Box>
-                  <Box sx={{ minWidth: 35 }}>
-                    <Typography variant="body2" color="text.secondary">{`${item.progress}%`}</Typography>
-                  </Box>
-                </Box> */}
-                  </Grid>
-                  <Grid item xs={12} md={2}>
-                    <CardMedia
-                      component="img"
-                      alt="green iguana"
-                      // object-fit
-                      image={item.bannerImg}
-                    />
-                  </Grid>
-                </Grid>
-              </Item>
-            ))
-          ) : (
-            <Typography variant="h5" component="div" gutterBottom>
-              No learning journey created.
-            </Typography>
-          )}
-        </Stack>
-        <Grid
-          container
-          spacing={0}
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
-          style={{ height: '10vh' }}
-        >
-          <Grid item xs={3}>
-            <Button variant="outlined" component={Link} to="learning-journey/">
-              View All
-            </Button>
-          </Grid>
-        </Grid>
+      <Box my={5}>
+        <LearningJourneysTable staffId={130001} />
       </Box>
 
-      <Box>
+      <Box my={5}>
         <CoursesTable numRows={3} />
       </Box>
 
-      <Box sx={{ marginBottom: '10vh', width: '50%', margin: 'auto' }}>
+      <Box my={5} sx={{ marginBottom: '10vh', width: '50%', margin: 'auto' }}>
         <SectionHeader header="Roles" />
         <Grid container spacing={4}>
           {roleList?.length > 0 ? (

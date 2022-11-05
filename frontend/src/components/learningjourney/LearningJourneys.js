@@ -7,7 +7,7 @@ const LearningJourneys = () => {
   return (
     <Box>
       <Box sx={{ my: 5 }}>
-        <LearningJourneysTable />
+        <LearningJourneysTable staffId={130001} numRows={-1} />
       </Box>
     </Box>
   )
