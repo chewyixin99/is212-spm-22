@@ -17,7 +17,8 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  CircularProgress
 } from '@mui/material'
 
 import { Link } from 'react-router-dom'
@@ -71,6 +72,9 @@ function NewLearningJourney({ numRows }) {
   const [selectedCourses, setSelectedCourses] = React.useState({});
   const [isCourseSelected, setIsCourseSelected] = React.useState(false);
   const [selectedCourseIds, setSelectedCourseIds] = React.useState([]);
+
+  const [duplicateRoles, setDuplicateRoles] = React.useState(false);
+  const [submissionLoading, setSubmissionLoading] = React.useState(false);
   // select courses by skill start ----------------------------
 
   // collate all selected courses by skill
@@ -186,13 +190,12 @@ function NewLearningJourney({ numRows }) {
       // submit learning journey
       submitLearningJourney();
     }
-    // else if (activeStep === 1) {
-
-    //   alert("Please select at least one skill and course.");
-    // }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
+    
+
+
+
   };
 
   const handleBack = () => {
@@ -240,7 +243,7 @@ function NewLearningJourney({ numRows }) {
 
   const submitLearningJourney = async () => {
     // submit learning journey
-
+    setSubmissionLoading(true);
     const course_names = Object.values(selectedCourses).flat();
     
     const body = {
@@ -259,7 +262,11 @@ function NewLearningJourney({ numRows }) {
       } 
     })
     .then((response) => {
+      setSubmissionLoading(false);
       console.log(response);
+      if (response.data.code == 400){
+        setDuplicateRoles(true);
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -328,9 +335,15 @@ function NewLearningJourney({ numRows }) {
       {activeStep === steps.length ? (
         <React.Fragment>
           <Box sx={{ height: '50vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Typography variant='h6' sx={{ mt: 2, mb: 1}}>
-              You have successfully created {learningJourneyName !== "" ? learningJourneyName : "a new Learning Journey"}!
-            </Typography>
+            {submissionLoading ? <CircularProgress color="success" /> : 
+              (!duplicateRoles? (<Typography variant='h6' sx={{ mt: 2, mb: 1, color: 'green'}}>
+                You have successfully created {learningJourneyName !== "" ? learningJourneyName : "a new Learning Journey"}!
+              </Typography>) : (
+                <Typography variant='h6' sx={{ mt: 2, mb: 1, color: 'red'}}>
+                You have already created a Learning Journey with {selectedRoleName}!
+              </Typography>
+              ))
+          }
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Box sx={{ flex: '1 1 auto' }} />
