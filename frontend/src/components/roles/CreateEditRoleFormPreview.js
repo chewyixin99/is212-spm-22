@@ -94,7 +94,7 @@ const CreateEditRoleFormPreview = ({
               handleBackClick={handleBack}
               handleNextClick={handleSubmit}
               isLoading={isSubmitting}
-              nextButtonLabel="Complete"
+              nextButtonLabel="Submit"
             />
           </Box>
         </Grid>
