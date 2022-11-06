@@ -25,7 +25,7 @@ export default function CreateEditRoleStepper({
     roleName: '',
     roleDesc: '',
     roleDept: '',
-    roleStatus: '',
+    roleStatus: 'Active',
     skills: [],
   })
   const navigate = useNavigate()
