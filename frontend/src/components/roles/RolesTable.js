@@ -43,7 +43,7 @@ function RolesTable({ numRows, role }) {
   const sectionButtonRenderer = () => {
     if (role === ROLES.STAFF) {
       if (numRows === -1) {
-        return <Box></Box>
+        return <Box />
       } else {
         return (
           <Box sx={{ display: 'flex' }}>

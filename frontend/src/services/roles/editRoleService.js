@@ -15,7 +15,7 @@ const editRoleService = async ({
     status: roleStatus,
     skills,
   })
-  console.log('---> editRoleService, props: ', requestBody)
+  // console.log('---> editRoleService, props: ', requestBody)
 
   const result = {
     data: null,

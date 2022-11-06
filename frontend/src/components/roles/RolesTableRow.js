@@ -97,7 +97,7 @@ const RolesTableRow = ({ userRole, roleInfo, reloadData }) => {
       <TableCell align="right">
         <ActionMenu variant="kebab" menuItemConfigs={actionMenuConfigs} />
       </TableCell>
-      {renderConfirmationDialog()}
+      {removeRoleDialogState.isOpen && renderConfirmationDialog()}
     </TableRow>
   )
 }

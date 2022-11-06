@@ -129,7 +129,7 @@ const SkillsTableRow = ({ skillInfo, reloadData }) => {
           }
         />
       </TableCell>
-      {renderRemoveSkillDialog()}
+      {removeSkillDialogState.isOpen && renderRemoveSkillDialog()}
     </TableRow>
   )
 }

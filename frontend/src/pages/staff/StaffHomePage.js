@@ -1,8 +1,9 @@
+import React from 'react'
 import { Box } from '@mui/material'
 
+import { useOutletContext } from 'react-router-dom'
 import CoursesTable from '../../components/course/CoursesTable'
 import LearningJourneysTable from '../../components/learningJourney/LearningJourneysTable'
-import { useOutletContext } from 'react-router-dom'
 import RolesTable from '../../components/roles/RolesTable'
 
 const StaffHomePage = () => {

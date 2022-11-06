@@ -153,7 +153,7 @@ function Navbar({ role }) {
                   </Typography>
                 </MenuItem>
               ) : (
-                <></>
+                <Box />
               )}
 
               <MenuItem onClick={handleCloseNavMenu}>
@@ -183,7 +183,7 @@ function Navbar({ role }) {
                   </Typography>
                 </MenuItem>
               ) : (
-                <></>
+                <Box />
               )}
 
               {role.toLowerCase() == 'staff' ? (
@@ -200,7 +200,7 @@ function Navbar({ role }) {
                   </Typography>
                 </MenuItem>
               ) : (
-                <></>
+                <Box />
               )}
 
               {role.toLowerCase() == 'staff' ? (
@@ -217,7 +217,7 @@ function Navbar({ role }) {
                   </Typography>
                 </MenuItem>
               ) : (
-                <></>
+                <Box />
               )}
             </Menu>
           </Box>
@@ -282,7 +282,7 @@ function Navbar({ role }) {
                 Skills
               </Button>
             ) : (
-              <></>
+              <Box />
             )}
 
             <Button
@@ -308,7 +308,7 @@ function Navbar({ role }) {
                 Learning Journey
               </Button>
             ) : (
-              <></>
+              <Box />
             )}
 
             {role.toLowerCase() == 'staff' ? (
@@ -325,7 +325,7 @@ function Navbar({ role }) {
                 My completed
               </Button>
             ) : (
-              <></>
+              <Box />
             )}
 
             <Menu
