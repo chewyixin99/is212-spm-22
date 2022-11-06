@@ -20,6 +20,7 @@ import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useRolesLoader from '../../services/roles/useRolesLoader'
 import { ROLES } from '../../constants'
+import { toRenderTableRows } from '../componentsLib'
 
 function RolesTable({ numRows, role }) {
   const [roleData, isLoading, total, error, reloadData] = useRolesLoader(
@@ -41,7 +42,19 @@ function RolesTable({ numRows, role }) {
 
   const sectionButtonRenderer = () => {
     if (role === ROLES.STAFF) {
-      return <Box />
+      if (numRows === -1) {
+        return <Box></Box>
+      } else {
+        return (
+          <Box sx={{ display: 'flex' }}>
+            <Box mx={1}>
+              <Button variant="outlined" component={Link} to="roles">
+                View All Roles
+              </Button>
+            </Box>
+          </Box>
+        )
+      }
     }
 
     return numRows === -1 ? (
@@ -83,7 +96,7 @@ function RolesTable({ numRows, role }) {
   }
 
   const renderTableRows = () => {
-    if (!isEmpty && !isLoading && !error && roleData) {
+    if (toRenderTableRows(isEmpty, isLoading, error) && roleData) {
       return (
         <>
           {roleData.map((roleInfo, index) => (

@@ -35,7 +35,6 @@ const LearningJourneysTableRow = ({ learningJourneyInfo, reloadData }) => {
       itemName: 'Edit',
       itemAction: () => {
         naviate(`${learningJourneyInfo?.learning_journey_id}/edit`)
-        console.log('--->LearningJourneysTableRow, edit')
       },
     },
     {
@@ -50,7 +49,6 @@ const LearningJourneysTableRow = ({ learningJourneyInfo, reloadData }) => {
     setIsLoading(true)
     deleteLearningJourneyService(learningJourneyInfo?.learning_journey_id)
       .then((response) => {
-        console.log(response)
         if (response?.data) {
           enqueueSnackbar('Learning journey successfully deleted.', {
             variant: 'success',

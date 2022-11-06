@@ -3,9 +3,9 @@ import propTypes from 'prop-types'
 
 import { TableCell, TableRow } from '@mui/material'
 
-import { STATUS } from '../../constants'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import ActionMenu from '../common/ActionMenu'
+import { getTextColor } from '../componentsLib'
 
 const CoursesTableRow = ({ courseInfo }) => {
   const navigate = useNavigate()
@@ -27,15 +27,7 @@ const CoursesTableRow = ({ courseInfo }) => {
     },
   ]
 
-  let textColor
-  if (course_status === STATUS.RETIRED) {
-    textColor = 'red'
-  } else if (course_status === STATUS.PENDING) {
-    textColor = 'orange'
-  } else {
-    textColor = 'green'
-  }
-
+  const textColor = getTextColor(course_status)
   return (
     <TableRow>
       <TableCell>{course_id}</TableCell>

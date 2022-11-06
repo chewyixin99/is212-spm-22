@@ -29,12 +29,10 @@ const useSkillsLoader = (
   }
 
   const loadSkills = () => {
-    // console.log('---> loadSkills()')
     setIsLoading(true)
     fetch(skillsId ? `${ENDPOINT}/skills/${skillsId}` : `${ENDPOINT}/skills`)
       .then((response) => response.json())
       .then((responseJSON) => {
-        console.log('---> useSkillsLoader, responseJSON: ', responseJSON)
         setData(responseJSON)
         setIsLoading(false)
       })

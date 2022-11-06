@@ -22,6 +22,11 @@ import SectionHeader from '../../components/common/SectionHeader'
 import DescriptionRow from '../../components/common/DescriptionRow'
 import BackNextButtons from '../../components/common/BackNextButtons'
 import { STATUS, ENDPOINT } from '../../constants'
+import {
+  isValidSkillDetails,
+  isValidSkillCourses,
+  isValidSkillDesc,
+} from './adminSkillsLib'
 
 function AdminEditSkill() {
   const location = useLocation()
@@ -74,21 +79,15 @@ function AdminEditSkill() {
     setSkillDescError(false)
     setCoursesError(false)
 
-    if (newSkillDesc === '' || newSkillDesc.length > 255) {
+    if (!isValidSkillDesc(newSkillDesc)) {
       setSkillDescError(true)
     }
 
-    if (newCourses === [] || newCourses.length < 1) {
+    if (!isValidSkillCourses(newCourses)) {
       setCoursesError(true)
     }
 
-    if (
-      !(
-        newSkillDesc.length > 255 ||
-        newSkillDesc.length < 1 ||
-        newCourses.length < 1
-      )
-    ) {
+    if (isValidSkillDetails(newSkillDesc, newCourses)) {
       // handle submit
       const requestBody = {
         status: newSkillStatus,

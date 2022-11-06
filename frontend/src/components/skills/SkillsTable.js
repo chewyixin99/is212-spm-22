@@ -22,6 +22,7 @@ import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useSkillsLoader from '../../services/skills/useSkillsLoader'
 import { ROLES } from '../../constants'
+import { toRenderTableRows } from '../componentsLib'
 
 function SkillsTable({ numRows, staffId, completed, header = 'Skills' }) {
   const [skillData, isLoading, total, error, reloadData] = useSkillsLoader(
@@ -92,7 +93,7 @@ function SkillsTable({ numRows, staffId, completed, header = 'Skills' }) {
   }
 
   const renderTableRows = () => {
-    if (!isEmpty && !isLoading && !error && skillData) {
+    if (toRenderTableRows(isEmpty, isLoading, error) && skillData) {
       return (
         <>
           {skillData.map((skillInfo, index) => (

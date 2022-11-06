@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom'
 import { RESPONSE_CODES, ENDPOINT } from '../../constants'
 
 import SectionHeader from '../../components/common/SectionHeader'
 
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Typography from '@mui/material/Typography';
+import Stepper from '@mui/material/Stepper'
+import Step from '@mui/material/Step'
+import StepLabel from '@mui/material/StepLabel'
+import Typography from '@mui/material/Typography'
 
 import {
   Box,
@@ -24,176 +24,165 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
 } from '@mui/material'
 
-import CardHeader from '@mui/material/CardHeader';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Checkbox from '@mui/material/Checkbox';
-import Divider from '@mui/material/Divider';
+import CardHeader from '@mui/material/CardHeader'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import Checkbox from '@mui/material/Checkbox'
+import Divider from '@mui/material/Divider'
 
-import axios from 'axios';
-import CoursesBySkillEdit from '../../components/learningJourney/CoursesBySkillEdit';
+import axios from 'axios'
+import CoursesBySkillEdit from '../../components/learningJourney/CoursesBySkillEdit'
 
 const steps = ['Update Learning Journey', 'Review Learning Journey']
 
 const StaffEditLearningJourney = () => {
   const { id } = useParams()
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
-  const [skillData, setSkillData] = React.useState([]);
-  const [selectedSkill, setSelectedSkill] = React.useState("");
-  const [selectedRoleId, setSelectedRoleId] = React.useState(0);
-  const [selectedRoleName, setSelectedRoleName] = React.useState("N.A.");
+  const [activeStep, setActiveStep] = React.useState(0)
+  const [skipped, setSkipped] = React.useState(new Set())
+  const [skillData, setSkillData] = React.useState([])
+  const [selectedSkill, setSelectedSkill] = React.useState('')
+  const [selectedRoleId, setSelectedRoleId] = React.useState(0)
+  const [selectedRoleName, setSelectedRoleName] = React.useState('N.A.')
 
-  const [learningJourneyName, setLearningJourneyName] = React.useState("");
-  const [learningJourneyId, setLearningJourneyId] = React.useState("");
+  const [learningJourneyName, setLearningJourneyName] = React.useState('')
+  const [learningJourneyId, setLearningJourneyId] = React.useState('')
 
-  const [selectedCourses, setSelectedCourses] = React.useState({});
-  const [selectedEditCourses, setSelectedEditCourses] = React.useState({});
+  const [selectedCourses, setSelectedCourses] = React.useState({})
+  const [selectedEditCourses, setSelectedEditCourses] = React.useState({})
 
-  const [isCourseSelected, setIsCourseSelected] = React.useState(false);
-  
-  const [selectedCourseIds, setSelectedCourseIds] = React.useState([]);
+  const [isCourseSelected, setIsCourseSelected] = React.useState(false)
 
-  const [isLoaded, setIsLoaded] = React.useState(false);
+  const [selectedCourseIds, setSelectedCourseIds] = React.useState([])
 
-  const [isCoursesEmpty, setIsCoursesEmpty] = React.useState(false);
+  const [isLoaded, setIsLoaded] = React.useState(false)
+
+  const [isCoursesEmpty, setIsCoursesEmpty] = React.useState(false)
 
   const isStepOptional = (step) => {
-    return false;
-  };
+    return false
+  }
 
   const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
+    return skipped.has(step)
+  }
 
   const handleNext = () => {
-    let newSkipped = skipped;
+    let newSkipped = skipped
     if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
+      newSkipped = new Set(newSkipped.values())
+      newSkipped.delete(activeStep)
     }
     if (activeStep === steps.length - 1) {
       // submit learning journey
-      const course_names = Object.values(selectedEditCourses).flat();
+      const course_names = Object.values(selectedEditCourses).flat()
       if (course_names.length === 0) {
-        alert("Please select at least one course");
+        alert('Please select at least one course')
       } else {
-        editLearningJourney();
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        setSkipped(newSkipped);
+        editLearningJourney()
+        setActiveStep((prevActiveStep) => prevActiveStep + 1)
+        setSkipped(newSkipped)
       }
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1)
+      setSkipped(newSkipped)
     }
-    else {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      setSkipped(newSkipped);
-    }
-
-
-  };
+  }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
 
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
       // You probably want to guard against something like this,
       // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
+      throw new Error("You can't skip a step that isn't optional.")
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
     setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
+      const newSkipped = new Set(prevSkipped.values())
+      newSkipped.add(activeStep)
+      return newSkipped
+    })
+  }
 
   const navigate = useNavigate()
 
   const handleRedirect = () => {
     navigate('/staff/learning-journey')
-  };
+  }
 
   const handleAddCourses = (coursesArr, name) => {
-
-    setSelectedEditCourses(selectedCourses => ({
+    setSelectedEditCourses((selectedCourses) => ({
       ...selectedCourses,
-      [name]: coursesArr
-    }));
-
-    console.log(selectedEditCourses);
+      [name]: coursesArr,
+    }))
   }
 
   const filterNewOld = (new_names) => {
+    const add = new_names
+      .filter((course) => {
+        return !selectedCourses.includes(course)
+      })
+      .map((course) => {
+        return course
+      })
 
-    const add = new_names.filter((course) => {
-      return !selectedCourses.includes(course)}
-    ).map((course) => {
-      return course
-    })
-
-    const remove = selectedCourses.filter((course) => {
-      return !new_names.includes(course)}
-    ).map((course) => {
-      return course
-    })
+    const remove = selectedCourses
+      .filter((course) => {
+        return !new_names.includes(course)
+      })
+      .map((course) => {
+        return course
+      })
 
     return [add, remove]
   }
 
   const convertNameToIds = (course_names) => {
-    return axios.get(`${ENDPOINT}/courses`)
-    .then((response) => {
-        
-        return response.data.data.courses.filter((course) => { 
+    return axios.get(`${ENDPOINT}/courses`).then((response) => {
+      return response.data.data.courses
+        .filter((course) => {
           return course_names.includes(course.course_name)
-
-        }).map((course) => {
+        })
+        .map((course) => {
           return course.course_id
         })
 
-        // setSelectedCourseIds(test);
-      
+      // setSelectedCourseIds(test);
     })
   }
 
   const editLearningJourney = async () => {
     // submit learning journey
 
-    const course_names = Object.values(selectedEditCourses).flat();
+    const course_names = Object.values(selectedEditCourses).flat()
     const add = filterNewOld(course_names)[0]
     const remove = filterNewOld(course_names)[1]
     const body = {
-        learning_journey_name: learningJourneyName,
-        add: await convertNameToIds(add),
-        remove: await convertNameToIds(remove)
+      learning_journey_name: learningJourneyName,
+      add: await convertNameToIds(add),
+      remove: await convertNameToIds(remove),
     }
-    console.log(body);
-
 
     axios
-    .put(`${ENDPOINT}/learning_journeys/${learningJourneyId}/update`, body,
-    {
-      headers: {
-         'Content-Type': 'application/json'
-      } 
-    })
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    }
-    );
-
-
+      .put(`${ENDPOINT}/learning_journeys/${learningJourneyId}/update`, body, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => {
+        console.log(response)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   // stepper form functions end ------------------------
@@ -201,112 +190,123 @@ const StaffEditLearningJourney = () => {
   // select skill functions start ------------------------
 
   const handleSkillChange = (event) => {
-    console.log(event.target.value);
-    setSelectedSkill(event.target.value);
-  };
+    console.log(event.target.value)
+    setSelectedSkill(event.target.value)
+  }
   // select skill functions start ------------------------
 
   const handleDeleteCourses = () => {
     let flag = false
 
-    Object.keys(selectedEditCourses).forEach((function (k) {
+    Object.keys(selectedEditCourses).forEach(function (k) {
       if (selectedEditCourses[k].length > 0) {
         flag = true
       }
-    }
-    ))
+    })
 
     if (flag) {
-      setIsCourseSelected(true);
-    }
-    else {
-      setIsCourseSelected(false);
+      setIsCourseSelected(true)
+    } else {
+      setIsCourseSelected(false)
     }
   }
 
   const getData = async (id) => {
-    console.log(id);
+    console.log(id)
     await fetch(`${ENDPOINT}/learning_journeys/${id}`)
-    .then((results) => results.json())
-    .then((data) => {
-      console.log(data.data);
-      setLearningJourneyName(data.data.learning_journey.learning_journey_name);
-      setLearningJourneyId(data.data.learning_journey.learning_journey_id);
-      setSelectedCourseIds(data.data.courses.map((course) => {
-        return course.course_id
-        }));
-      setSelectedCourses(data.data.courses.map((course) => {
-        return course.course_name
-        }));
-      setIsLoaded(true);
-      return data.data.learning_journey.role_id
-    })
-    .then(async(role_id) => {
-      console.log(role_id);
-      await fetch(`${ENDPOINT}/roles/${role_id}/skills`)
       .then((results) => results.json())
       .then((data) => {
-        // console.log(data.data);
-        setSkillData(data.data.skills)
+        console.log(data.data)
+        setLearningJourneyName(data.data.learning_journey.learning_journey_name)
+        setLearningJourneyId(data.data.learning_journey.learning_journey_id)
+        setSelectedCourseIds(
+          data.data.courses.map((course) => {
+            return course.course_id
+          })
+        )
+        setSelectedCourses(
+          data.data.courses.map((course) => {
+            return course.course_name
+          })
+        )
+        setIsLoaded(true)
+        return data.data.learning_journey.role_id
       })
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+      .then(async (role_id) => {
+        console.log(role_id)
+        await fetch(`${ENDPOINT}/roles/${role_id}/skills`)
+          .then((results) => results.json())
+          .then((data) => {
+            // console.log(data.data);
+            setSkillData(data.data.skills)
+          })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
-    // if (id != 0 || name != "N.A.") {
-    //   axios.get(`${ENDPOINT}/roles/${id}/skills`)
-    //     .then(res => {
-    //       console.log(res.data.data);
-    //       setSkillData(res.data.data.skills)
-    //       setSelectedCourses({});
-    //     })
-    //     .catch(err => {
-    //       console.log(err)
-    //     })
-    // }
-  
-
+  // if (id != 0 || name != "N.A.") {
+  //   axios.get(`${ENDPOINT}/roles/${id}/skills`)
+  //     .then(res => {
+  //       console.log(res.data.data);
+  //       setSkillData(res.data.data.skills)
+  //       setSelectedCourses({});
+  //     })
+  //     .catch(err => {
+  //       console.log(err)
+  //     })
+  // }
 
   useEffect(() => {
-    getData(id);
-    handleDeleteCourses();
-  }, [isLoaded]);
+    getData(id)
+    handleDeleteCourses()
+  }, [isLoaded])
 
   return (
     <Box sx={{ width: '50%', margin: 'auto', padding: '40px 0' }}>
       <h1>New Learning Journey</h1>
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
-          const stepProps = {};
-          const labelProps = {};
+          const stepProps = {}
+          const labelProps = {}
           if (isStepOptional(index)) {
             labelProps.optional = (
               <Typography variant="caption">Optional</Typography>
-            );
+            )
           }
           if (isStepSkipped(index)) {
-            stepProps.completed = false;
+            stepProps.completed = false
           }
           return (
             <Step key={label} {...stepProps}>
               <StepLabel {...labelProps}>{label}</StepLabel>
             </Step>
-          );
+          )
         })}
       </Stepper>
       {activeStep === steps.length ? (
         <React.Fragment>
-          <Box sx={{ height: '50vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Typography variant='h6' sx={{ mt: 2, mb: 1}}>
-              You have successfully updated {learningJourneyName !== "" ? learningJourneyName : "a new Learning Journey"}!
+          <Box
+            sx={{
+              height: '50vh',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+              You have successfully updated{' '}
+              {learningJourneyName !== ''
+                ? learningJourneyName
+                : 'a new Learning Journey'}
+              !
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleRedirect}>Redirect</Button>
-            </Box>
+            <Box sx={{ flex: '1 1 auto' }} />
+            <Button onClick={handleRedirect}>Redirect</Button>
+          </Box>
         </React.Fragment>
       ) : (
         <React.Fragment>
@@ -330,28 +330,34 @@ const StaffEditLearningJourney = () => {
                               name="learningJourneyName"
                               fullWidth
                               variant="standard"
-                              onChange={e => setLearningJourneyName(e.target.value)}
+                              onChange={(e) =>
+                                setLearningJourneyName(e.target.value)
+                              }
                               value={learningJourneyName}
                             />
                           </Grid>
-
                         </Grid>
                       </React.Fragment>
                       <React.Fragment>
-                        <Typography variant="subtitle1" sx={{ fontSize: '1rem' }}>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{ fontSize: '1rem' }}
+                        >
                           Minimum 1 course selected.
                         </Typography>
                         {skillData?.map((item) => {
-                          return (<CoursesBySkillEdit
-                            item={item}
-                            key={item.skill_id}
-                            handleAddCourses={handleAddCourses}
-                            selectedCourses={selectedCourses}
-                          />)
+                          return (
+                            <CoursesBySkillEdit
+                              item={item}
+                              key={item.skill_id}
+                              handleAddCourses={handleAddCourses}
+                              selectedCourses={selectedCourses}
+                            />
+                          )
                         })}
                       </React.Fragment>
                     </Box>
-                  );
+                  )
 
                 // step 2 represents the learning journey summary before submission
                 case 1:
@@ -361,30 +367,34 @@ const StaffEditLearningJourney = () => {
                         <Typography variant="h6" gutterBottom>
                           Learning Journey Summary
                         </Typography>
-                        <ListItem sx={{ py: 1, px: 0 }} >
-                          <ListItemText primary='Learning Journey Name' />
-                          <Typography variant="body2">{learningJourneyName}</Typography>
+                        <ListItem sx={{ py: 1, px: 0 }}>
+                          <ListItemText primary="Learning Journey Name" />
+                          <Typography variant="body2">
+                            {learningJourneyName}
+                          </Typography>
                         </ListItem>
-                        <ListItem sx={{ py: 1, px: 0 }} >
-                          <ListItemText primary='Role' />
-                          <Typography variant="body2">{selectedRoleName}</Typography>
+                        <ListItem sx={{ py: 1, px: 0 }}>
+                          <ListItemText primary="Role" />
+                          <Typography variant="body2">
+                            {selectedRoleName}
+                          </Typography>
                         </ListItem>
 
-
-                        {
-                          Object.keys(selectedEditCourses).map(k => (
-                            <ListItem sx={{ py: 1, px: 0 }} key={k}>
-                              <ListItemText primary={k} />
-                              <Typography variant="body2">{selectedEditCourses[k].length > 1 ? selectedEditCourses[k].join(', ') : selectedEditCourses[k]}</Typography>
-
-                            </ListItem>
-                          ))
-                        }
+                        {Object.keys(selectedEditCourses).map((k) => (
+                          <ListItem sx={{ py: 1, px: 0 }} key={k}>
+                            <ListItemText primary={k} />
+                            <Typography variant="body2">
+                              {selectedEditCourses[k].length > 1
+                                ? selectedEditCourses[k].join(', ')
+                                : selectedEditCourses[k]}
+                            </Typography>
+                          </ListItem>
+                        ))}
                       </React.Fragment>
                     </Box>
-                  );
+                  )
                 default:
-                  return <h1>Error - Page do not exist!</h1>;
+                  return <h1>Error - Page do not exist!</h1>
               }
             })()}
           </Box>
@@ -406,19 +416,13 @@ const StaffEditLearningJourney = () => {
               </Button>
             )}
 
-            <Button onClick={handleNext}
-            >
-
+            <Button onClick={handleNext}>
               {activeStep === steps.length - 1 ? 'Confirm' : 'Next'}
-
             </Button>
           </Box>
           {/* Stepper form control buttons end ---------------- */}
         </React.Fragment>
-      )
-
-      }
-
+      )}
     </Box>
   )
 }

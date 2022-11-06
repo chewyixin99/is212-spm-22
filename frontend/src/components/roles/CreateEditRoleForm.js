@@ -188,10 +188,8 @@ const CreateEditRoleForm = ({
           initialValues={{ ...roleFormContext.roleFormValues }}
           validationSchema={CreateEditRoleFormSchema}
           onSubmit={(values) => {
-            console.log('handleNext: ', roleFormContext.roleFormValues)
             roleFormContext.setRoleFormValues(values)
             handleNext()
-            console.log(roleFormContext)
           }}
         >
           {({ values, errors, touched, handleChange, handleSubmit }) => (

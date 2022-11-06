@@ -6,9 +6,10 @@ import { useSnackbar } from 'notistack'
 import { TableCell, TableRow } from '@mui/material'
 
 import ActionMenu from '../common/ActionMenu'
-import { STATUS, ENDPOINT, ROLES } from '../../constants'
+import { ENDPOINT, ROLES } from '../../constants'
 import ConfirmationDialog from '../common/ConfirmationDialog'
 import useDialogState from '../../services/common/useDialogState'
+import { getTextColor } from '../componentsLib'
 
 const SkillsTableRow = ({ skillInfo, reloadData }) => {
   const navigate = useNavigate()
@@ -60,14 +61,7 @@ const SkillsTableRow = ({ skillInfo, reloadData }) => {
     },
   ]
 
-  let textColor
-  if (skillInfo.status === STATUS.RETIRED) {
-    textColor = 'red'
-  } else if (skillInfo.status === STATUS.PENDING) {
-    textColor = 'orange'
-  } else {
-    textColor = 'green'
-  }
+  const textColor = getTextColor(skillInfo.status)
 
   const removeSkill = () => {
     setIsLoading(true)
@@ -81,10 +75,8 @@ const SkillsTableRow = ({ skillInfo, reloadData }) => {
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((responseJSON) => {
-        console.log(responseJSON)
         const message = responseJSON?.message
         if (responseJSON.code > 399) {
-          console.log(responseJSON.message)
           enqueueSnackbar(
             message || 'Unable to delete skill. Please try again.',
             { variant: 'error' }

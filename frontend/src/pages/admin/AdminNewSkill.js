@@ -21,6 +21,11 @@ import SectionHeader from '../../components/common/SectionHeader'
 import BackNextButtons from '../../components/common/BackNextButtons'
 import { STATUS, ENDPOINT } from '../../constants'
 import SnackbarAlert from '../../components/common/SnackbarAlert'
+import isValidSkillDetails, {
+  isValidSkillCourses,
+  isValidSkillDesc,
+  isValidSkillName,
+} from './adminSkillsLib'
 
 function AdminNewSkill() {
   // error handling already built in TextField
@@ -56,12 +61,9 @@ function AdminNewSkill() {
 
   useEffect(() => {
     if (
-      !(
-        alertSeverity === 'error' ||
-        formValues.skillName.length > 50 ||
-        formValues.skillDesc.length > 255 ||
-        courses.length < 1
-      )
+      alertSeverity !== 'error' &&
+      isValidSkillName(formValues.skillName) &&
+      isValidSkillDetails(formValues.skillDesc, courses)
     ) {
       navigate('/admin/newskill/preview', {
         state: {
@@ -130,17 +132,21 @@ function AdminNewSkill() {
     setIsLoading(true)
 
     // check if skill is already present
-    checkSkillName()
+    if (isValidSkillName(formValues.skillName)) {
+      checkSkillName()
+    } else {
+      setIsLoading(false)
+    }
 
-    if (formValues.skillName == '' || formValues.skillName.length > 50) {
+    if (!isValidSkillName(formValues.skillName)) {
       setSkillNameError(true)
     }
 
-    if (formValues.skillDesc == '' || formValues.skillDesc.length > 255) {
+    if (!isValidSkillDesc(formValues.skillDesc)) {
       setSkillDescError(true)
     }
 
-    if (courses.length < 1) {
+    if (!isValidSkillCourses(courses)) {
       setCoursesError(true)
     }
   }

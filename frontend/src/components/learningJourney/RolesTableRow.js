@@ -3,34 +3,25 @@ import propTypes from 'prop-types'
 
 import { TableCell, TableRow, Button } from '@mui/material'
 
-import { STATUS } from '../../constants'
+import { getTextColor } from '../componentsLib'
 
 const RolesTableRow = (props) => {
-
   const roleInfo = props.roleInfo
-  const textColor =
-    roleInfo.status == STATUS.RETIRED
-      ? 'red'
-      : roleInfo.status == STATUS.PENDING
-        ? 'orange'
-        : 'green'
+  const textColor = getTextColor(roleInfo.status)
 
   const renderButton = (id, name) => {
-
     if (props.selectedRoleId === id) {
-      return (
-        <Button variant='contained'>Selected</Button>
-      )
+      return <Button variant="contained">Selected</Button>
     } else {
       return (
-        <Button variant='outlined' onClick={event => props.getData(id, name)}>Select</Button>
+        <Button variant="outlined" onClick={(event) => props.getData(id, name)}>
+          Select
+        </Button>
       )
     }
   }
 
-  useState(() => {
-    console.log('selectedid', props.selectedRoleId);
-  }, [props.selectedRoleId])
+  useState(() => {}, [props.selectedRoleId])
 
   return (
     <TableRow>
@@ -41,7 +32,6 @@ const RolesTableRow = (props) => {
         {renderButton(roleInfo?.role_id, roleInfo?.role_name)}
       </TableCell>
     </TableRow>
-
   )
 }
 

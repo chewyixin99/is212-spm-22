@@ -20,6 +20,7 @@ import useAllLearningJourneysLoader from '../../services/learningJourneys/useAll
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import useStaffLearningJourneyLoader from '../../services/learningJourneys/useStaffLearningJourneyLoader'
+import { toRenderTableRows } from '../componentsLib'
 
 const LearningJourneysTable = ({ staffId, numRows }) => {
   // eslint-disable-next-line
@@ -85,10 +86,6 @@ const LearningJourneysTable = ({ staffId, numRows }) => {
   }
 
   const renderTableStatuses = () => {
-    console.log('---> isLoading: ', isLoading)
-    console.log('---> error: ', error)
-    console.log('---> isEmpty: ', isEmpty)
-
     if (isLoading) {
       return <TableRowLoadingStatus cols={4} />
     } else if (!isLoading && !error && isEmpty) {
@@ -104,7 +101,7 @@ const LearningJourneysTable = ({ staffId, numRows }) => {
   }
 
   const renderTableRows = () => {
-    if (!isEmpty && !isLoading && !error && learningJourneyData) {
+    if (toRenderTableRows(isEmpty, isLoading, error) && learningJourneyData) {
       return (
         <>
           {learningJourneyData.map((learningJourneyInfo, index) => (

@@ -4,10 +4,7 @@ import propTypes from 'prop-types'
 import { Box, Typography } from '@mui/material'
 import { useOutletContext } from 'react-router-dom'
 
-import { ROLES } from '../../constants'
-
 const SectionHeader = ({ header, subHeader, sectionButtonComponent }) => {
-  const { role } = useOutletContext()
 
   const renderHeader = () => (
     <Typography variant="h4" gutterBottom>

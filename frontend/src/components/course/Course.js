@@ -108,7 +108,7 @@ function Course() {
         </Typography>
         <Stack spacing={4} sx={{ marginTop: '5vh', marginBottom: '10vh ' }}>
           {renderAlertMessage(course.course_status)}
-          {renderCourseSkills(courseSkills)}
+          {renderCourseSkills()}
           <DescriptionRow title="Course ID" value={course.course_id} />
           <DescriptionRow title="Course type" value={course.course_type} />
           <DescriptionRow

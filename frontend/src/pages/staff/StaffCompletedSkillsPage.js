@@ -1,7 +1,9 @@
 import { Box } from '@mui/material'
+import { useOutletContext } from 'react-router-dom'
 import SkillsTable from '../../components/skills/SkillsTable'
 
 function StaffCompletedSkillsPage() {
+  const { staffId } = useOutletContext()
   return (
     <Box>
       <Box sx={{ my: 5 }}>
@@ -9,7 +11,7 @@ function StaffCompletedSkillsPage() {
         <SkillsTable
           numRows={-1}
           completed={true}
-          staffId={130001}
+          staffId={staffId}
           header="My completed skills"
         />
       </Box>

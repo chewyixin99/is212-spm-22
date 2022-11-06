@@ -20,6 +20,7 @@ import CoursesTableRow from './CoursesTableRow'
 import TableRowEmptyStatus from '../common/TableRowEmptyStatus'
 import TableRowLoadingStatus from '../common/TableRowLoadingStatus'
 import useCoursesLoader from '../../services/courses/useCoursesLoader'
+import { toRenderTableRows } from '../componentsLib'
 
 function CoursesTable({ numRows, staffId, completed, header = 'Courses' }) {
   const [coursesData, isLoading, total, error] = useCoursesLoader(
@@ -71,7 +72,7 @@ function CoursesTable({ numRows, staffId, completed, header = 'Courses' }) {
   }
 
   const renderTableRows = () => {
-    if (!isEmpty && !isLoading && !error && coursesData) {
+    if (toRenderTableRows(isEmpty, isLoading, error) && coursesData) {
       return (
         <>
           {coursesData.map((courseInfo, index) => (

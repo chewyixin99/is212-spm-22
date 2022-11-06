@@ -10,7 +10,7 @@ const StaffRolesPage = () => {
   return (
     <Box>
       <Box sx={{ my: 5 }}>
-        <RolesTable role={role} />
+        <RolesTable role={role} numRows={-1} />
       </Box>
     </Box>
   )

@@ -3,7 +3,9 @@ import { Outlet } from 'react-router-dom'
 import { ROLES } from '../../constants'
 
 function ManagerOutlet() {
-  return <Outlet context={{ role: ROLES.MANAGER }} />
+  const role = JSON.parse(localStorage.getItem('role'))
+  const staffId = JSON.parse(localStorage.getItem('staffId'))
+  return <Outlet context={{ role: role, staffId: staffId }} />
 }
 
 export default ManagerOutlet
