@@ -198,7 +198,7 @@ function NewLearningJourney({ numRows }) {
     }
     else if (activeStep === 1) {
       // submit learning journey
-      if (Object.keys(selectedCourses).length === 0) {
+      if (!isCourseSelected) {
         alert("Please select at least one course.");
         return;
       }
@@ -212,12 +212,8 @@ function NewLearningJourney({ numRows }) {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
       setSkipped(newSkipped);
     }
-
-    
-
-
-
-  };
+  }
+  
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -496,14 +492,6 @@ function NewLearningJourney({ numRows }) {
 
           {/* Stepper form control buttons start ------------------ */}
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
             <Box sx={{ flex: '1 1 auto' }} />
             {isStepOptional(activeStep) && (
               <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
