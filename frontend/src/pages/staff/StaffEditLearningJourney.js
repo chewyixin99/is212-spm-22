@@ -54,14 +54,12 @@ const StaffEditLearningJourney = () => {
 
   const [selectedCourses, setSelectedCourses] = React.useState({})
   const [selectedEditCourses, setSelectedEditCourses] = React.useState({})
-
-  const [isCourseSelected, setIsCourseSelected] = React.useState(false)
-
   const [selectedCourseIds, setSelectedCourseIds] = React.useState([])
+  const [isCourseSelected, setIsCourseSelected] = React.useState(false)
 
   const [isLoaded, setIsLoaded] = React.useState(false)
 
-  const [isCoursesEmpty, setIsCoursesEmpty] = React.useState(false)
+  const [updateFlag, setUpdateFlag] = React.useState(false)
 
   const isStepOptional = (step) => {
     return false
@@ -77,20 +75,27 @@ const StaffEditLearningJourney = () => {
       newSkipped = new Set(newSkipped.values())
       newSkipped.delete(activeStep)
     }
-    if (activeStep === steps.length - 1) {
-      // submit learning journey
-      const course_names = Object.values(selectedEditCourses).flat()
-      if (course_names.length === 0) {
-        alert('Please select at least one course')
-      } else {
-        editLearningJourney()
+    if (activeStep === 0) {
+      if (learningJourneyName === '') {
+        alert('Please enter a learning journey name.')
+        return
+      } 
+      else if (!isCourseSelected) {
+        alert('Please select at least one course.')
+        return
+      }
+      else {
         setActiveStep((prevActiveStep) => prevActiveStep + 1)
         setSkipped(newSkipped)
       }
-    } else {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1)
-      setSkipped(newSkipped)
     }
+    if (activeStep === 1) {
+      // submit learning journey
+        editLearningJourney()
+        setActiveStep((prevActiveStep) => prevActiveStep + 1)
+        setSkipped(newSkipped)
+    }
+
   }
 
   const handleBack = () => {
@@ -190,12 +195,11 @@ const StaffEditLearningJourney = () => {
   // select skill functions start ------------------------
 
   const handleSkillChange = (event) => {
-    console.log(event.target.value)
     setSelectedSkill(event.target.value)
   }
   // select skill functions start ------------------------
 
-  const handleDeleteCourses = () => {
+  const handleUpdateCourses = () => {
     let flag = false
 
     Object.keys(selectedEditCourses).forEach(function (k) {
@@ -211,12 +215,14 @@ const StaffEditLearningJourney = () => {
     }
   }
 
+  const handleUpdate = () => {
+    setUpdateFlag(!updateFlag)
+  }
+
   const getData = async (id) => {
-    console.log(id)
     await fetch(`${ENDPOINT}/learning_journeys/${id}`)
       .then((results) => results.json())
       .then((data) => {
-        console.log(data.data)
         setLearningJourneyName(data.data.learning_journey.learning_journey_name)
         setLearningJourneyId(data.data.learning_journey.learning_journey_id)
         setSelectedCourseIds(
@@ -233,7 +239,6 @@ const StaffEditLearningJourney = () => {
         return data.data.learning_journey.role_id
       })
       .then(async (role_id) => {
-        console.log(role_id)
         await fetch(`${ENDPOINT}/roles/${role_id}/skills`)
           .then((results) => results.json())
           .then((data) => {
@@ -246,26 +251,18 @@ const StaffEditLearningJourney = () => {
       })
   }
 
-  // if (id != 0 || name != "N.A.") {
-  //   axios.get(`${ENDPOINT}/roles/${id}/skills`)
-  //     .then(res => {
-  //       console.log(res.data.data);
-  //       setSkillData(res.data.data.skills)
-  //       setSelectedCourses({});
-  //     })
-  //     .catch(err => {
-  //       console.log(err)
-  //     })
-  // }
+
+  useEffect(() => {
+    handleUpdateCourses()
+  }, [selectedEditCourses])
 
   useEffect(() => {
     getData(id)
-    handleDeleteCourses()
   }, [isLoaded])
 
   return (
     <Box sx={{ width: '50%', margin: 'auto', padding: '40px 0' }}>
-      <h1>New Learning Journey</h1>
+      <h1>Edit Learning Journey</h1>
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps = {}
@@ -352,6 +349,7 @@ const StaffEditLearningJourney = () => {
                               key={item.skill_id}
                               handleAddCourses={handleAddCourses}
                               selectedCourses={selectedCourses}
+                              handleUpdate={handleUpdate}
                             />
                           )
                         })}
@@ -401,14 +399,14 @@ const StaffEditLearningJourney = () => {
 
           {/* Stepper form control buttons start ------------------ */}
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
+            {/* <Button
               color="inherit"
               disabled={activeStep === 0}
               onClick={handleBack}
               sx={{ mr: 1 }}
             >
               Back
-            </Button>
+            </Button> */}
             <Box sx={{ flex: '1 1 auto' }} />
             {isStepOptional(activeStep) && (
               <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
