@@ -186,12 +186,33 @@ function NewLearningJourney({ numRows }) {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-    if (activeStep === steps.length - 1) {
-      // submit learning journey
-      submitLearningJourney();
+    if (activeStep === 0) {
+      if (learningJourneyName === "" || selectedRoleId === 0) {
+        alert("Please enter a learning journey name and select a role.");
+        return;
+      }
+      else {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setSkipped(newSkipped);
+      }
     }
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
+    else if (activeStep === 1) {
+      // submit learning journey
+      if (Object.keys(selectedCourses).length === 0) {
+        alert("Please select at least one course.");
+        return;
+      }
+      else {
+        submitLearningJourney();
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setSkipped(newSkipped);
+      }
+    }
+    else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setSkipped(newSkipped);
+    }
+
     
 
 
@@ -491,7 +512,6 @@ function NewLearningJourney({ numRows }) {
             )}
 
             <Button onClick={handleNext}
-              disabled={activeStep === 0 ? selectedRoleName !== 'N.A.' ? false : true : activeStep === 1 ? isCourseSelected ? false : true : activeStep === 2 ? false : true}
             >
 
               {activeStep === steps.length - 1 ? 'Confirm' : 'Next'}
