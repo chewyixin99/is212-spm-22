@@ -20,7 +20,7 @@ def get_all_courses():
                 "data": {"courses": [course.json() for course in courses_list]},
             }
         )
-    return jsonify({"code": 404, "message": "There are no role records."}), 404
+    return jsonify({"code": 404, "message": "There are no course records."}), 404
 
 
 # Get Course by Id
