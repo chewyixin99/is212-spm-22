@@ -25,7 +25,7 @@ def create_app():
 
     is_production = int(os.environ.get("IS_PRODUCTION"))
     if not is_production:
-        production_db = "mysql+mysqlconnector://root:" + db_pw + "@localhost:3306/spm"
+        production_db = "mysql+mysqlconnector://root:" + db_pw + "@localhost:3306/testSPM"
     else:
         production_db = os.environ.get("CLEARDB_DATABASE_URL")
 

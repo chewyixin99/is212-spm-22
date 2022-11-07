@@ -32,3 +32,10 @@ class Skill(db.Model):
             "skill_desc": self.skill_desc,
             "status": self.status
         }
+
+    def to_dict(self):
+        columns = self.__mapper__.column_attrs.keys()
+        result = {}
+        for column in columns:
+            result[column] = getattr(self, column)
+        return result
