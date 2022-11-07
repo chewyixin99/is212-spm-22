@@ -167,11 +167,13 @@ const CreateEditRoleForm = ({
           label={skillsSelectLabel}
           renderValue={renderSelectChip}
         >
-          {allSkillsData.map((skill) => (
-            <MenuItem key={skill.skill_id} value={skill.skill_id}>
-              {skill.skill_name}
-            </MenuItem>
-          ))}
+          {allSkillsData
+            .filter((skill) => skill.status === 'Active')
+            .map((skill) => (
+              <MenuItem key={skill.skill_id} value={skill.skill_id}>
+                {skill.skill_name}
+              </MenuItem>
+            ))}
         </Select>
         <FormHelperText error={touched.skills && errors.skills}>
           {touched.skills && errors.skills ? errors.skills : ''}
