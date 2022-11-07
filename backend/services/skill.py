@@ -212,60 +212,6 @@ def get_courses_of_skill(skill_id):
     )
 
 
-# Update Courses of Skill
-@skill_routes.route("/skills/<int:skill_id>/courses", methods=["PUT"])
-def update_courses_of_skill(skill_id):
-    skill = Skill.query.filter_by(skill_id=skill_id).first()
-    if not skill:
-        return jsonify(
-            {"code": 404, "message": "Skill cannot be found. Please try again."}
-        )
-
-    data = request.get_json()
-    remove_courses = []
-    add_courses = []
-
-    for r in data["remove"]:
-        to_remove = Course.query.filter_by(course_id=r).first()
-        if to_remove is None:
-            return jsonify({"code": 404, "message": f"Course id {r} does not exist."})
-        remove_courses.append(to_remove)
-    for a in data["add"]:
-        to_add = Course.query.filter_by(course_id=a).first()
-        if to_add is None:
-            return jsonify({"code": 404, "message": f"Course id {a} does not exist."})
-        add_courses.append(to_add)
-
-    try:
-        for c in remove_courses:
-            if c in skill.courses:
-                skill.courses.remove(c)
-        for c in add_courses:
-            if c not in skill.courses:
-                skill.courses.append(c)
-        db.session.commit()
-    except Exception as e:
-        print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": data,
-                "message": "An error occurred while updating role with data.",
-            }
-        )
-
-    return jsonify(
-        {
-            "code": 200,
-            "data": {
-                "skill": skill.json(),
-                "courses": [course.json() for course in skill.courses],
-                "message": "Successfully updated courses in skill.",
-            },
-        }
-    )
-
-
 # Get Staffs that COMPLETED this skill
 @skill_routes.route("/skills/<int:skill_id>/staffs")
 def get_staffs_of_skill(skill_id):
