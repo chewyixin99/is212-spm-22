@@ -2,6 +2,7 @@ from extensions import db
 from flask import Blueprint, jsonify, request
 from models.course import Course
 from models.skill import Skill
+from services.utils import error
 
 skill_routes = Blueprint("skills", __name__)
 
@@ -14,7 +15,7 @@ def get_all_skills():
         return jsonify(
             {"code": 200, "data": {"skills": [skill.json() for skill in skills_list]}}
         )
-    return jsonify({"code": 404, "message": "There are no skill records"})
+    return error("skill", None, "no_records")
 
 
 # Get Skill by Id
@@ -23,7 +24,7 @@ def get_skill_by_id(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
     if skill:
         return jsonify({"code": 200, "data": skill.json()})
-    return jsonify({"code": 404, "message": "Skill cannot be found. Please try again."})
+    return error("skill", skill_id, "no_records_by_identifier")
 
 
 # Get Skill by Name
@@ -32,22 +33,15 @@ def get_skill_by_skill_name(skill_name):
     skill = Skill.query.filter_by(skill_name=skill_name).first()
     if skill:
         return jsonify({"code": 200, "data": skill.json()})
-    return jsonify({"code": 404, "message": "Skill cannot be found. Please try again."})
+    return error("skill", skill_name, "no_records_by_identifier")
 
 
 # Create Skill
 @skill_routes.route("/skills/<string:skill_name>", methods=["POST"])
 def create_skill(skill_name):
     if Skill.query.filter_by(skill_name=skill_name).first():
-        return jsonify(
-            {
-                "code": 400,
-                "data": {
-                    "skill_name": skill_name,
-                },
-                "message": f"Skill for this skill_name: {skill_name} already exists.",
-            }
-        )
+        error_data = {"skill_name": skill_name}
+        return error("skill", skill_name, "exists", error_data)
 
     data = request.get_json()
 
@@ -66,13 +60,7 @@ def create_skill(skill_name):
         db.session.commit()
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"skill_name": skill_name},
-                "message": "An error occurred while creating the skill record",
-            }
-        )
+        return error("skill", skill_name, "internal_server_error_create")
     return jsonify(
         {
             "code": 201,
@@ -87,12 +75,7 @@ def create_skill(skill_name):
 def update_skill(skill_id):
     skill = Skill.query.filter(Skill.skill_id == skill_id).first()
     if not skill:
-        return jsonify(
-            {
-                "code": 404,
-                "message": f"Unable to update skill {skill_id}, skill does not exist.",
-            }
-        )
+        return error("skill", skill_id, "no_records_by_identifier")
 
     data = request.get_json()
     remove_courses = []
@@ -101,12 +84,12 @@ def update_skill(skill_id):
     for r in data["remove"]:
         to_remove = Course.query.filter_by(course_id=r).first()
         if to_remove is None:
-            return jsonify({"code": 404, "message": f"Course id {r} does not exist."})
+            return error("course", r, "no_records_by_identifier")
         remove_courses.append(to_remove)
     for a in data["add"]:
         to_add = Course.query.filter_by(course_id=a).first()
         if to_add is None:
-            return jsonify({"code": 404, "message": f"Course id {a} does not exist."})
+            return error("course", r, "no_records_by_identifier")
         add_courses.append(to_add)
 
     try:
@@ -122,13 +105,7 @@ def update_skill(skill_id):
 
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"skill_id": skill_id},
-                "message": f"An error occurred while updating skill with skill_id: {skill_id}",
-            }
-        )
+        return error("skill", skill_id, "internal_server_error_update")
     return jsonify(
         {
             "code": 200,
@@ -143,26 +120,14 @@ def update_skill(skill_id):
 def delete_skill(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
     if not (skill):
-        return jsonify(
-            {
-                "code": 404,
-                "data": {"skill_id": skill_id},
-                "message": f"Skill {skill_id} does not exist.",
-            }
-        )
+        return error("skill", skill_id, "no_records_by_identifier")
 
     try:
         db.session.delete(skill)
         db.session.commit()
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"skill_id": skill_id},
-                "message": "An error occurred while deleting the skill.",
-            }
-        )
+        return error("skill", skill_id, "internal_server_error_delete")
 
     return jsonify(
         {
@@ -178,9 +143,7 @@ def delete_skill(skill_id):
 def get_roles_of_skill(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
     if not skill:
-        return jsonify(
-            {"code": 404, "message": "Skill cannot be found. Please try again."}
-        )
+        return error("skill", skill_id, "no_records_by_identifier")
     return jsonify(
         {
             "code": 200,
@@ -197,9 +160,7 @@ def get_roles_of_skill(skill_id):
 def get_courses_of_skill(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
     if not skill:
-        return jsonify(
-            {"code": 404, "message": "Skill cannot be found. Please try again."}
-        )
+        return error("skill", skill_id, "no_records_by_identifier")
     return jsonify(
         {
             "code": 200,
@@ -217,9 +178,7 @@ def get_courses_of_skill(skill_id):
 def get_staffs_of_skill(skill_id):
     skill = Skill.query.filter_by(skill_id=skill_id).first()
     if not skill:
-        return jsonify(
-            {"code": 404, "message": "Skill cannot be found. Please try again."}
-        )
+        return error("skill", skill_id, "no_records_by_identifier")
     return jsonify(
         {
             "code": 200,

@@ -2,6 +2,7 @@ from extensions import db
 from flask import Blueprint, jsonify, request
 from models.course import Course
 from models.learning_journey import Learning_Journey
+from services.utils import error
 
 learning_journey_routes = Blueprint("learning_journeys", __name__)
 
@@ -22,7 +23,7 @@ def get_all_learning_journeys():
                 },
             }
         )
-    return jsonify({"code": 404, "message": "There are no learning_journey records"})
+    return error("learning_journey", None, "no_records")
 
 
 # Get Learning Journeys by Id (NOTE: This is staff_id not learning_journey_id)
@@ -41,12 +42,7 @@ def get_learning_journey_by_id(staff_id):
                 ],
             }
         )
-    return jsonify(
-        {
-            "code": 404,
-            "message": "Staff does not have any learning journeys to be found. Please try again.",
-        }
-    )
+    return error("learning_journey", staff_id, "no_records_under_table")
 
 
 # Get Learning Journey by Learning Journey ID
@@ -56,11 +52,8 @@ def get_learning_journey_by_lj_id(learning_journey_id):
         learning_journey_id=learning_journey_id
     ).first()
     if not learning_journey:
-        return jsonify(
-            {
-                "code": 404,
-                "message": "Learning Journey cannot be found. Please try again.",
-            }
+        return error(
+            "learning_journey", learning_journey_id, "no_records_by_identifier"
         )
     return jsonify(
         {
@@ -82,11 +75,8 @@ def get_courses_of_learning_journey(learning_journey_id):
         learning_journey_id=learning_journey_id
     ).first()
     if not learning_journey:
-        return jsonify(
-            {
-                "code": 404,
-                "message": "Learning Journey cannot be found. Please try again.",
-            }
+        return error(
+            "learning_journey", learning_journey_id, "no_records_by_identifier"
         )
     return jsonify(
         {
@@ -108,11 +98,8 @@ def update_course_in_learning_journey(learning_journey_id):
         learning_journey_id=learning_journey_id
     ).first()
     if not learning_journey:
-        return jsonify(
-            {
-                "code": 404,
-                "message": "Learning Journey cannot be found. Please try again.",
-            }
+        return error(
+            "learning_journey", learning_journey_id, "no_records_by_identifier"
         )
 
     data = request.get_json()
@@ -124,43 +111,29 @@ def update_course_in_learning_journey(learning_journey_id):
     for r in data["remove"]:
         to_remove = Course.query.filter_by(course_id=r).first()
         if to_remove is None:
-            return jsonify({"code": 404, "message": f"Course id {r} does not exist."})
+            return error("course", r, "no_records_by_identifier")
         remove_courses.append(to_remove)
 
     for a in data["add"]:
         to_add = Course.query.filter_by(course_id=a).first()
         if to_add is None:
-            return jsonify({"code": 404, "message": f"Course id {a} does not exist."})
+            return error("course", a, "no_records_by_identifier")
         add_courses.append(to_add)
 
     try:
         for c in remove_courses:
             if c not in learning_journey.courses:
-                return jsonify(
-                    {
-                        "code": 401,
-                        "message": f"{c} is not in Learning Journey {learning_journey_id}. Please try again.",
-                    }
-                )
+                return error("learning_journey", c, "not_inside")
             learning_journey.courses.remove(c)
         for c in add_courses:
             if c in learning_journey.courses:
-                return jsonify(
-                    {
-                        "code": 401,
-                        "message": f"{c} is already in Learning Journey {learning_journey_id}. Please try again.",
-                    }
-                )
+                return error("learning_journey", c, "already_inside")
             learning_journey.courses.append(c)
         db.session.commit()
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": data,
-                "message": "An error occurred while updating the courses with data.",
-            }
+        return error(
+            "learning_journey", learning_journey_id, "internal_server_error_update"
         )
 
     return jsonify(
@@ -184,13 +157,8 @@ def create_learning_journey(learning_journey_id):
         learning_journey_id=learning_journey_id
     ).first():
         # exist, return 400
-        return jsonify(
-            {
-                "code": 400,
-                "data": {"learning_journey_id": learning_journey_id},
-                "message": f"Learning Journey of this learning_journey_id: {learning_journey_id} already exists.",
-            }
-        )
+        error_data = {"learning_journey_id": learning_journey_id}
+        return error("learning_journey", learning_journey_id, "exists", error_data)
 
     data = request.get_json()
 
@@ -210,12 +178,8 @@ def create_learning_journey(learning_journey_id):
     except Exception as e:
         # failed to add, return 500
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"learning_journey_id": learning_journey_id},
-                "message": "An error occurred while creating the learning_journey record.",
-            }
+        return error(
+            "learning_journey", learning_journey_id, "internal_server_error_create"
         )
     # success, return 200
     return jsonify(
@@ -236,12 +200,8 @@ def delete_learning_journey(learning_journey_id):
         learning_journey_id=learning_journey_id
     ).first()
     if not (learning_journey):
-        return jsonify(
-            {
-                "code": 404,
-                "data": {"learning_journey_id": learning_journey_id},
-                "message": f"Learning journey {learning_journey_id} does not exist.",
-            }
+        return error(
+            "learning_journey", learning_journey_id, "no_records_by_identifier"
         )
 
     try:
@@ -249,12 +209,8 @@ def delete_learning_journey(learning_journey_id):
         db.session.commit()
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"learning_journey_id": learning_journey_id},
-                "message": "An error occurred while deleting the learning journey.",
-            }
+        return error(
+            "learning_journey", learning_journey_id, "internal_server_error_delete"
         )
 
     return jsonify(

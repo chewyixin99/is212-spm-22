@@ -1,6 +1,7 @@
 from extensions import db
 from flask import Blueprint, jsonify, request
 from models.staff import Staff
+from services.utils import error
 
 staff_routes = Blueprint("staffs", __name__)
 
@@ -13,7 +14,7 @@ def get_all_staffs():
         return jsonify(
             {"code": 200, "data": {"staffs": [staff.json() for staff in staffs_list]}}
         )
-    return jsonify({"code": 404, "message": "There are no staff records."}), 404
+    return error("staff", None, "no_records")
 
 
 # Get Staff by Staff_id
@@ -22,25 +23,15 @@ def get_staff_by_id(staff_id):
     staff = Staff.query.filter_by(staff_id=staff_id).first()
     if staff:
         return jsonify({"code": 200, "data": staff.json()})
-    return (
-        jsonify({"code": 404, "message": "Staff cannot be found. Please try again."}),
-        404,
-    )
+    return error("staff", staff_id, "no_records_by_identifier")
 
 
 # Create Staff
 @staff_routes.route("/staffs/<string:email>", methods=["POST"])
 def create_staff(email):
     if Staff.query.filter_by(email=email).first():
-        return jsonify(
-            {
-                "code": 400,
-                "data": {
-                    "email": email,
-                },
-                "message": f"Staff for this email: {email} already exists.",
-            }
-        )
+        error_data = {"email": email}
+        return error("staff", email, "exists", error_data)
 
     data = request.get_json()
 
@@ -50,13 +41,7 @@ def create_staff(email):
         db.session.commit()
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"email": email},
-                "message": "An error occurred while creating the staff record",
-            }
-        )
+        return error("staff", email, "internal_server_error_create")
     return jsonify(
         {
             "code": 201,
@@ -71,12 +56,7 @@ def create_staff(email):
 def update_staff(staff_id):
     staff = Staff.query.filter(Staff.staff_id == staff_id).first()
     if not staff:
-        return jsonify(
-            {
-                "code": 404,
-                "message": f"Unable to update staff {staff_id}, staff does not exist.",
-            }
-        )
+        return error("staff", staff_id, "no_records_by_identifier")
 
     data = request.get_json()
     try:
@@ -85,13 +65,7 @@ def update_staff(staff_id):
             db.session.commit()
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"staff_id": staff_id},
-                "message": f"An error occurred while updating staff with staff_id: {staff_id}",
-            }
-        )
+        return error("staff", staff_id, "internal_server_error_update")
     return jsonify(
         {
             "code": 200,
@@ -106,9 +80,7 @@ def update_staff(staff_id):
 def get_courses_of_staff(staff_id):
     staff = Staff.query.filter_by(staff_id=staff_id).first()
     if not staff:
-        return jsonify(
-            {"code": 404, "message": "Staff cannot be found. Please try again."}
-        )
+        return error("staff", staff_id, "no_records_by_identifier")
     return jsonify(
         {
             "code": 200,
@@ -125,9 +97,7 @@ def get_courses_of_staff(staff_id):
 def get_skills_of_staff(staff_id):
     staff = Staff.query.filter_by(staff_id=staff_id).first()
     if not staff:
-        return jsonify(
-            {"code": 404, "message": "Staff cannot be found. Please try again."}
-        )
+        return error("staff", staff_id, "no_records_by_identifier")
     return jsonify(
         {
             "code": 200,

@@ -2,6 +2,7 @@ from extensions import db
 from flask import Blueprint, jsonify, request
 from models.role import Role
 from models.skill import Skill
+from services.utils import error
 
 role_routes = Blueprint("roles", __name__)
 
@@ -14,7 +15,7 @@ def get_all_roles():
         return jsonify(
             {"code": 200, "data": {"roles": [role.json() for role in roles_list]}}
         )
-    return jsonify({"code": 404, "message": "There are no role records."}), 404
+    return error("role", None, "no_records")
 
 
 # Get a Role by Id
@@ -23,10 +24,7 @@ def get_role_by_id(role_id):
     role = Role.query.filter_by(role_id=role_id).first()
     if role:
         return jsonify({"code": 200, "data": role.json()})
-    return (
-        jsonify({"code": 404, "message": "Role cannot be found. Please try again."}),
-        404,
-    )
+    return error("role", role_id, "no_records_by_identifier")
 
 
 # Get role by Name
@@ -35,25 +33,15 @@ def get_role_by_name(role_name):
     role = Role.query.filter_by(role_name=role_name).first()
     if role:
         return jsonify({"code": 200, "data": role.json()})
-    return (
-        jsonify({"code": 404, "message": "Role cannot be found. Please try again."}),
-        404,
-    )
+    return error("role", role_name, "no_records_by_identifier")
 
 
 # Create Role
 @role_routes.route("/roles/<string:role_name>", methods=["POST"])
 def create_role(role_name):
     if Role.query.filter_by(role_name=role_name).first():
-        return jsonify(
-            {
-                "code": 400,
-                "data": {
-                    "role_name": role_name,
-                },
-                "message": f"Role for this role_name: {role_name} already exists.",
-            }
-        )
+        error_data = {"role_name": role_name}
+        return error("role", role_name, "exists", error_data)
 
     data = request.get_json()
 
@@ -64,9 +52,7 @@ def create_role(role_name):
     for skill_id in request_skills_id:
         skill = Skill.query.filter_by(skill_id=skill_id).first()
         if skill is None:
-            return jsonify(
-                {"code": 404, "message": f"Skill id {skill_id} does not exist."}
-            )
+            return error("skill", skill_id, "no_records_by_identifier")
         skills.append(skill)
 
     try:
@@ -76,13 +62,7 @@ def create_role(role_name):
         db.session.commit()
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"role_name": role_name},
-                "message": "An error occurred while creating the role record",
-            }
-        )
+        return error("role", role_name, "internal_server_error_create")
     return jsonify(
         {
             "code": 201,
@@ -97,12 +77,7 @@ def create_role(role_name):
 def update_role(role_id):
     role = Role.query.filter(Role.role_id == role_id).first()
     if not role:
-        return jsonify(
-            {
-                "code": 404,
-                "message": f"Unable to update role {role_id}, role does not exist.",
-            }
-        )
+        return error("role", role_id, "no_records_by_identifier")
 
     data = request.get_json()
 
@@ -113,9 +88,7 @@ def update_role(role_id):
     for skill_id in request_skills_id:
         skill = Skill.query.filter_by(skill_id=skill_id).first()
         if skill is None:
-            return jsonify(
-                {"code": 404, "message": f"Skill id {skill_id} does not exist."}
-            )
+            return error("skill", skill_id, "no_records_by_identifier")
         skills.append(skill)
 
     # Update DB
@@ -128,13 +101,7 @@ def update_role(role_id):
 
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"role_id": role_id},
-                "message": f"An error occurred while updating role with role_id: {role_id}",
-            }
-        )
+        return error("role", role_id, "internal_server_error_update")
     return jsonify(
         {
             "code": 200,
@@ -143,31 +110,20 @@ def update_role(role_id):
         }
     )
 
+
 # Delete Role
 @role_routes.route("/roles/<int:role_id>", methods=["DELETE"])
 def delete_role(role_id):
     role = Role.query.filter_by(role_id=role_id).first()
     if not (role):
-        return jsonify(
-            {
-                "code": 404,
-                "data": {"role_id": role_id},
-                "message": f"Role {role_id} does not exist.",
-            }
-        )
+        return error("role", role_id, "no_records_by_identifier")
 
     try:
         db.session.delete(role)
         db.session.commit()
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"role_id": role_id},
-                "message": "An error occurred while deleting the role.",
-            }
-        )
+        return error("role", role_id, "internal_server_error_delete")
 
     return jsonify(
         {
@@ -183,9 +139,7 @@ def delete_role(role_id):
 def get_skills_of_role(role_id):
     role = Role.query.filter_by(role_id=role_id).first()
     if not role:
-        return jsonify(
-            {"code": 404, "message": "Role cannot be found. Please try again."}
-        )
+        return error("role", role_id, "no_records_by_identifier")
     return jsonify(
         {
             "code": 200,
@@ -202,24 +156,20 @@ def get_skills_of_role(role_id):
 def update_skills_of_role(role_id):
     role = Role.query.filter(Role.role_id == role_id).first()
     if not role:
-        return jsonify(
-            {
-                "code": 404,
-                "message": f"Unable to update skills of role {role_id}, role does not exist.",
-            }
-        )
+        return error("role", role_id, "no_records_by_identifier")
+
     data = request.get_json()
     remove_skills = []
     add_skills = []
     for r in data["remove"]:
         to_remove = Skill.query.filter_by(skill_id=r).first()
         if to_remove is None:
-            return jsonify({"code": 404, "message": f"Skill id {r} does not exist."})
+            return error("skill", r, "no_records_by_identifier")
         remove_skills.append(to_remove)
     for a in data["add"]:
         to_add = Skill.query.filter_by(skill_id=a).first()
         if to_add is None:
-            return jsonify({"code": 404, "message": f"Skill id {a} does not exist."})
+            return error("skill", r, "no_records_by_identifier")
         add_skills.append(to_add)
 
     try:
@@ -232,13 +182,7 @@ def update_skills_of_role(role_id):
         db.session.commit()
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": data,
-                "message": "An error occurred while updating role with data.",
-            }
-        )
+        return error("role", role_id, "internal_server_error_update")
 
     return jsonify(
         {

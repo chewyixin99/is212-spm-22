@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request
 from models.course import Course
 from models.learning_journey_course import learning_journey_course
 from models.skill_course import skill_course
+from services.utils import error
 
 # from services.learning_journey import Learning_Journey
 
@@ -20,7 +21,7 @@ def get_all_courses():
                 "data": {"courses": [course.json() for course in courses_list]},
             }
         )
-    return jsonify({"code": 404, "message": "There are no course records."}), 404
+    return error("course", None, "no_records")
 
 
 # Get Course by Id
@@ -29,24 +30,16 @@ def get_course_by_id(course_id):
     course = Course.query.filter(Course.course_id == course_id).first()
     if course:
         return jsonify({"code": 200, "data": course.json()})
-    return (
-        jsonify({"code": 404, "message": "Course cannot be found. Please try again."}),
-        404,
-    )
+    return error("course", course_id, "no_records_by_identifier")
 
 
 # Create Course
 @course_routes.route("/courses/<string:course_id>", methods=["POST"])
 def create_course(course_id):
     if Course.query.filter_by(course_id=course_id).first():
-        # exist, return 400
-        return jsonify(
-            {
-                "code": 400,
-                "data": {"course_id": course_id},
-                "message": f"Course for this course_id: {course_id} already exists.",
-            }
-        )
+        # already exists, return 400
+        error_data = {"course_id": course_id}
+        return error("course", course_id, "exists", error_data)
 
     data = request.get_json()
 
@@ -57,13 +50,7 @@ def create_course(course_id):
     except Exception as e:
         # failed to add, return 500
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"course_id": course_id},
-                "message": "An error occurred while creating the course record.",
-            }
-        )
+        return error("course", course_id, "internal_server_error_create")
     # success, return 200
     return jsonify(
         {
@@ -79,12 +66,7 @@ def create_course(course_id):
 def update_course(course_id):
     course = Course.query.filter(Course.course_id == course_id).first()
     if not course:
-        return jsonify(
-            {
-                "code": 404,
-                "message": f"Unable to update course {course_id}, course does not exist.",
-            }
-        )
+        return error("course", course_id, "no_records_by_identifier")
 
     data = request.get_json()
     try:
@@ -93,13 +75,7 @@ def update_course(course_id):
         db.session.commit()
     except Exception as e:
         print(e)
-        return jsonify(
-            {
-                "code": 500,
-                "data": {"course_id": course_id},
-                "message": "An error occurred while updating the course.",
-            }
-        )
+        return error("course", course_id, "internal_server_error_update")
     return jsonify(
         {
             "code": 200,
@@ -114,9 +90,7 @@ def update_course(course_id):
 def get_skills_of_course(course_id):
     course = Course.query.filter_by(course_id=course_id).first()
     if not course:
-        return jsonify(
-            {"code": 404, "message": "Course cannot be found. Please try again."}
-        )
+        return error("course", course_id, "no_records_by_identifier")
     return jsonify(
         {
             "code": 200,
@@ -133,9 +107,7 @@ def get_skills_of_course(course_id):
 def get_staffs_of_course(course_id):
     course = Course.query.filter_by(course_id=course_id).first()
     if not course:
-        return jsonify(
-            {"code": 404, "message": "Course cannot be found. Please try again."}
-        )
+        return error("course", course_id, "no_records_by_identifier")
     return jsonify(
         {
             "code": 200,
@@ -152,9 +124,7 @@ def get_staffs_of_course(course_id):
 def get_learning_journeys_of_course(course_id):
     course = Course.query.filter_by(course_id=course_id).first()
     if not course:
-        return jsonify(
-            {"code": 404, "message": "Course cannot be found. Please try again."}
-        )
+        return error("course", course_id, "no_records_by_identifier")
     return jsonify(
         {
             "code": 200,
