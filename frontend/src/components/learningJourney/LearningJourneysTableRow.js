@@ -28,13 +28,17 @@ const LearningJourneysTableRow = ({ learningJourneyInfo, reloadData }) => {
     {
       itemName: 'View',
       itemAction: () => {
-        naviate(`${learningJourneyInfo?.learning_journey_id}`)
+        naviate(
+          `/staff/learning-journey/${learningJourneyInfo?.learning_journey_id}`
+        )
       },
     },
     {
       itemName: 'Edit',
       itemAction: () => {
-        naviate(`${learningJourneyInfo?.learning_journey_id}/edit`)
+        naviate(
+          `/staff/learning-journey/${learningJourneyInfo?.learning_journey_id}/edit`
+        )
       },
     },
     {
