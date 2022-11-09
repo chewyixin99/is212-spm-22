@@ -25,6 +25,7 @@ const useStaffLearningJourneyLoader = (staffId, numRows = -1, init = true) => {
   const loadLearningJourneys = () => {
     // console.log('---> loadLearningJourneys()')
     setIsLoading(true)
+    setTotal(0)
     fetch(`${ENDPOINT}/learning_journeys/${staffId}`)
       .then((response) => response.json())
       .then((responseJSON) => {
