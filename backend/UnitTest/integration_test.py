@@ -5,7 +5,7 @@ import requests
 # URL = "https://g7t3-backend-v2.herokuapp.com"
 
 
-class TestEmptyTables(unittest.TestCase):
+class aTestEmptyTables(unittest.TestCase):
     course_url = "http://localhost:5001/courses"
     learning_journey_url = "http://localhost:5001/learning_journeys"
     role_url = "http://localhost:5001/roles"
@@ -38,7 +38,7 @@ class TestEmptyTables(unittest.TestCase):
         self.assertEqual(response.json()["code"], 404)
 
 
-class TestCreateReadUpdateHappy(unittest.TestCase):
+class bTestCreateReadUpdateHappy(unittest.TestCase):
     course_url = "http://localhost:5001/courses"
     role_url = "http://localhost:5001/roles"
     skill_url = "http://localhost:5001/skills"
@@ -195,7 +195,7 @@ class TestCreateReadUpdateHappy(unittest.TestCase):
         self.assertEqual(response.json()["data"]["status"], "Retired")
 
 
-class TestCreateReadUpdateHappyLJ(unittest.TestCase):
+class cTestCreateReadUpdateHappyLJ(unittest.TestCase):
     learning_journey_url = "http://localhost:5001/learning_journeys"
 
     # Learning Journey
@@ -223,7 +223,7 @@ class TestCreateReadUpdateHappyLJ(unittest.TestCase):
         self.assertEqual(response.json()["code"], 200)
 
 
-class TestCreateReadUpdateNegative(unittest.TestCase):
+class dTestCreateReadUpdateNegative(unittest.TestCase):
     course_url = "http://localhost:5001/courses"
     learning_journey_url = "http://localhost:5001/learning_journeys"
     role_url = "http://localhost:5001/roles"
@@ -359,7 +359,7 @@ class TestCreateReadUpdateNegative(unittest.TestCase):
         self.assertEqual(response.json()["code"], 404)
 
 
-class TestMappingsHappy(unittest.TestCase):
+class eTestMappingsHappy(unittest.TestCase):
     course_url = "http://localhost:5001/courses"
     learning_journey_url = "http://localhost:5001/learning_journeys"
     role_url = "http://localhost:5001/roles"
@@ -480,7 +480,7 @@ class TestMappingsHappy(unittest.TestCase):
         self.assertEqual(type(response.json()["data"]["courses"]), type([]))
 
 
-class TestMappingsNegative(unittest.TestCase):
+class fTestMappingsNegative(unittest.TestCase):
     course_url = "http://localhost:5001/courses"
     learning_journey_url = "http://localhost:5001/learning_journeys"
     role_url = "http://localhost:5001/roles"
