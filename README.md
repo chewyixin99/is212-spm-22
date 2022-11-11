@@ -3,29 +3,46 @@
 ## Learning Journey Management System
 
 Plans and track staffs' learning journey, which fulfils skills required for job roles
-
-## For developers only!
-
-- STEP 1. Get your packages needed installed:
-
-  - navigate to file directory /spm/backend
-  - `$ pip install -r requirements.txt`
-  -  or if you want a conda venv, `$ conda env create -f environment.yml`
-
-- STEP 2. Setting up git hooks:
-
-  - navigate to root /spm/ (ENSURE IT IS IN ROOT)
-  - `$ pre-commit install`
-
 ## Starting the app
 
-- Frontend (Node)
+### Frontend (Node)
 
-  - navigate to file directory /spm/frontend
+  - navigate to file directory ./spm/frontend
   - `$ npm install` followed by `$ npm start`
   - frontend app will be live on port 3000
 
-- Backend (flask)
+### Backend (flask)
 
-  - navigate to file directory /spm/backend
+  - navigate to file directory ./spm/backend
   - `$ py app.py run` or `$ python app.py run`
+## For developers only!
+
+### Things you need before development
+
+1. Get your packages needed installed:
+
+  - navigate to file directory ./spm/backend
+  - `$ pip install -r requirements.txt`
+  -  or if you want a conda venv, `$ conda env create -f environment.yml`
+
+2. Setting up git hooks:
+
+  - navigate to root ./spm/ (ENSURE IT IS IN ROOT)
+  - `$ pre-commit install`
+
+### How to perform Unit Testing
+
+#### Back-end
+
+1. Start up MAMP (for MacOSX) / WAMP (for Windows)
+2. Go to MySQL WorkBench or localhost/phpMyAdmin
+3. Import testspm.sql from /spm/backend and run queries to initiate testDb
+4. `$ py app.py run` or `$ python app.py run`
+5. On /spm/backend/app.py, change "@localhost:3306/SPM" to "@localhost:3306/testSPM"
+6. On the left toolbar of VSCode, locate Testing and import the unit_test.py and integration_test.py found in the UnitTest folder (i.e ./spm/backend/UnitTest)
+7. Click the play button for unit_test.py. All tests should run successfully with a green tick.
+8. Click the play button for implementation_test.py. All tests should run successfully with a green tick.
+
+#### Front-end
+1. Navigate to file directory ./spm/frontend
+2. `$ npm test`. All tests should run successfully.
