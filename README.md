@@ -7,6 +7,17 @@ Plans and track staffs' learning journey, which fulfils skills required for job 
 ---
 ## Starting the app
 
+### Env variables
+
+```
+# file backend/.env
+
+DATABASE_PASSWORD=<your_db_password>
+IS_PRODUCTION=<value> # value is 0 / 1 for false / true respectively
+
+```
+
+
 ### Frontend (Node)
 
   - navigate to file directory `/spm/frontend`
